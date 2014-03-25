@@ -7,10 +7,42 @@ package ru.spbau.preprocessing.erlang.preprocessor;
 %%
 
 %{
-  static final int ERLANG_FORM = 0;
+  static final Integer ERLANG_FORM = 0;
 
   public ErlangFormsLexer(CharSequence text) {
     this(new java.io.StringReader(text.toString()));
+  }
+
+  private int myFormStart = -1;
+  private int myFormLength = -1;
+
+  public final int getFormStart(){
+    return myFormStart;
+  }
+
+  public final int getFormEnd(){
+    return myFormStart + myFormLength;
+  }
+
+  private Integer form() {
+    formStarted();
+    return formEnded(false);
+  }
+
+  private void formStarted() {
+    myFormStart = zzStartRead;
+    myFormLength = yylength();
+    yybegin(FORM);
+  }
+
+  private Integer formEnded() {
+    return formEnded(true);
+  }
+
+  private Integer formEnded(boolean addCurrentToken) {
+    if (addCurrentToken) myFormLength += yylength();
+    yybegin(YYINITIAL);
+    return ERLANG_FORM;
   }
 %}
 
@@ -50,9 +82,9 @@ FormToken = {Comment} | {Whitespace} | {NotWhitespaceFormToken}
 
 %%
 
-<YYINITIAL>         {Comment}                       { return ERLANG_FORM; }
-<YYINITIAL>         {Whitespace}                    { return ERLANG_FORM; }
-<YYINITIAL>         {NotWhitespaceFormToken}        { yybegin(FORM); }
-<FORM>              {FormToken}                     { }
-<FORM>              "."/ ({WhitespaceChar} | "%")   { yybegin(YYINITIAL); return ERLANG_FORM; }
-<FORM>              <<EOF>>                         { yybegin(YYINITIAL); return ERLANG_FORM; }
+<YYINITIAL>         {Comment}                       { return form(); }
+<YYINITIAL>         {Whitespace}                    { return form(); }
+<YYINITIAL>         {NotWhitespaceFormToken}        { formStarted(); }
+<FORM>              {FormToken}                     { myFormLength += yylength(); }
+<FORM>              "."/ ({WhitespaceChar} | "%")   { return formEnded(); }
+<FORM>              <<EOF>>                         { return formEnded(); }

@@ -235,10 +235,42 @@ public class ErlangFormsLexer {
   private boolean zzEOFDone;
 
   /* user code: */
-  static final int ERLANG_FORM = 0;
+  static final Integer ERLANG_FORM = 0;
 
   public ErlangFormsLexer(CharSequence text) {
     this(new java.io.StringReader(text.toString()));
+  }
+
+  private int myFormStart = -1;
+  private int myFormLength = -1;
+
+  public final int getFormStart(){
+    return myFormStart;
+  }
+
+  public final int getFormEnd(){
+    return myFormStart + myFormLength;
+  }
+
+  private Integer form() {
+    formStarted();
+    return formEnded(false);
+  }
+
+  private void formStarted() {
+    myFormStart = zzStartRead;
+    myFormLength = yylength();
+    yybegin(FORM);
+  }
+
+  private Integer formEnded() {
+    return formEnded(true);
+  }
+
+  private Integer formEnded(boolean addCurrentToken) {
+    if (addCurrentToken) myFormLength += yylength();
+    yybegin(YYINITIAL);
+    return ERLANG_FORM;
   }
 
 
@@ -551,21 +583,21 @@ public class ErlangFormsLexer {
 
       switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
         case 1: 
-          { yybegin(FORM);
+          { formStarted();
           }
         case 5: break;
         case 2: 
-          { return ERLANG_FORM;
+          { return form();
           }
         case 6: break;
         case 3: 
-          { 
+          { myFormLength += yylength();
           }
         case 7: break;
         case 4: 
           // lookahead expression with fixed base length
           zzMarkedPos = zzStartRead + 1;
-          { yybegin(YYINITIAL); return ERLANG_FORM;
+          { return formEnded();
           }
         case 8: break;
         default: 
@@ -573,7 +605,7 @@ public class ErlangFormsLexer {
             zzAtEOF = true;
             switch (zzLexicalState) {
             case FORM: {
-              yybegin(YYINITIAL); return ERLANG_FORM;
+              return formEnded();
             }
             case 27: break;
             default:
