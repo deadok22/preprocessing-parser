@@ -782,12 +782,17 @@ public class ErlangLexer implements ru.spbau.preprocessing.api.LanguageLexer<Erl
   /* user code: */
   private ErlangToken myTokenType;
 
+  public ErlangToken next() throws IOException {
+    advance();
+    return tokenType();
+  }
+
   // implementation of ru.spbau.preprocessing.api.LanguageLexer<ErlangToken>
 
   private int myStartIndexInSourceBuffer;
 
   public void advance() throws IOException {
-    myTokenType = next();
+    myTokenType = _next();
   }
 
   public ErlangToken tokenType() {
@@ -1040,7 +1045,7 @@ public class ErlangLexer implements ru.spbau.preprocessing.api.LanguageLexer<Erl
    * @return      the next token
    * @exception   java.io.IOException  if any I/O-Error occurs
    */
-  public ErlangToken next() throws java.io.IOException {
+  public ErlangToken _next() throws java.io.IOException {
     int zzInput;
     int zzAction;
 

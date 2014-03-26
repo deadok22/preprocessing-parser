@@ -9,12 +9,17 @@ import static ru.spbau.preprocessing.erlang.ErlangToken.*;
 %{
   private ErlangToken myTokenType;
 
+  public ErlangToken next() throws IOException {
+    advance();
+    return tokenType();
+  }
+
   // implementation of ru.spbau.preprocessing.api.LanguageLexer<ErlangToken>
 
   private int myStartIndexInSourceBuffer;
 
   public void advance() throws IOException {
-    myTokenType = next();
+    myTokenType = _next();
   }
 
   public ErlangToken tokenType() {
@@ -40,7 +45,7 @@ import static ru.spbau.preprocessing.erlang.ErlangToken.*;
 %unicode
 %public
 
-%function next
+%function _next
 %type ErlangToken
 
 %table
