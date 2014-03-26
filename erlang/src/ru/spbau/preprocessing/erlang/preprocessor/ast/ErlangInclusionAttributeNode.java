@@ -2,12 +2,12 @@ package ru.spbau.preprocessing.erlang.preprocessor.ast;
 
 import ru.spbau.preprocessing.api.preprocessor.PreprocessorLanguageFileInclusionNode;
 
-public class ErlangInclusionAttribute extends ErlangPreprocessorNode implements PreprocessorLanguageFileInclusionNode {
+public class ErlangInclusionAttributeNode extends ErlangPreprocessorNode implements PreprocessorLanguageFileInclusionNode {
   private final String myIncludePath;
   private final ErlangIncludeResolutionStrategy myResolutionStrategy;
 
-  public ErlangInclusionAttribute(CharSequence buffer, int startOffset, int endOffset,
-                                  String includePath, ErlangIncludeResolutionStrategy resolutionStrategy) {
+  public ErlangInclusionAttributeNode(CharSequence buffer, int startOffset, int endOffset,
+                                      String includePath, ErlangIncludeResolutionStrategy resolutionStrategy) {
     super(buffer, startOffset, endOffset);
     myIncludePath = includePath;
     myResolutionStrategy = resolutionStrategy;

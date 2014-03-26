@@ -4,10 +4,7 @@ import ru.spbau.preprocessing.api.preprocessor.PreprocessorLanguageNode;
 import ru.spbau.preprocessing.api.preprocessor.PreprocessorLanguageParser;
 import ru.spbau.preprocessing.erlang.ErlangLexer;
 import ru.spbau.preprocessing.erlang.ErlangToken;
-import ru.spbau.preprocessing.erlang.preprocessor.ast.ErlangInclusionAttribute;
-import ru.spbau.preprocessing.erlang.preprocessor.ast.ErlangMacroDefinitionNode;
-import ru.spbau.preprocessing.erlang.preprocessor.ast.ErlangMacroUndefinitionNode;
-import ru.spbau.preprocessing.erlang.preprocessor.ast.ErlangPreprocessorNode;
+import ru.spbau.preprocessing.erlang.preprocessor.ast.*;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -46,7 +43,7 @@ public class ErlangPreprocessorLanguageParser implements PreprocessorLanguagePar
       return new ErlangPreprocessorNode(myText, myFormStartOffset, myFormEndOffset);
     }
 
-    public ErlangPreprocessorNode parsePreprocessorAttribute() {
+    public ErlangPreprocessorNode parsePreprocessorAttribute(boolean insideAlternatives) {
       ErlangLexer lexer = new ErlangLexer((Reader) null);
       lexer.start(myText, myFormStartOffset, myFormEndOffset);
       try {
@@ -57,10 +54,10 @@ public class ErlangPreprocessorLanguageParser implements PreprocessorLanguagePar
         if (token != ATOM) return null;
         String attr = lexer.yytext();
         if ("include".equals(attr)) {
-          return parseInclusion(lexer, ErlangInclusionAttribute.ErlangIncludeResolutionStrategy.INCLUDE);
+          return parseInclusion(lexer, ErlangInclusionAttributeNode.ErlangIncludeResolutionStrategy.INCLUDE);
         }
         else if ("include_lib".equals(attr)) {
-          return parseInclusion(lexer, ErlangInclusionAttribute.ErlangIncludeResolutionStrategy.INCLUDE_LIB);
+          return parseInclusion(lexer, ErlangInclusionAttributeNode.ErlangIncludeResolutionStrategy.INCLUDE_LIB);
         }
         else if ("undef".equals(attr)) {
           return parseMacroUndefinition(lexer);
@@ -68,40 +65,33 @@ public class ErlangPreprocessorLanguageParser implements PreprocessorLanguagePar
         else if ("define".equals(attr)) {
           return parseMacroDefinition(lexer);
         }
-        //TODO these should only be allowed inside AlternativesNode
-        else if ("ifdef".equals(attr)) {
-          //TODO
-          throw new UnsupportedOperationException("Not implemented");
+        else if (insideAlternatives) {
+          if ("ifdef".equals(attr)) {
+            return parseMacroDefinedCondition(lexer, true);
+          }
+          else if ("ifndef".equals(attr)) {
+            return parseMacroDefinedCondition(lexer, false);
+          }
+          else if ("else".equals(attr)) {
+            return parseElseOrEndif(lexer, ErlangConditionalAttributeNode.Type.ELSE);
+          }
+          else if ("endif".equals(attr)) {
+            return parseElseOrEndif(lexer, ErlangConditionalAttributeNode.Type.ENDIF);
+          }
         }
-        else if ("ifndef".equals(attr)) {
-          //TODO
-          throw new UnsupportedOperationException("Not implemented");
-        }
-        //TODO these should only be allowed after -ifdef or -ifndef
-        else if ("else".equals(attr)) {
-          //TODO
-          throw new UnsupportedOperationException("Not implemented");
-        }
-        else if ("endif".equals(attr)) {
-          //TODO
-          throw new UnsupportedOperationException("Not implemented");
-        }
-        else {
-          return null;
-        }
-      } catch (IOException e) {
-        return null;
+      } catch (IOException ignored) {
       }
+      return null;
     }
 
-    private ErlangInclusionAttribute parseInclusion(ErlangLexer lexer,
-                                                    ErlangInclusionAttribute.ErlangIncludeResolutionStrategy type) throws IOException {
+    private ErlangInclusionAttributeNode parseInclusion(ErlangLexer lexer,
+                                                    ErlangInclusionAttributeNode.ErlangIncludeResolutionStrategy type) throws IOException {
       skipWhitespaceAndComment(lexer);
-      if (PAR_LEFT != lexer.tokenType()) return null;
+      if (lexer.tokenType() != PAR_LEFT) return null;
       skipWhitespaceAndComment(lexer);
-      if (STRING != lexer.tokenType()) return null;
+      if (lexer.tokenType() != STRING) return null;
       String includePath = myText.subSequence(lexer.tokenStartOffset() + 1, lexer.tokenEndOffset() - 1).toString();
-      return isRightParDotEndOfForm(lexer) ? new ErlangInclusionAttribute(myText, myFormStartOffset, myFormEndOffset, includePath, type) : null;
+      return isRightParDotEndOfForm(lexer) ? new ErlangInclusionAttributeNode(myText, myFormStartOffset, myFormEndOffset, includePath, type) : null;
     }
 
     private ErlangMacroUndefinitionNode parseMacroUndefinition(ErlangLexer lexer) throws IOException {
@@ -111,11 +101,10 @@ public class ErlangPreprocessorLanguageParser implements PreprocessorLanguagePar
 
     private ErlangMacroDefinitionNode parseMacroDefinition(ErlangLexer lexer) throws IOException {
       skipWhitespaceAndComment(lexer);
-      if (PAR_LEFT != lexer.tokenType()) return null;
+      if (lexer.tokenType() != PAR_LEFT) return null;
       skipWhitespaceAndComment(lexer);
-      if (ATOM != lexer.tokenType() && VAR != lexer.tokenType()) return null;
-      //TODO quotedMacroNames
-      String macroName = lexer.yytext();
+      String macroName = macroName(lexer);
+      if (macroName == null) return null;
       skipWhitespaceAndComment(lexer);
       List<String> parameterNames = null;
       if (lexer.tokenType() == PAR_LEFT) {
@@ -162,21 +151,38 @@ public class ErlangPreprocessorLanguageParser implements PreprocessorLanguagePar
               null;
     }
 
+    private ErlangMacroDefinedConditionAttributeNode parseMacroDefinedCondition(ErlangLexer lexer, boolean isPositive) throws IOException {
+      String macroName = parseMacroNameAttribute(lexer);
+      return macroName != null ?
+              new ErlangMacroDefinedConditionAttributeNode(myText, myFormStartOffset, myFormEndOffset, macroName, isPositive) :
+              null;
+    }
+
+    private ErlangConditionalAttributeNode parseElseOrEndif(ErlangLexer lexer, ErlangConditionalAttributeNode.Type type) throws IOException {
+      skipWhitespaceAndComment(lexer);
+      return lexer.tokenType() == DOT && lexer.next() == null ?
+              new ErlangConditionalAttributeNode(myText, myFormStartOffset, myFormEndOffset, type) :
+              null;
+    }
+
     private String parseMacroNameAttribute(ErlangLexer lexer) throws IOException {
       skipWhitespaceAndComment(lexer);
-      if (PAR_LEFT != lexer.tokenType()) return null;
+      if (lexer.tokenType() != PAR_LEFT) return null;
       skipWhitespaceAndComment(lexer);
-      if (ATOM != lexer.tokenType() && VAR != lexer.tokenType()) return null;
+      String macroName = macroName(lexer);
+      return isRightParDotEndOfForm(lexer) && macroName != null ? macroName : null;
+    }
+
+    private String macroName(ErlangLexer lexer) {
       //TODO quoted macro names
-      String macroName = lexer.yytext();
-      return isRightParDotEndOfForm(lexer) ? macroName : null;
+      return lexer.tokenType() == ATOM || lexer.tokenType() == VAR ? lexer.yytext() : null;
     }
 
     private boolean isRightParDotEndOfForm(ErlangLexer lexer) throws IOException {
       skipWhitespaceAndComment(lexer);
-      if (PAR_RIGHT != lexer.tokenType()) return false;
+      if (lexer.tokenType() != PAR_RIGHT) return false;
       skipWhitespaceAndComment(lexer);
-      return DOT == lexer.tokenType() && lexer.next() == null;
+      return lexer.tokenType() == DOT && lexer.next() == null;
     }
 
     private static void skipWhitespaceAndComment(ErlangLexer lexer) throws IOException {
