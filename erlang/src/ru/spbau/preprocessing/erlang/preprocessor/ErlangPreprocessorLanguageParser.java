@@ -5,6 +5,7 @@ import ru.spbau.preprocessing.api.preprocessor.PreprocessorLanguageParser;
 import ru.spbau.preprocessing.erlang.ErlangLexer;
 import ru.spbau.preprocessing.erlang.ErlangToken;
 import ru.spbau.preprocessing.erlang.preprocessor.ast.ErlangInclusionAttribute;
+import ru.spbau.preprocessing.erlang.preprocessor.ast.ErlangMacroDefinitionNode;
 import ru.spbau.preprocessing.erlang.preprocessor.ast.ErlangMacroUndefinitionNode;
 import ru.spbau.preprocessing.erlang.preprocessor.ast.ErlangPreprocessorNode;
 
@@ -30,7 +31,7 @@ public class ErlangPreprocessorLanguageParser implements PreprocessorLanguagePar
     return parseResult;
   }
 
-  private final class SingleFormParser {
+  private static final class SingleFormParser {
     private CharSequence myText;
     private int myFormStartOffset;
     private int myFormEndOffset;
@@ -64,6 +65,10 @@ public class ErlangPreprocessorLanguageParser implements PreprocessorLanguagePar
         else if ("undef".equals(attr)) {
           return parseMacroUndefinition(lexer);
         }
+        else if ("define".equals(attr)) {
+          return parseMacroDefinition(lexer);
+        }
+        //TODO these should only be allowed inside AlternativesNode
         else if ("ifdef".equals(attr)) {
           //TODO
           throw new UnsupportedOperationException("Not implemented");
@@ -104,6 +109,59 @@ public class ErlangPreprocessorLanguageParser implements PreprocessorLanguagePar
       return macroName != null ? new ErlangMacroUndefinitionNode(myText, myFormStartOffset, myFormEndOffset, macroName) : null;
     }
 
+    private ErlangMacroDefinitionNode parseMacroDefinition(ErlangLexer lexer) throws IOException {
+      skipWhitespaceAndComment(lexer);
+      if (PAR_LEFT != lexer.tokenType()) return null;
+      skipWhitespaceAndComment(lexer);
+      if (ATOM != lexer.tokenType() && VAR != lexer.tokenType()) return null;
+      //TODO quotedMacroNames
+      String macroName = lexer.yytext();
+      skipWhitespaceAndComment(lexer);
+      List<String> parameterNames = null;
+      if (lexer.tokenType() == PAR_LEFT) {
+        parameterNames = new ArrayList<String>();
+        while (true) {
+          skipWhitespaceAndComment(lexer);
+          if (lexer.tokenType() == VAR) {
+            parameterNames.add(lexer.yytext());
+            skipWhitespaceAndComment(lexer);
+            if (lexer.tokenType() == COMMA) continue;
+          }
+          if (lexer.tokenType() == PAR_RIGHT) {
+            skipWhitespaceAndComment(lexer);
+            break;
+          }
+          else {
+            return null;
+          }
+        }
+      }
+      if (lexer.tokenType() != COMMA) {
+        return null;
+      }
+      lexer.advance();
+
+      //consume macro body
+      int macroBodyStartOffset = lexer.tokenStartOffset();
+      int macroBodyEndOffset = -1;
+      while (lexer.tokenType() != null) {
+        int tokenOffset = lexer.tokenStartOffset();
+        if (lexer.tokenType() == PAR_RIGHT) {
+          skipWhitespaceAndComment(lexer);
+          if (lexer.tokenType() == DOT && lexer.next() == null) {
+            macroBodyEndOffset = tokenOffset;
+          }
+        }
+        else {
+          lexer.advance();
+        }
+      }
+
+      return macroBodyEndOffset >= macroBodyStartOffset ?
+              new ErlangMacroDefinitionNode(myText, myFormStartOffset, myFormEndOffset, macroName, parameterNames, macroBodyStartOffset, macroBodyEndOffset) :
+              null;
+    }
+
     private String parseMacroNameAttribute(ErlangLexer lexer) throws IOException {
       skipWhitespaceAndComment(lexer);
       if (PAR_LEFT != lexer.tokenType()) return null;
@@ -120,12 +178,16 @@ public class ErlangPreprocessorLanguageParser implements PreprocessorLanguagePar
       skipWhitespaceAndComment(lexer);
       return DOT == lexer.tokenType() && lexer.next() == null;
     }
-  }
 
-  private static void skipWhitespaceAndComment(ErlangLexer lexer) throws IOException {
-    ErlangToken t = lexer.next();
-    while (t == WHITESPACE || t == COMMENT) {
-      t = lexer.next();
+    private static void skipWhitespaceAndComment(ErlangLexer lexer) throws IOException {
+      ErlangToken t = lexer.next();
+      while (isWhitespaceOrComment(t)) {
+        t = lexer.next();
+      }
+    }
+
+    private static boolean isWhitespaceOrComment(ErlangToken token) {
+      return token == WHITESPACE || token == COMMENT;
     }
   }
 }
