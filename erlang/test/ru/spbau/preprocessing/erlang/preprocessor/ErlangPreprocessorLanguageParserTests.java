@@ -32,6 +32,16 @@ public class ErlangPreprocessorLanguageParserTests {
     assertEquals(fun2, result.get(2).getText());
   }
 
+  @Test
+  public void testAlternative() throws Exception {
+    String branch1 = "-ifdef(X).\nfoo() -> ok.\n";
+    String branch2 = "-else.\nfoo() -> ok.\n";
+    String endIf = "-endif.";
+    List<? extends PreprocessorLanguageNode> result = parse(branch1 + branch2 + endIf);
+    assertNotNull(result);
+    assertEquals(1, result.size());
+  }
+
   private List<? extends PreprocessorLanguageNode> parse(String text) throws IOException {
     return new ErlangPreprocessorLanguageParser().parse(text);
   }
