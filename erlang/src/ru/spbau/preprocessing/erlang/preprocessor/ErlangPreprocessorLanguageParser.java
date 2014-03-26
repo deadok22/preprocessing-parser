@@ -5,6 +5,7 @@ import ru.spbau.preprocessing.api.preprocessor.PreprocessorLanguageParser;
 import ru.spbau.preprocessing.erlang.ErlangLexer;
 import ru.spbau.preprocessing.erlang.ErlangToken;
 import ru.spbau.preprocessing.erlang.preprocessor.ast.ErlangInclusionAttribute;
+import ru.spbau.preprocessing.erlang.preprocessor.ast.ErlangMacroUndefinitionNode;
 import ru.spbau.preprocessing.erlang.preprocessor.ast.ErlangPreprocessorNode;
 
 import java.io.IOException;
@@ -61,8 +62,7 @@ public class ErlangPreprocessorLanguageParser implements PreprocessorLanguagePar
           return parseInclusion(lexer, ErlangInclusionAttribute.ErlangIncludeResolutionStrategy.INCLUDE_LIB);
         }
         else if ("undef".equals(attr)) {
-          //TODO
-          throw new UnsupportedOperationException("Not implemented");
+          return parseMacroUndefinition(lexer);
         }
         else if ("ifdef".equals(attr)) {
           //TODO
@@ -96,12 +96,29 @@ public class ErlangPreprocessorLanguageParser implements PreprocessorLanguagePar
       skipWhitespaceAndComment(lexer);
       if (STRING != lexer.tokenType()) return null;
       String includePath = myText.subSequence(lexer.tokenStartOffset() + 1, lexer.tokenEndOffset() - 1).toString();
+      return isRightParDotEndOfForm(lexer) ? new ErlangInclusionAttribute(myText, myFormStartOffset, myFormEndOffset, includePath, type) : null;
+    }
+
+    private ErlangMacroUndefinitionNode parseMacroUndefinition(ErlangLexer lexer) throws IOException {
+      String macroName = parseMacroNameAttribute(lexer);
+      return macroName != null ? new ErlangMacroUndefinitionNode(myText, myFormStartOffset, myFormEndOffset, macroName) : null;
+    }
+
+    private String parseMacroNameAttribute(ErlangLexer lexer) throws IOException {
       skipWhitespaceAndComment(lexer);
-      if (PAR_RIGHT != lexer.tokenType()) return null;
+      if (PAR_LEFT != lexer.tokenType()) return null;
       skipWhitespaceAndComment(lexer);
-      if (DOT != lexer.tokenType()) return null;
-      if (null != lexer.next()) return null;
-      return new ErlangInclusionAttribute(myText, myFormStartOffset, myFormEndOffset, includePath, type);
+      if (ATOM != lexer.tokenType() && VAR != lexer.tokenType()) return null;
+      //TODO quoted macro names
+      String macroName = lexer.yytext();
+      return isRightParDotEndOfForm(lexer) ? macroName : null;
+    }
+
+    private boolean isRightParDotEndOfForm(ErlangLexer lexer) throws IOException {
+      skipWhitespaceAndComment(lexer);
+      if (PAR_RIGHT != lexer.tokenType()) return false;
+      skipWhitespaceAndComment(lexer);
+      return DOT == lexer.tokenType() && lexer.next() == null;
     }
   }
 
