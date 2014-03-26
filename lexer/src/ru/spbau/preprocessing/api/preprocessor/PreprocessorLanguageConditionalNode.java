@@ -13,7 +13,7 @@ public interface PreprocessorLanguageConditionalNode extends PreprocessorLanguag
    *         cpp's #if ... #elif ... #else ... #end construct
    */
   PreprocessorLanguageCondition getConditionExpression();
-  List<PreprocessorLanguageNode> getCode();
+  List<? extends PreprocessorLanguageNode> getCode();
 
   /**
    * A preprocessor language condition for conditionally compiled block of code.

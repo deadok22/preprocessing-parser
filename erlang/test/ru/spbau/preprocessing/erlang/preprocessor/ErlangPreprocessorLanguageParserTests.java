@@ -13,7 +13,7 @@ public class ErlangPreprocessorLanguageParserTests {
   @Test
   public void testFunction() throws Exception {
     String fun = "foo() -> ok.";
-    List<PreprocessorLanguageNode> result = parse(fun);
+    List<? extends PreprocessorLanguageNode> result = parse(fun);
     assertNotNull(result);
     assertEquals(1, result.size());
     assertEquals(fun, result.get(0).getText());
@@ -24,7 +24,7 @@ public class ErlangPreprocessorLanguageParserTests {
     String fun1 = "foo() -> ok.";
     String endl = "\n";
     String fun2 = "bar() -> ok.";
-    List<PreprocessorLanguageNode> result = parse(fun1 + endl + fun2);
+    List<? extends PreprocessorLanguageNode> result = parse(fun1 + endl + fun2);
     assertNotNull(result);
     assertEquals(3, result.size());
     assertEquals(fun1, result.get(0).getText());
@@ -32,7 +32,7 @@ public class ErlangPreprocessorLanguageParserTests {
     assertEquals(fun2, result.get(2).getText());
   }
 
-  private List<PreprocessorLanguageNode> parse(String text) throws IOException {
+  private List<? extends PreprocessorLanguageNode> parse(String text) throws IOException {
     return new ErlangPreprocessorLanguageParser().parse(text);
   }
 }

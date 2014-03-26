@@ -11,6 +11,8 @@ import static ru.spbau.preprocessing.erlang.ErlangToken.*;
 
   // implementation of ru.spbau.preprocessing.api.LanguageLexer<ErlangToken>
 
+  private int myStartIndexInSourceBuffer;
+
   public void advance() throws IOException {
     myTokenType = next();
   }
@@ -20,22 +22,16 @@ import static ru.spbau.preprocessing.erlang.ErlangToken.*;
   }
 
   public int tokenStartOffset() {
-    return zzStartRead;
+    return myStartIndexInSourceBuffer + zzStartRead;
   }
 
   public int tokenEndOffset() {
-    return zzMarkedPos;
+    return myStartIndexInSourceBuffer + zzMarkedPos;
   }
 
-  //TODO make sure it works (it may not)
   public void start(CharSequence buffer, int start, int end) {
-    zzBuffer = buffer.toString().toCharArray();
-    zzCurrentPos = zzMarkedPos = zzStartRead = start;
-    zzAtEOF  = false;
-    zzAtBOL = true;
-    zzEndRead = end;
-    yybegin(YYINITIAL);
-    myTokenType = null;
+    myStartIndexInSourceBuffer = start;
+    yyreset(new java.io.StringReader(buffer.subSequence(start, end).toString()));
   }
 %}
 

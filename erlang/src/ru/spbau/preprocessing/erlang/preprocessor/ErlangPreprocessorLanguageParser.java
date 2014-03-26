@@ -1,6 +1,5 @@
 package ru.spbau.preprocessing.erlang.preprocessor;
 
-import ru.spbau.preprocessing.api.preprocessor.PreprocessorLanguageNode;
 import ru.spbau.preprocessing.api.preprocessor.PreprocessorLanguageParser;
 import ru.spbau.preprocessing.erlang.ErlangLexer;
 import ru.spbau.preprocessing.erlang.ErlangToken;
@@ -15,17 +14,60 @@ import static ru.spbau.preprocessing.erlang.ErlangToken.*;
 
 public class ErlangPreprocessorLanguageParser implements PreprocessorLanguageParser {
   @Override
-  public List<PreprocessorLanguageNode> parse(CharSequence text) throws IOException {
-    ArrayList<PreprocessorLanguageNode> parseResult = new ArrayList<PreprocessorLanguageNode>();
+  public List<ErlangPreprocessorNode> parse(CharSequence text) throws IOException {
     ErlangFormsLexer formsLexer = new ErlangFormsLexer(text);
-    SingleFormParser singleFormParser = new SingleFormParser();
+    return parseConditionalCode(text, formsLexer);
+  }
+
+  /**
+   * Parses forms until first occurrence of -else or -endif.
+   * Nested conditionals are parsed recursively.
+   */
+  private static List<ErlangPreprocessorNode> parseConditionalCode(CharSequence text, ErlangFormsLexer formsLexer) throws IOException {
+    ArrayList<ErlangPreprocessorNode> parseResult = new ArrayList<ErlangPreprocessorNode>();
     while (formsLexer.advance() != null) {
-      singleFormParser.reset(text, formsLexer.getFormStart(), formsLexer.getFormEnd());
-      //TODO try parse preprocessor directive
-      //no preprocessor directive parsed - this is a code node
-      parseResult.add(singleFormParser.parseCodeNode());
+      ErlangPreprocessorNode node = parseNode(text, formsLexer);
+      if (node instanceof ErlangConditionalAttributeNode) break;
+      if (node == null) return null;
+      parseResult.add(node);
     }
     return parseResult;
+  }
+
+  private static ErlangPreprocessorNode parseNode(CharSequence text, ErlangFormsLexer formsLexer) throws IOException {
+    SingleFormParser singleFormParser = new SingleFormParser();
+    singleFormParser.reset(text, formsLexer.getFormStart(), formsLexer.getFormEnd());
+    ErlangPreprocessorNode preprocessorAttribute = singleFormParser.parsePreprocessorAttribute();
+    // it's -ifdef or -ifndef
+    if (preprocessorAttribute instanceof ErlangMacroDefinedConditionAttributeNode) {
+      ErlangMacroDefinedConditionAttributeNode conditionalGuard = (ErlangMacroDefinedConditionAttributeNode) preprocessorAttribute;
+      return parseAlternatives(text, formsLexer, conditionalGuard);
+    }
+    else {
+      return preprocessorAttribute != null ? preprocessorAttribute : singleFormParser.parseCodeNode();
+    }
+  }
+
+  private static ErlangAlternativesNode parseAlternatives(CharSequence text, ErlangFormsLexer formsLexer,
+                                                          ErlangMacroDefinedConditionAttributeNode conditionalGuard) throws IOException {
+    ErlangConditionalNode conditionTrueBranch = new ErlangConditionalNode(conditionalGuard, parseConditionalCode(text, formsLexer));
+    ErlangConditionalAttributeNode elseOrEndIf = parseElseOrEndIfAttribute(text, formsLexer.getFormStart(), formsLexer.getFormEnd());
+    if (elseOrEndIf == null) return null; // ill-formed file
+    ErlangConditionalNode conditionFalseBranch = null;
+    if (elseOrEndIf.getType() == ErlangConditionalAttributeNode.Type.ELSE) {
+      conditionFalseBranch = new ErlangConditionalNode(elseOrEndIf, parseConditionalCode(text, formsLexer));
+      elseOrEndIf = parseElseOrEndIfAttribute(text, formsLexer.getFormStart(), formsLexer.getFormEnd());
+    }
+    return elseOrEndIf.getType() == ErlangConditionalAttributeNode.Type.ENDIF ?
+            new ErlangAlternativesNode(conditionTrueBranch, conditionFalseBranch, elseOrEndIf) :
+            null; //ill-formed
+  }
+
+  private static ErlangConditionalAttributeNode parseElseOrEndIfAttribute(CharSequence text, int formStartOffset, int formEndOffset) {
+    SingleFormParser singleFormParser = new SingleFormParser();
+    singleFormParser.reset(text, formStartOffset, formEndOffset);
+    ErlangPreprocessorNode attribute = singleFormParser.parsePreprocessorAttribute();
+    return (attribute instanceof ErlangConditionalAttributeNode) ? (ErlangConditionalAttributeNode) attribute : null;
   }
 
   private static final class SingleFormParser {
@@ -43,7 +85,7 @@ public class ErlangPreprocessorLanguageParser implements PreprocessorLanguagePar
       return new ErlangPreprocessorNode(myText, myFormStartOffset, myFormEndOffset);
     }
 
-    public ErlangPreprocessorNode parsePreprocessorAttribute(boolean insideAlternatives) {
+    public ErlangPreprocessorNode parsePreprocessorAttribute() {
       ErlangLexer lexer = new ErlangLexer((Reader) null);
       lexer.start(myText, myFormStartOffset, myFormEndOffset);
       try {
@@ -65,19 +107,17 @@ public class ErlangPreprocessorLanguageParser implements PreprocessorLanguagePar
         else if ("define".equals(attr)) {
           return parseMacroDefinition(lexer);
         }
-        else if (insideAlternatives) {
-          if ("ifdef".equals(attr)) {
-            return parseMacroDefinedCondition(lexer, true);
-          }
-          else if ("ifndef".equals(attr)) {
-            return parseMacroDefinedCondition(lexer, false);
-          }
-          else if ("else".equals(attr)) {
-            return parseElseOrEndif(lexer, ErlangConditionalAttributeNode.Type.ELSE);
-          }
-          else if ("endif".equals(attr)) {
-            return parseElseOrEndif(lexer, ErlangConditionalAttributeNode.Type.ENDIF);
-          }
+        else if ("ifdef".equals(attr)) {
+          return parseMacroDefinedCondition(lexer, true);
+        }
+        else if ("ifndef".equals(attr)) {
+          return parseMacroDefinedCondition(lexer, false);
+        }
+        else if ("else".equals(attr)) {
+          return parseElseOrEndif(lexer, ErlangConditionalAttributeNode.Type.ELSE);
+        }
+        else if ("endif".equals(attr)) {
+          return parseElseOrEndif(lexer, ErlangConditionalAttributeNode.Type.ENDIF);
         }
       } catch (IOException ignored) {
       }
@@ -85,7 +125,7 @@ public class ErlangPreprocessorLanguageParser implements PreprocessorLanguagePar
     }
 
     private ErlangInclusionAttributeNode parseInclusion(ErlangLexer lexer,
-                                                    ErlangInclusionAttributeNode.ErlangIncludeResolutionStrategy type) throws IOException {
+                                                        ErlangInclusionAttributeNode.ErlangIncludeResolutionStrategy type) throws IOException {
       skipWhitespaceAndComment(lexer);
       if (lexer.tokenType() != PAR_LEFT) return null;
       skipWhitespaceAndComment(lexer);

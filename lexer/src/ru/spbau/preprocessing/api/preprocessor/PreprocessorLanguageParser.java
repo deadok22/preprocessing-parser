@@ -8,5 +8,5 @@ import java.util.List;
  * It doesn't explicitly use LanguageLexer as preprocessor language may be described in a more sound way.
  */
 public interface PreprocessorLanguageParser {
-  List<PreprocessorLanguageNode> parse(CharSequence text) throws IOException;
+  List<? extends PreprocessorLanguageNode> parse(CharSequence text) throws IOException;
 }

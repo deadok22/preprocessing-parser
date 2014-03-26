@@ -33,4 +33,8 @@ public class ErlangPreprocessorNode implements PreprocessorLanguageNode {
   public void accept(PreprocessorLanguageNodeVisitor visitor) {
     visitor.visit(this);
   }
+
+  CharSequence getBuffer() {
+    return myBuffer;
+  }
 }

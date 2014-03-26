@@ -7,5 +7,5 @@ import java.util.List;
  * #ifdef ... #elif ... #endif
  */
 public interface PreprocessorLanguageAlternativesNode extends PreprocessorLanguageNode {
-  List<PreprocessorLanguageConditionalNode> getAlternatives();
+  List<? extends PreprocessorLanguageConditionalNode> getAlternatives();
 }
