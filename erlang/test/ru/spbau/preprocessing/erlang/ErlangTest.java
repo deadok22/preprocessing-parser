@@ -7,7 +7,8 @@ import ru.spbau.preprocessing.erlang.preprocessor.ErlangPreprocessorLanguagePars
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         ErlangFormsLexerTests.class,
-        ErlangPreprocessorLanguageParserTests.class
+        ErlangPreprocessorLanguageParserTests.class,
+        ErlangPreprocessingLexerTests.class
 })
 public class ErlangTest {
 }

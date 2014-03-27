@@ -21,6 +21,7 @@ public class PreprocessingLexer<TokenTypeBase> {
 
   public LexemeGraphNode buildLexemeGraph() throws IOException {
     List<? extends PreprocessorLanguageNode> preprocessorLanguageNodes = myLanguageProvider.createPreprocessorLanguageParser().parse(myText);
+    if (preprocessorLanguageNodes == null) return null;
     LexemeGraphBuilder<TokenTypeBase> lexemeGraphBuilder = new LexemeGraphBuilder<TokenTypeBase>();
     new LexingPreprocessorLanguageNodeVisitor(lexemeGraphBuilder).visitNodes(preprocessorLanguageNodes);
     return lexemeGraphBuilder.build();

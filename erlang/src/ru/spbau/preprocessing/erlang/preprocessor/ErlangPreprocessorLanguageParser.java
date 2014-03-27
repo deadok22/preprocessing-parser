@@ -58,7 +58,7 @@ public class ErlangPreprocessorLanguageParser implements PreprocessorLanguagePar
       conditionFalseBranch = new ErlangConditionalNode(elseOrEndIf, parseConditionalCode(text, formsLexer));
       elseOrEndIf = parseElseOrEndIfAttribute(text, formsLexer.getFormStart(), formsLexer.getFormEnd());
     }
-    return elseOrEndIf.getType() == ErlangConditionalAttributeNode.Type.ENDIF ?
+    return elseOrEndIf != null && elseOrEndIf.getType() == ErlangConditionalAttributeNode.Type.ENDIF ?
             new ErlangAlternativesNode(conditionTrueBranch, conditionFalseBranch, elseOrEndIf) :
             null; //ill-formed
   }

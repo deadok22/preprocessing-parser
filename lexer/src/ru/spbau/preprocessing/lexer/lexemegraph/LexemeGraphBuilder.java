@@ -28,11 +28,15 @@ public class LexemeGraphBuilder<TokenTypeBase> {
 
   public List<LexemeGraphBuilder<TokenTypeBase>> fork(int alternativesCount) {
     completeLangNode();
-    LexemeGraphForkNode forkNode = new LexemeGraphForkNode(new ArrayList<LexemeGraphNode>(alternativesCount));
+    ArrayList<LexemeGraphNode> childNodes = new ArrayList<LexemeGraphNode>(alternativesCount);
+    for (int i = 0; i < alternativesCount; i++) {
+      childNodes.add(null);
+    }
+    LexemeGraphForkNode forkNode = new LexemeGraphForkNode(childNodes);
     completeNode(forkNode);
     List<LexemeGraphBuilder<TokenTypeBase>> branchBuilders = new ArrayList<LexemeGraphBuilder<TokenTypeBase>>(alternativesCount);
     for (int i = 0; i < alternativesCount; i++) {
-      branchBuilders.set(i, new LexemeGraphBuilder<TokenTypeBase>(forkNode, i));
+      branchBuilders.add(new LexemeGraphBuilder<TokenTypeBase>(forkNode, i));
     }
     //TODO track branch builders' completion
     return branchBuilders;
