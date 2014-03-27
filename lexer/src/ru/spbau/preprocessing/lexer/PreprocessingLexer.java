@@ -60,7 +60,7 @@ public class PreprocessingLexer<TokenTypeBase> {
     }
 
     @Override
-    public void visitMacroUndefinition(PreprocessorLanguageMacroDefinitionNode node) {
+    public void visitMacroUndefinition(PreprocessorLanguageMacroUndefinitionNode node) {
       //TODO
     }
 
@@ -71,7 +71,7 @@ public class PreprocessingLexer<TokenTypeBase> {
       for (int i = 0; i < alternatives.size(); i++) {
         LexemeGraphBuilder<TokenTypeBase> forkBuilder = forkBuilders.get(i);
         PreprocessorLanguageConditionalNode conditional = alternatives.get(i);
-        new LexingPreprocessorLanguageNodeVisitor(forkBuilder).visitConditionalNode(conditional);
+        new LexingPreprocessorLanguageNodeVisitor(forkBuilder).visitConditional(conditional);
         forkBuilder.build();
       }
     }
@@ -82,7 +82,7 @@ public class PreprocessingLexer<TokenTypeBase> {
     }
 
     @Override
-    public void visitConditionalNode(PreprocessorLanguageConditionalNode node) {
+    public void visitConditional(PreprocessorLanguageConditionalNode node) {
       visitNodes(node.getCode());
     }
   }

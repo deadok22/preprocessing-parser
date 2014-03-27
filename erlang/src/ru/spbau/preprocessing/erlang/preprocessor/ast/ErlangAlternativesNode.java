@@ -1,6 +1,7 @@
 package ru.spbau.preprocessing.erlang.preprocessor.ast;
 
 import ru.spbau.preprocessing.api.preprocessor.PreprocessorLanguageAlternativesNode;
+import ru.spbau.preprocessing.api.preprocessor.PreprocessorLanguageNodeVisitor;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -24,5 +25,10 @@ public class ErlangAlternativesNode extends ErlangPreprocessorNode
     return myAlternativeBranch == null ?
             Collections.singletonList(myConditionTrueBranch) :
             Arrays.asList(myConditionTrueBranch, myAlternativeBranch);
+  }
+
+  @Override
+  public void accept(PreprocessorLanguageNodeVisitor visitor) {
+    visitor.visitAlternatives(this);
   }
 }

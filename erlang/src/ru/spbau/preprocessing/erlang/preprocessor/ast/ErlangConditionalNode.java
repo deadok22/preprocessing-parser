@@ -1,6 +1,7 @@
 package ru.spbau.preprocessing.erlang.preprocessor.ast;
 
 import ru.spbau.preprocessing.api.preprocessor.PreprocessorLanguageConditionalNode;
+import ru.spbau.preprocessing.api.preprocessor.PreprocessorLanguageNodeVisitor;
 
 import java.util.List;
 
@@ -29,5 +30,10 @@ public class ErlangConditionalNode extends ErlangPreprocessorNode
   @Override
   public List<ErlangPreprocessorNode> getCode() {
     return myCode;
+  }
+
+  @Override
+  public void accept(PreprocessorLanguageNodeVisitor visitor) {
+    visitor.visitConditional(this);
   }
 }

@@ -1,6 +1,7 @@
 package ru.spbau.preprocessing.erlang.preprocessor.ast;
 
 import ru.spbau.preprocessing.api.preprocessor.PreprocessorLanguageMacroUndefinitionNode;
+import ru.spbau.preprocessing.api.preprocessor.PreprocessorLanguageNodeVisitor;
 
 public class ErlangMacroUndefinitionNode extends ErlangPreprocessorNode
         implements PreprocessorLanguageMacroUndefinitionNode {
@@ -14,5 +15,10 @@ public class ErlangMacroUndefinitionNode extends ErlangPreprocessorNode
   @Override
   public String getName() {
     return myMacroName;
+  }
+
+  @Override
+  public void accept(PreprocessorLanguageNodeVisitor visitor) {
+    visitor.visitMacroUndefinition(this);
   }
 }

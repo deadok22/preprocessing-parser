@@ -1,6 +1,7 @@
 package ru.spbau.preprocessing.erlang.preprocessor.ast;
 
 import ru.spbau.preprocessing.api.preprocessor.PreprocessorLanguageMacroDefinitionNode;
+import ru.spbau.preprocessing.api.preprocessor.PreprocessorLanguageNodeVisitor;
 
 import java.util.List;
 
@@ -40,5 +41,10 @@ public class ErlangMacroDefinitionNode extends ErlangPreprocessorNode
   public String getSubstitution(List<String> macroArguments) {
     //TODO
     throw new UnsupportedOperationException("Not implemented");
+  }
+
+  @Override
+  public void accept(PreprocessorLanguageNodeVisitor visitor) {
+    visitor.visitMacroDefinition(this);
   }
 }
