@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
 
 public class ErlangPreprocessingLexerTests {
   @Test
-  public void testSomething() throws Exception {
+  public void testSimpleConditional() throws Exception {
     String ifdef = "-ifdef(FOO).";
     String condTrue = "\nfoo() -> ok.\n";
     String elze = "-else.";
