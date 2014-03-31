@@ -7,7 +7,7 @@ package ru.spbau.preprocessing.api.conditions;
 public interface PresenceCondition {
   PresenceCondition and(PresenceCondition presenceCondition);
   PresenceCondition or(PresenceCondition presenceCondition);
-  PresenceCondition not(PresenceCondition presenceCondition);
+  PresenceCondition not();
   Value evaluate(MacroDefinitionsTable mdt);
 
   /**
@@ -21,6 +21,14 @@ public interface PresenceCondition {
     /**
      * A presence condition's value depends on free macros
      */
-    VARIANCE
+    VARIANCE;
+
+    public Value not() {
+      switch (this) {
+        case TRUE: return FALSE;
+        case FALSE: return TRUE;
+        default : return VARIANCE;
+      }
+    }
   }
 }
