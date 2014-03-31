@@ -19,19 +19,4 @@ public interface PreprocessorLanguageConditionalNode extends PreprocessorLanguag
    * A preprocessor language condition for conditionally compiled block of code.
    */
   public interface PreprocessorLanguageCondition {}
-
-  /**
-   * Macro defined condition for conditionally compiled block of code.
-   */
-  public interface PreprocessorLanguageMacroDefinedCondition extends PreprocessorLanguageCondition {
-    String getMacroName();
-
-    /**
-     * A macro defined condition is positive if it corresponds to
-     * cpp's #ifdef or Erlang's -ifdef construct.
-     *
-     * @return true if it is a positive macro defined condition.
-     */
-    boolean isPositiveCondition();
-  }
 }

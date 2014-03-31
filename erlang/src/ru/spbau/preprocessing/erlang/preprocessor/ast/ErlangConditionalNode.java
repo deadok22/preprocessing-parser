@@ -23,7 +23,7 @@ public class ErlangConditionalNode extends ErlangPreprocessorNode
   @Override
   public PreprocessorLanguageCondition getConditionExpression() {
     return myConditionalAttribute instanceof ErlangMacroDefinedConditionAttributeNode ?
-            (ErlangMacroDefinedConditionAttributeNode) myConditionalAttribute :
+            ((ErlangMacroDefinedConditionAttributeNode) myConditionalAttribute) :
             null;
   }
 

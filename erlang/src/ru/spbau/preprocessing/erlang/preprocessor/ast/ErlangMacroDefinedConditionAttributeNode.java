@@ -3,7 +3,7 @@ package ru.spbau.preprocessing.erlang.preprocessor.ast;
 import ru.spbau.preprocessing.api.preprocessor.PreprocessorLanguageConditionalNode;
 
 public class ErlangMacroDefinedConditionAttributeNode extends ErlangConditionalAttributeNodeBase
-        implements PreprocessorLanguageConditionalNode.PreprocessorLanguageMacroDefinedCondition {
+  implements PreprocessorLanguageConditionalNode.PreprocessorLanguageCondition {
   private final String myMacroName;
   private final boolean myIsPositive;
 
@@ -14,12 +14,10 @@ public class ErlangMacroDefinedConditionAttributeNode extends ErlangConditionalA
     myIsPositive = isPositive;
   }
 
-  @Override
   public String getMacroName() {
     return myMacroName;
   }
 
-  @Override
   public boolean isPositiveCondition() {
     return myIsPositive;
   }
