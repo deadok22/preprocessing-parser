@@ -2,6 +2,8 @@ package ru.spbau.preprocessing.erlang.conditions;
 
 import ru.spbau.preprocessing.api.conditions.PresenceCondition;
 
+//TODO handle cases like x & !x, x or !x
+//TODO or switch to using BDDs
 public class ErlangPresenceCondition implements PresenceCondition {
   public static final ErlangPresenceCondition TRUE = new ErlangPresenceCondition(Value.TRUE);
   public static final ErlangPresenceCondition FALSE = new ErlangPresenceCondition(Value.FALSE);
