@@ -1,5 +1,5 @@
 package ru.spbau.preprocessing.api.conditions;
 
 public interface MacroDefinitionsTable {
-  MacroDefinitionState getMacroDefinitionState(String macroName);
+  MacroDefinitionState getMacroDefinitionState(String macroName, ConditionalContext context);
 }

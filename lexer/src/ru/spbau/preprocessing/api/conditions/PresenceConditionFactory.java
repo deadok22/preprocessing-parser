@@ -10,5 +10,5 @@ public interface PresenceConditionFactory {
   /**
    * Returned presence condition's value should be computed exactly once and before this method returns.
    */
-  PresenceCondition create(PreprocessorLanguageConditionalNode.PreprocessorLanguageCondition langCondition, MacroDefinitionsTable mdt);
+  PresenceCondition create(PreprocessorLanguageConditionalNode.PreprocessorLanguageCondition langCondition, ConditionalContext containingContext);
 }
