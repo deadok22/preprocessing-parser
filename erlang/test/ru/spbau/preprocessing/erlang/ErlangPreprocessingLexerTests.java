@@ -19,9 +19,11 @@ public class ErlangPreprocessingLexerTests {
   public TestName myTestName = new TestName();
 
   //tests without macro substitution
-  @Test public void freeMacro()                throws Exception { doTest(); }
-  @Test public void definedMacro()             throws Exception { doTest(); }
-  @Test public void undefinedMacro()           throws Exception { doTest(); }
+  @Test public void freeMacro()                  throws Exception { doTest(); }
+  @Test public void definedMacro()               throws Exception { doTest(); }
+  @Test public void undefinedMacro()             throws Exception { doTest(); }
+  @Test public void definitionDefinesMacro()     throws Exception { doTest(); }
+  @Test public void undefinitionUndefinesMacro() throws Exception { doTest(); }
 
   private static final String TEST_DATA_PATH = "erlang/testData/preprocessingLexer/";
 

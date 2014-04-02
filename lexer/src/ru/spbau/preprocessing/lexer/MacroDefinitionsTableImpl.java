@@ -11,9 +11,10 @@ import ru.spbau.preprocessing.api.preprocessor.PreprocessorLanguageMacroUndefini
 
 import java.util.EnumSet;
 import java.util.List;
+import java.util.ListIterator;
 
 public class MacroDefinitionsTableImpl implements MacroDefinitionsTable {
-  private final ListMultimap<String, Entry> myTable = ArrayListMultimap.create();
+  private final ListMultimap<String, Entry> myTable = LinkedListMultimap.create();
 
   @Override
   public MacroDefinitionState getMacroDefinitionState(String macroName, ConditionalContext context) {
@@ -32,13 +33,38 @@ public class MacroDefinitionsTableImpl implements MacroDefinitionsTable {
   }
 
   public void undefine(PreprocessorLanguageMacroUndefinitionNode undefinition, PresenceCondition presenceCondition) {
-    //TODO maintain consistency
+    updateEntriesBeforeUndefinition(undefinition.getName(), presenceCondition);
+    //TODO check if a FREE entry should be added as well
     putEntry(newEntry(undefinition, presenceCondition));
   }
 
   public void define(PreprocessorLanguageMacroDefinitionNode definition, PresenceCondition presenceCondition) {
-    //TODO maintain consistency
+    updateEntriesBeforeDefinition(definition.getName(), definition.getArity(), presenceCondition);
+    //TODO check if a FREE entry should be added as well
     putEntry(newEntry(definition, presenceCondition));
+  }
+
+  private void updateEntriesBeforeDefinition(String macroName, int arity, PresenceCondition definitionPresenceCondition) {
+    updateEntries(macroName, arity, true, definitionPresenceCondition);
+  }
+
+  private void updateEntriesBeforeUndefinition(String macroName, PresenceCondition undefinitionPresenceCondition) {
+    updateEntries(macroName, 0, false, undefinitionPresenceCondition);
+  }
+
+  private void updateEntries(String macroName, int macroArity, boolean arityIsSignificant, PresenceCondition definitionPresenceCondition) {
+    PresenceCondition negationOfDefinitionPresenceCondition = definitionPresenceCondition.not();
+    List<Entry> allEntries = myTable.get(macroName);
+    for (ListIterator<Entry> i = allEntries.listIterator(); i.hasNext(); ) {
+      Entry entry = i.next();
+      if (arityIsSignificant &&
+              entry instanceof DefinedEntry &&
+              ((DefinedEntry) entry).arity() != macroArity) continue;
+      entry.setPresenceCondition(entry.getPresenceCondition().and(negationOfDefinitionPresenceCondition));
+      if (entry.getPresenceCondition().value() == PresenceCondition.Value.FALSE) {
+        i.remove();
+      }
+    }
   }
 
   /**
@@ -48,7 +74,7 @@ public class MacroDefinitionsTableImpl implements MacroDefinitionsTable {
     return Lists.newArrayList(Collections2.filter(myTable.get(macroName), new Predicate<Entry>() {
       @Override
       public boolean apply(Entry entry) {
-        return entry.presenceCondition().and(presenceCondition).value() != PresenceCondition.Value.FALSE;
+        return entry.getPresenceCondition().and(presenceCondition).value() != PresenceCondition.Value.FALSE;
       }
     }));
   }
@@ -70,7 +96,7 @@ public class MacroDefinitionsTableImpl implements MacroDefinitionsTable {
   }
 
   public static abstract class Entry {
-    private final PresenceCondition myPresenceCondition;
+    private PresenceCondition myPresenceCondition;
 
     protected Entry(PresenceCondition presenceCondition) {
       myPresenceCondition = presenceCondition;
@@ -79,8 +105,12 @@ public class MacroDefinitionsTableImpl implements MacroDefinitionsTable {
     public abstract MacroDefinitionState type();
     public abstract String macroName();
 
-    public final PresenceCondition presenceCondition() {
+    public final PresenceCondition getPresenceCondition() {
       return myPresenceCondition;
+    }
+
+    public void setPresenceCondition(PresenceCondition presenceCondition) {
+      myPresenceCondition = presenceCondition;
     }
   }
 

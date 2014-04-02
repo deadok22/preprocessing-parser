@@ -1,0 +1,16 @@
+LANG   TRUE   TRUE
+ Lexeme: WHITESPACE
+ Lexeme: WHITESPACE
+FORK   TRUE   TRUE
+ BRANCH   ((TRUE & TRUE) & (is_defined X))   TRUE
+  LANG   ((TRUE & TRUE) & (is_defined X))   TRUE
+   Lexeme: WHITESPACE
+   Lexeme: ATOM
+   Lexeme: PAR_LEFT
+   Lexeme: PAR_RIGHT
+   Lexeme: WHITESPACE
+   Lexeme: ARROW
+   Lexeme: WHITESPACE
+   Lexeme: ATOM
+   Lexeme: DOT
+   Lexeme: WHITESPACE
