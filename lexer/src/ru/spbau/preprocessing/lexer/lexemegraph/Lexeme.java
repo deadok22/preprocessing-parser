@@ -25,4 +25,9 @@ public class Lexeme<TokenTypeBase> {
   public int hashCode() {
     return myType.hashCode();
   }
+
+  @Override
+  public String toString() {
+    return "Lexeme: " + String.valueOf(myType);
+  }
 }

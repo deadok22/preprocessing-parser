@@ -1,0 +1,27 @@
+LANG   TRUE   TRUE
+ Lexeme: WHITESPACE
+FORK   TRUE   TRUE
+ BRANCH   ((TRUE & TRUE) & (is_defined UNDEFINED_MACRO))   FALSE
+  LANG   ((TRUE & TRUE) & (is_defined UNDEFINED_MACRO))   FALSE
+   Lexeme: WHITESPACE
+   Lexeme: ATOM
+   Lexeme: PAR_LEFT
+   Lexeme: PAR_RIGHT
+   Lexeme: WHITESPACE
+   Lexeme: ARROW
+   Lexeme: WHITESPACE
+   Lexeme: ATOM
+   Lexeme: DOT
+   Lexeme: WHITESPACE
+ BRANCH   ((TRUE & (TRUE & ! (is_defined UNDEFINED_MACRO))) & TRUE)   TRUE
+  LANG   ((TRUE & (TRUE & ! (is_defined UNDEFINED_MACRO))) & TRUE)   TRUE
+   Lexeme: WHITESPACE
+   Lexeme: ATOM
+   Lexeme: PAR_LEFT
+   Lexeme: PAR_RIGHT
+   Lexeme: WHITESPACE
+   Lexeme: ARROW
+   Lexeme: WHITESPACE
+   Lexeme: ATOM
+   Lexeme: DOT
+   Lexeme: WHITESPACE

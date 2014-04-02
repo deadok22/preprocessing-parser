@@ -16,4 +16,9 @@ public class LexemeGraphLangNode<TokenTypeBase> extends LexemeGraphNode {
   public List<Lexeme<TokenTypeBase>> getLexemes() {
     return Collections.unmodifiableList(myLexemes);
   }
+
+  @Override
+  public void acceptSingleNode(LexemeGraphVisitor visitor) {
+    visitor.visitLangNode(this);
+  }
 }

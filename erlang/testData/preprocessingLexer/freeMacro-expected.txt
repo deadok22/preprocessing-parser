@@ -1,0 +1,25 @@
+FORK   TRUE   TRUE
+ BRANCH   ((TRUE & TRUE) & (is_defined FREE_MACRO))   VARIANCE
+  LANG   ((TRUE & TRUE) & (is_defined FREE_MACRO))   VARIANCE
+   Lexeme: WHITESPACE
+   Lexeme: ATOM
+   Lexeme: PAR_LEFT
+   Lexeme: PAR_RIGHT
+   Lexeme: WHITESPACE
+   Lexeme: ARROW
+   Lexeme: WHITESPACE
+   Lexeme: ATOM
+   Lexeme: DOT
+   Lexeme: WHITESPACE
+ BRANCH   ((TRUE & (TRUE & ! (is_defined FREE_MACRO))) & TRUE)   VARIANCE
+  LANG   ((TRUE & (TRUE & ! (is_defined FREE_MACRO))) & TRUE)   VARIANCE
+   Lexeme: WHITESPACE
+   Lexeme: ATOM
+   Lexeme: PAR_LEFT
+   Lexeme: PAR_RIGHT
+   Lexeme: WHITESPACE
+   Lexeme: ARROW
+   Lexeme: WHITESPACE
+   Lexeme: ATOM
+   Lexeme: DOT
+   Lexeme: WHITESPACE

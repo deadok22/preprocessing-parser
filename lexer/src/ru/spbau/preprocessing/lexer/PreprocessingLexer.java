@@ -37,6 +37,7 @@ public class PreprocessingLexer<TokenTypeBase> {
     public LexingPreprocessorLanguageNodeVisitor(ConditionalContextImpl context, LexemeGraphBuilder<TokenTypeBase> lexemeGraphBuilder) {
       myContext = context;
       myLexemeGraphBuilder = lexemeGraphBuilder;
+      myLexemeGraphBuilder.setNodePresenceCondition(context.getCurrentPresenceCondition());
     }
 
     @Override

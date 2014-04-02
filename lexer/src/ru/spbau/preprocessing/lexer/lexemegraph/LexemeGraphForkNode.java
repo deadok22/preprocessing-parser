@@ -20,4 +20,9 @@ public class LexemeGraphForkNode extends LexemeGraphNode {
   void setChild(int childIdx, LexemeGraphNode node) {
     myChildren.set(childIdx, node);
   }
+
+  @Override
+  public void acceptSingleNode(LexemeGraphVisitor visitor) {
+    visitor.visitForkNode(this);
+  }
 }
