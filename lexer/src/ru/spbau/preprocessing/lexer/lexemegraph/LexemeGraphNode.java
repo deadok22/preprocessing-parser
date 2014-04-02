@@ -1,9 +1,13 @@
 package ru.spbau.preprocessing.lexer.lexemegraph;
 
+import ru.spbau.preprocessing.api.conditions.PresenceCondition;
+
 public class LexemeGraphNode {
+  private final PresenceCondition myPresenceCondition;
   private LexemeGraphNode myNextNode;
 
-  public LexemeGraphNode() {
+  public LexemeGraphNode(PresenceCondition presenceCondition) {
+    myPresenceCondition = presenceCondition;
   }
 
   public LexemeGraphNode next() {

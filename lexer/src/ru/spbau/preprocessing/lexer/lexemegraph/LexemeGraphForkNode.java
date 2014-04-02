@@ -1,12 +1,15 @@
 package ru.spbau.preprocessing.lexer.lexemegraph;
 
+import ru.spbau.preprocessing.api.conditions.PresenceCondition;
+
 import java.util.Collections;
 import java.util.List;
 
 public class LexemeGraphForkNode extends LexemeGraphNode {
   private final List<LexemeGraphNode> myChildren;
 
-  public LexemeGraphForkNode(List<LexemeGraphNode> children) {
+  public LexemeGraphForkNode(PresenceCondition presenceCondition, List<LexemeGraphNode> children) {
+    super(presenceCondition);
     myChildren = children;
   }
 

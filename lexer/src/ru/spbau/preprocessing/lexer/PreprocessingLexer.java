@@ -2,6 +2,8 @@ package ru.spbau.preprocessing.lexer;
 
 import ru.spbau.preprocessing.api.LanguageLexer;
 import ru.spbau.preprocessing.api.LanguageProvider;
+import ru.spbau.preprocessing.api.conditions.PresenceCondition;
+import ru.spbau.preprocessing.api.conditions.PresenceConditionFactory;
 import ru.spbau.preprocessing.api.preprocessor.*;
 import ru.spbau.preprocessing.lexer.lexemegraph.Lexeme;
 import ru.spbau.preprocessing.lexer.lexemegraph.LexemeGraphBuilder;
@@ -23,19 +25,23 @@ public class PreprocessingLexer<TokenTypeBase> {
     List<? extends PreprocessorLanguageNode> preprocessorLanguageNodes = myLanguageProvider.createPreprocessorLanguageParser().parse(myText);
     if (preprocessorLanguageNodes == null) return null;
     LexemeGraphBuilder<TokenTypeBase> lexemeGraphBuilder = new LexemeGraphBuilder<TokenTypeBase>();
-    new LexingPreprocessorLanguageNodeVisitor(lexemeGraphBuilder).visitNodes(preprocessorLanguageNodes);
+    ConditionalContextImpl rootContext = new ConditionalContextImpl(myLanguageProvider.createPresenceConditionFactory());
+    new LexingPreprocessorLanguageNodeVisitor(rootContext, lexemeGraphBuilder).visitNodes(preprocessorLanguageNodes);
     return lexemeGraphBuilder.build();
   }
 
   private class LexingPreprocessorLanguageNodeVisitor extends PreprocessorLanguageNodeVisitor {
+    private final ConditionalContextImpl myContext;
     private final LexemeGraphBuilder<TokenTypeBase> myLexemeGraphBuilder;
 
-    public LexingPreprocessorLanguageNodeVisitor(LexemeGraphBuilder<TokenTypeBase> lexemeGraphBuilder) {
+    public LexingPreprocessorLanguageNodeVisitor(ConditionalContextImpl context, LexemeGraphBuilder<TokenTypeBase> lexemeGraphBuilder) {
+      myContext = context;
       myLexemeGraphBuilder = lexemeGraphBuilder;
     }
 
     @Override
     public void visit(PreprocessorLanguageNode node) {
+      myLexemeGraphBuilder.setNodePresenceCondition(myContext.getCurrentPresenceCondition());
       LanguageLexer<TokenTypeBase> langLexer = myLanguageProvider.createLanguageLexer();
       langLexer.start(myText, node.getStartOffset(), node.getStartOffset() + node.getLength());
       try {
@@ -57,23 +63,33 @@ public class PreprocessingLexer<TokenTypeBase> {
 
     @Override
     public void visitMacroDefinition(PreprocessorLanguageMacroDefinitionNode node) {
-      //TODO
+      myContext.defineMacro(node);
     }
 
     @Override
     public void visitMacroUndefinition(PreprocessorLanguageMacroUndefinitionNode node) {
-      //TODO
+      myContext.undefineMacro(node);
     }
 
     @Override
     public void visitAlternatives(PreprocessorLanguageAlternativesNode node) {
       List<? extends PreprocessorLanguageConditionalNode> alternatives = node.getAlternatives();
       List<LexemeGraphBuilder<TokenTypeBase>> forkBuilders = myLexemeGraphBuilder.fork(alternatives.size());
+      PresenceConditionFactory presenceConditionFactory = myLanguageProvider.createPresenceConditionFactory();
+      PresenceCondition negationOfPreviousBranchGuards = presenceConditionFactory.getTrue();
       for (int i = 0; i < alternatives.size(); i++) {
         LexemeGraphBuilder<TokenTypeBase> forkBuilder = forkBuilders.get(i);
         PreprocessorLanguageConditionalNode conditional = alternatives.get(i);
-        new LexingPreprocessorLanguageNodeVisitor(forkBuilder).visitConditional(conditional);
+        PreprocessorLanguageConditionalNode.PreprocessorLanguageCondition branchGuardExpression = conditional.getConditionExpression();
+        PresenceCondition branchGuard = branchGuardExpression != null ?
+                presenceConditionFactory.create(branchGuardExpression, myContext) :
+                presenceConditionFactory.getTrue();
+        ConditionalContextImpl forkConditionalContext = myContext.copy()
+                .andCondition(negationOfPreviousBranchGuards)
+                .andCondition(branchGuard);
+        new LexingPreprocessorLanguageNodeVisitor(forkConditionalContext, forkBuilder).visitConditional(conditional);
         forkBuilder.build();
+        negationOfPreviousBranchGuards = negationOfPreviousBranchGuards.and(branchGuard.not());
       }
     }
 

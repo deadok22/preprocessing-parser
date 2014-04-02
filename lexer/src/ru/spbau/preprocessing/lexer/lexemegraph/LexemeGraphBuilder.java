@@ -1,5 +1,7 @@
 package ru.spbau.preprocessing.lexer.lexemegraph;
 
+import ru.spbau.preprocessing.api.conditions.PresenceCondition;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +13,8 @@ public class LexemeGraphBuilder<TokenTypeBase> {
   private LexemeGraphNode myLastNode;
 
   private List<Lexeme<TokenTypeBase>> myLexemeBuffer;
+
+  private PresenceCondition myCurrentNodePresenceCondition;
 
   public LexemeGraphBuilder() {
     this(null, -1);
@@ -26,13 +30,17 @@ public class LexemeGraphBuilder<TokenTypeBase> {
     myLexemeBuffer.add(lexeme);
   }
 
+  public void setNodePresenceCondition(PresenceCondition presenceCondition) {
+    myCurrentNodePresenceCondition = presenceCondition;
+  }
+
   public List<LexemeGraphBuilder<TokenTypeBase>> fork(int alternativesCount) {
     completeLangNode();
     ArrayList<LexemeGraphNode> childNodes = new ArrayList<LexemeGraphNode>(alternativesCount);
     for (int i = 0; i < alternativesCount; i++) {
       childNodes.add(null);
     }
-    LexemeGraphForkNode forkNode = new LexemeGraphForkNode(childNodes);
+    LexemeGraphForkNode forkNode = new LexemeGraphForkNode(myCurrentNodePresenceCondition, childNodes);
     completeNode(forkNode);
     List<LexemeGraphBuilder<TokenTypeBase>> branchBuilders = new ArrayList<LexemeGraphBuilder<TokenTypeBase>>(alternativesCount);
     for (int i = 0; i < alternativesCount; i++) {
@@ -58,7 +66,7 @@ public class LexemeGraphBuilder<TokenTypeBase> {
 
   private void completeLangNode() {
     if (myLexemeBuffer == null) return;
-    completeNode(new LexemeGraphLangNode<TokenTypeBase>(myLexemeBuffer));
+    completeNode(new LexemeGraphLangNode<TokenTypeBase>(myCurrentNodePresenceCondition, myLexemeBuffer));
     myLexemeBuffer = null;
   }
 
