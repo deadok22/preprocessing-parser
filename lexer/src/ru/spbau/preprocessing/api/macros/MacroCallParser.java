@@ -7,4 +7,5 @@ public interface MacroCallParser<TokenTypeBase> {
   void consumeLexeme(Lexeme<TokenTypeBase> lexeme);
   MacroCallParserState getState();
   MacroCall<TokenTypeBase> getParsedCall();
+  MacroCallParser<TokenTypeBase> copy();
 }

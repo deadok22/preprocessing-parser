@@ -1,16 +1,20 @@
 package ru.spbau.preprocessing.lexer;
 
+import com.google.common.collect.Queues;
 import ru.spbau.preprocessing.api.LanguageLexer;
 import ru.spbau.preprocessing.api.LanguageProvider;
 import ru.spbau.preprocessing.api.conditions.PresenceCondition;
 import ru.spbau.preprocessing.api.conditions.PresenceConditionFactory;
+import ru.spbau.preprocessing.api.macros.MacroCall;
+import ru.spbau.preprocessing.api.macros.MacroCallParser;
+import ru.spbau.preprocessing.api.macros.MacroCallParserState;
 import ru.spbau.preprocessing.api.preprocessor.*;
 import ru.spbau.preprocessing.lexer.lexemegraph.Lexeme;
 import ru.spbau.preprocessing.lexer.lexemegraph.LexemeGraphBuilder;
 import ru.spbau.preprocessing.lexer.lexemegraph.LexemeGraphNode;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.*;
 
 public class PreprocessingLexer<TokenTypeBase> {
   private final LanguageProvider<TokenTypeBase> myLanguageProvider;
@@ -34,10 +38,16 @@ public class PreprocessingLexer<TokenTypeBase> {
     private final ConditionalContextImpl myContext;
     private final LexemeGraphBuilder<TokenTypeBase> myLexemeGraphBuilder;
 
+    private final MacroCallMultiParser myMacroCallMultiParser;
+    private final Queue<Lexeme<TokenTypeBase>> myLookAheadBuffer;
+
+
     public LexingPreprocessorLanguageNodeVisitor(ConditionalContextImpl context, LexemeGraphBuilder<TokenTypeBase> lexemeGraphBuilder) {
       myContext = context;
       myLexemeGraphBuilder = lexemeGraphBuilder;
       myLexemeGraphBuilder.setNodePresenceCondition(context.getCurrentPresenceCondition());
+      myMacroCallMultiParser = new MacroCallMultiParser();
+      myLookAheadBuffer = Queues.newArrayDeque();
     }
 
     @Override
@@ -48,7 +58,24 @@ public class PreprocessingLexer<TokenTypeBase> {
       try {
         for (langLexer.advance(); langLexer.tokenType() != null; langLexer.advance()) {
           Lexeme<TokenTypeBase> lexeme = new Lexeme<TokenTypeBase>(langLexer.tokenType());
-          myLexemeGraphBuilder.addLexeme(lexeme);
+          myLookAheadBuffer.add(lexeme);
+          if (myMacroCallMultiParser.needMoreTokens()) {
+            myMacroCallMultiParser.consumeLexeme(lexeme);
+          }
+          if (!myMacroCallMultiParser.needMoreTokens()) {
+            Collection<MacroCall<TokenTypeBase>> macroCalls = myMacroCallMultiParser.getParsedMacroCalls();
+            if (macroCalls.isEmpty()) {
+              myLexemeGraphBuilder.addLexeme(myLookAheadBuffer.poll());
+              myMacroCallMultiParser.reset();
+              //TODO reset the multiparser and feed it tokens from the buffer
+            }
+            else if (macroCalls.size() == 1) {
+              //TODO resolve a macro and decide whether to add a conditional or not
+            }
+            else {
+              //TODO fork for each macro call which resolves to something
+            }
+          }
         }
       } catch (IOException e) {
         e.printStackTrace();
@@ -102,6 +129,42 @@ public class PreprocessingLexer<TokenTypeBase> {
     @Override
     public void visitConditional(PreprocessorLanguageConditionalNode node) {
       visitNodes(node.getCode());
+    }
+
+    private class MacroCallMultiParser {
+      private final Collection<MacroCallParser<TokenTypeBase>> myMacroCallParsers =
+              myLanguageProvider.createMacroCallParsers();
+
+      public void reset() {
+        for (MacroCallParser<TokenTypeBase> parser : myMacroCallParsers) {
+          parser.reset();
+        }
+      }
+
+      public boolean needMoreTokens() {
+        for (MacroCallParser<TokenTypeBase> parser : myMacroCallParsers) {
+          if (parser.getState() == MacroCallParserState.PARSING) return true;
+        }
+        return false;
+      }
+
+      public void consumeLexeme(Lexeme<TokenTypeBase> lexeme) {
+        for (MacroCallParser<TokenTypeBase> parser : myMacroCallParsers) {
+          if (parser.getState() != MacroCallParserState.NOT_PARSED && parser.getState() != MacroCallParserState.PARSED) {
+            parser.consumeLexeme(lexeme);
+          }
+        }
+      }
+
+      public Collection<MacroCall<TokenTypeBase>> getParsedMacroCalls() {
+        List<MacroCall<TokenTypeBase>> macroCalls = new ArrayList<MacroCall<TokenTypeBase>>(myMacroCallParsers.size());
+        for (MacroCallParser<TokenTypeBase> parser : myMacroCallParsers) {
+          if (parser.getState() == MacroCallParserState.PARSED) {
+            macroCalls.add(parser.getParsedCall());
+          }
+        }
+        return macroCalls;
+      }
     }
   }
 }

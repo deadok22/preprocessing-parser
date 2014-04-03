@@ -8,4 +8,5 @@ public interface MacroCall<TokenTypeBase> {
   String getMacroName();
   int getArity();
   List<List<Lexeme<TokenTypeBase>>> getArgumentsList();
+  int getLexemesCount();
 }
