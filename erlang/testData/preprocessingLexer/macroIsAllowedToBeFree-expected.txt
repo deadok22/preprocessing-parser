@@ -1,0 +1,40 @@
+FORK   TRUE   TRUE
+ BRANCH   ((TRUE & TRUE) & (is_defined A))   VARIANCE
+  LANG   ((TRUE & TRUE) & (is_defined A))   VARIANCE
+   Lexeme: WHITESPACE
+   Lexeme: WHITESPACE
+LANG   TRUE   TRUE
+ Lexeme: WHITESPACE
+ Lexeme: COMMENT
+ Lexeme: WHITESPACE
+ Lexeme: COMMENT
+ Lexeme: WHITESPACE
+ Lexeme: COMMENT
+ Lexeme: WHITESPACE
+ Lexeme: COMMENT
+ Lexeme: WHITESPACE
+FORK   TRUE   TRUE
+ BRANCH   ((TRUE & TRUE) & (is_defined X))   VARIANCE
+  LANG   ((TRUE & TRUE) & (is_defined X))   VARIANCE
+   Lexeme: WHITESPACE
+   Lexeme: ATOM
+   Lexeme: PAR_LEFT
+   Lexeme: PAR_RIGHT
+   Lexeme: WHITESPACE
+   Lexeme: ARROW
+   Lexeme: WHITESPACE
+   Lexeme: ATOM
+   Lexeme: DOT
+   Lexeme: WHITESPACE
+ BRANCH   ((TRUE & (TRUE & ! (is_defined X))) & TRUE)   VARIANCE
+  LANG   ((TRUE & (TRUE & ! (is_defined X))) & TRUE)   VARIANCE
+   Lexeme: WHITESPACE
+   Lexeme: ATOM
+   Lexeme: PAR_LEFT
+   Lexeme: PAR_RIGHT
+   Lexeme: WHITESPACE
+   Lexeme: ARROW
+   Lexeme: WHITESPACE
+   Lexeme: ATOM
+   Lexeme: DOT
+   Lexeme: WHITESPACE

@@ -24,6 +24,7 @@ public class ErlangPreprocessingLexerTests {
   @Test public void undefinedMacro()             throws Exception { doTest(); }
   @Test public void definitionDefinesMacro()     throws Exception { doTest(); }
   @Test public void undefinitionUndefinesMacro() throws Exception { doTest(); }
+  @Test public void macroIsAllowedToBeFree()     throws Exception { doTest(); }
 
   private static final String TEST_DATA_PATH = "erlang/testData/preprocessingLexer/";
 

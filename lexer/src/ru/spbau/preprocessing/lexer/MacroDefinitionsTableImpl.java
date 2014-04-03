@@ -18,8 +18,32 @@ public class MacroDefinitionsTableImpl implements MacroDefinitionsTable {
 
   @Override
   public MacroDefinitionState getMacroDefinitionState(String macroName, ConditionalContext context) {
+    return getMacroDefinitionState(macroName, context.getCurrentPresenceCondition());
+  }
+
+  public void undefine(PreprocessorLanguageMacroUndefinitionNode undefinition, PresenceCondition presenceCondition) {
+    updateEntriesBeforeUndefinition(undefinition.getName(), presenceCondition);
+    addFreeEntryForDefinition(undefinition.getName(), presenceCondition);
+    putEntry(newEntry(undefinition, presenceCondition));
+  }
+
+  public void define(PreprocessorLanguageMacroDefinitionNode definition, PresenceCondition presenceCondition) {
+    updateEntriesBeforeDefinition(definition.getName(), definition.getArity(), presenceCondition);
+    addFreeEntryForDefinition(definition.getName(), presenceCondition);
+    putEntry(newEntry(definition, presenceCondition));
+  }
+
+  private void addFreeEntryForDefinition(String macroName, PresenceCondition newDefinitionPresenceCondition) {
+    if (newDefinitionPresenceCondition.value() == PresenceCondition.Value.TRUE) return;
+    if (getMacroDefinitionState(macroName, newDefinitionPresenceCondition) == MacroDefinitionState.FREE &&
+            getReachingEntries(macroName, newDefinitionPresenceCondition).isEmpty()) {
+      putEntry(newEntry(macroName, newDefinitionPresenceCondition.not()));
+    }
+  }
+
+  private MacroDefinitionState getMacroDefinitionState(String macroName, PresenceCondition currentPresenceCondition) {
     //TODO handle all cases
-    List<Entry> reachingEntries = getReachingEntries(macroName, context.getCurrentPresenceCondition());
+    List<Entry> reachingEntries = getReachingEntries(macroName, currentPresenceCondition);
     EnumSet<MacroDefinitionState> states = EnumSet.noneOf(MacroDefinitionState.class);
     for (Entry reachingEntry : reachingEntries) {
       states.add(reachingEntry.type());
@@ -30,18 +54,6 @@ public class MacroDefinitionsTableImpl implements MacroDefinitionsTable {
     //TODO deduce condition for macro to be defined or undefined
     System.err.println("Macro definition state is not clear. We'll treat it as a free macro for now.");
     return MacroDefinitionState.FREE;
-  }
-
-  public void undefine(PreprocessorLanguageMacroUndefinitionNode undefinition, PresenceCondition presenceCondition) {
-    updateEntriesBeforeUndefinition(undefinition.getName(), presenceCondition);
-    //TODO check if a FREE entry should be added as well
-    putEntry(newEntry(undefinition, presenceCondition));
-  }
-
-  public void define(PreprocessorLanguageMacroDefinitionNode definition, PresenceCondition presenceCondition) {
-    updateEntriesBeforeDefinition(definition.getName(), definition.getArity(), presenceCondition);
-    //TODO check if a FREE entry should be added as well
-    putEntry(newEntry(definition, presenceCondition));
   }
 
   private void updateEntriesBeforeDefinition(String macroName, int arity, PresenceCondition definitionPresenceCondition) {
