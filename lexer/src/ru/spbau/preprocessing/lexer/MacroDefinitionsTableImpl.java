@@ -9,9 +9,7 @@ import ru.spbau.preprocessing.api.conditions.PresenceCondition;
 import ru.spbau.preprocessing.api.preprocessor.PreprocessorLanguageMacroDefinitionNode;
 import ru.spbau.preprocessing.api.preprocessor.PreprocessorLanguageMacroUndefinitionNode;
 
-import java.util.EnumSet;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
 public class MacroDefinitionsTableImpl implements MacroDefinitionsTable {
   private final ListMultimap<String, Entry> myTable = LinkedListMultimap.create();
@@ -19,6 +17,21 @@ public class MacroDefinitionsTableImpl implements MacroDefinitionsTable {
   @Override
   public MacroDefinitionState getMacroDefinitionState(String macroName, ConditionalContext context) {
     return getMacroDefinitionState(macroName, context.getCurrentPresenceCondition());
+  }
+
+  public Collection<DefinedEntry> getDefinitions(String macroName, int arity, ConditionalContext context) {
+    if (getMacroDefinitionState(macroName, context) == MacroDefinitionState.UNDEFINED) return Collections.emptyList();
+    List<Entry> reachingEntries = getReachingEntries(macroName, context.getCurrentPresenceCondition());
+    List<DefinedEntry> definitions = new ArrayList<DefinedEntry>(reachingEntries.size());
+    for (Entry reachingEntry : reachingEntries) {
+      if (reachingEntry instanceof DefinedEntry) {
+        DefinedEntry definition = (DefinedEntry) reachingEntry;
+        if (definition.arity() == arity) {
+          definitions.add(definition);
+        }
+      }
+    }
+    return definitions;
   }
 
   public void undefine(PreprocessorLanguageMacroUndefinitionNode undefinition, PresenceCondition presenceCondition) {
@@ -146,6 +159,10 @@ public class MacroDefinitionsTableImpl implements MacroDefinitionsTable {
 
     public int arity() {
       return myDefinition.getArity();
+    }
+
+    public PreprocessorLanguageMacroDefinitionNode getDefinition() {
+      return myDefinition;
     }
   }
 
