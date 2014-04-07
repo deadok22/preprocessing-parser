@@ -7,8 +7,7 @@ public interface PresenceConditionFactory {
 
   PresenceCondition getFalse();
 
-  /**
-   * Returned presence condition's value should be computed exactly once and before this method returns.
-   */
   PresenceCondition create(PreprocessorLanguageConditionalNode.PreprocessorLanguageCondition langCondition, ConditionalContext containingContext);
+
+  PresenceCondition createMacroIsDefined(String macroName, ConditionalContext containingContext);
 }
