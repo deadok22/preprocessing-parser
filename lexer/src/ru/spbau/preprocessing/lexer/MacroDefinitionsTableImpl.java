@@ -16,22 +16,25 @@ public class MacroDefinitionsTableImpl implements MacroDefinitionsTable {
 
   @Override
   public MacroDefinitionState getMacroDefinitionState(String macroName, ConditionalContext context) {
-    return getMacroDefinitionState(macroName, context.getCurrentPresenceCondition());
+    return getMacroDefinitionState(macroName, 0, false, context.getCurrentPresenceCondition());
   }
 
-  public Collection<DefinedEntry> getDefinitions(String macroName, int arity, ConditionalContext context) {
+  public MacroDefinitionState getMacroDefinitionState(String macroName, int arity, ConditionalContext context) {
+    return getMacroDefinitionState(macroName, arity, true, context.getCurrentPresenceCondition());
+  }
+
+  /**
+   * Get macro table entries which affect a macro with passed name and arity.
+   */
+  public Collection<Entry> getEntries(String macroName, final int arity, ConditionalContext context) {
     if (getMacroDefinitionState(macroName, context) == MacroDefinitionState.UNDEFINED) return Collections.emptyList();
     List<Entry> reachingEntries = getReachingEntries(macroName, context.getCurrentPresenceCondition());
-    List<DefinedEntry> definitions = new ArrayList<DefinedEntry>(reachingEntries.size());
-    for (Entry reachingEntry : reachingEntries) {
-      if (reachingEntry instanceof DefinedEntry) {
-        DefinedEntry definition = (DefinedEntry) reachingEntry;
-        if (definition.arity() == arity) {
-          definitions.add(definition);
-        }
+    return Collections2.filter(reachingEntries, new Predicate<Entry>() {
+      @Override
+      public boolean apply(Entry entry) {
+        return !(entry instanceof DefinedEntry && ((DefinedEntry) entry).arity() != arity);
       }
-    }
-    return definitions;
+    });
   }
 
   public void undefine(PreprocessorLanguageMacroUndefinitionNode undefinition, PresenceCondition presenceCondition) {
@@ -48,17 +51,20 @@ public class MacroDefinitionsTableImpl implements MacroDefinitionsTable {
 
   private void addFreeEntryForDefinition(String macroName, PresenceCondition newDefinitionPresenceCondition) {
     if (newDefinitionPresenceCondition.value() == PresenceCondition.Value.TRUE) return;
-    if (getMacroDefinitionState(macroName, newDefinitionPresenceCondition) == MacroDefinitionState.FREE &&
+    if (getMacroDefinitionState(macroName, 0, false, newDefinitionPresenceCondition) == MacroDefinitionState.FREE &&
             getReachingEntries(macroName, newDefinitionPresenceCondition).isEmpty()) {
       putEntry(newEntry(macroName, newDefinitionPresenceCondition.not()));
     }
   }
 
-  private MacroDefinitionState getMacroDefinitionState(String macroName, PresenceCondition currentPresenceCondition) {
+  private MacroDefinitionState getMacroDefinitionState(String macroName, int arity, boolean arityIsSignificant, PresenceCondition currentPresenceCondition) {
     //TODO handle all cases
     List<Entry> reachingEntries = getReachingEntries(macroName, currentPresenceCondition);
     EnumSet<MacroDefinitionState> states = EnumSet.noneOf(MacroDefinitionState.class);
     for (Entry reachingEntry : reachingEntries) {
+      if (arityIsSignificant && reachingEntry instanceof DefinedEntry && ((DefinedEntry)reachingEntry).arity() != arity) {
+        continue;
+      }
       states.add(reachingEntry.type());
     }
     if (states.size() == 1) {

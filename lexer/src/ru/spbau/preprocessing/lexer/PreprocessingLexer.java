@@ -3,6 +3,7 @@ package ru.spbau.preprocessing.lexer;
 import com.google.common.collect.Queues;
 import ru.spbau.preprocessing.api.LanguageLexer;
 import ru.spbau.preprocessing.api.LanguageProvider;
+import ru.spbau.preprocessing.api.conditions.MacroDefinitionState;
 import ru.spbau.preprocessing.api.conditions.PresenceCondition;
 import ru.spbau.preprocessing.api.conditions.PresenceConditionFactory;
 import ru.spbau.preprocessing.api.macros.MacroCall;
@@ -14,7 +15,10 @@ import ru.spbau.preprocessing.lexer.lexemegraph.LexemeGraphBuilder;
 import ru.spbau.preprocessing.lexer.lexemegraph.LexemeGraphNode;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Queue;
 
 public class PreprocessingLexer<TokenTypeBase> {
   private final LanguageProvider<TokenTypeBase> myLanguageProvider;
@@ -70,7 +74,13 @@ public class PreprocessingLexer<TokenTypeBase> {
               //TODO reset the multiparser and feed it tokens from the buffer
             }
             else if (macroCalls.size() == 1) {
-              //TODO resolve a macro and decide whether to add a conditional or not
+              MacroCall<TokenTypeBase> call = macroCalls.iterator().next();
+              Collection<MacroDefinitionsTableImpl.Entry> entries =
+                      myContext.getMacroTable().getEntries(call.getMacroName(), call.getArity(), myContext);
+              if (myContext.getMacroTable().getMacroDefinitionState(call.getMacroName(), call.getArity(), myContext) != MacroDefinitionState.DEFINED) {
+                //TODO add an extra branch containing tokens of the macro call
+              }
+              //TODO fork
             }
             else {
               //TODO fork for each macro call which resolves to something
