@@ -126,6 +126,29 @@ public class MacroDefinitionsTableImpl implements MacroDefinitionsTable {
     return new FreeEntry(macroName, presenceCondition);
   }
 
+  public static Collection<DefinedEntry> filterDefinedEntries(Collection<? extends Entry> entries) {
+    return filterEntries(entries, DefinedEntry.class);
+  }
+
+  public static Collection<UndefinedEntry> filterUndefinedEntries(Collection<? extends Entry> entries) {
+    return filterEntries(entries, UndefinedEntry.class);
+  }
+
+  public static Collection<FreeEntry> filterFreeEntries(Collection<?extends Entry> entries) {
+    return filterEntries(entries, FreeEntry.class);
+  }
+
+  private static <T extends Entry> Collection<T> filterEntries(Collection<? extends Entry> entries, Class<T> clazz) {
+    ArrayList<T> definedEntries = new ArrayList<T>(entries.size());
+    for (Entry e : entries) {
+      if (clazz.isInstance(e)) {
+        //noinspection unchecked
+        definedEntries.add((T) e);
+      }
+    }
+    return definedEntries;
+  }
+
   public static abstract class Entry {
     private PresenceCondition myPresenceCondition;
 
