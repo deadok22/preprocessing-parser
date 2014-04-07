@@ -1,9 +1,9 @@
 package ru.spbau.preprocessing.lexer;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Queues;
 import ru.spbau.preprocessing.api.LanguageLexer;
 import ru.spbau.preprocessing.api.LanguageProvider;
-import ru.spbau.preprocessing.api.conditions.MacroDefinitionState;
 import ru.spbau.preprocessing.api.conditions.PresenceCondition;
 import ru.spbau.preprocessing.api.conditions.PresenceConditionFactory;
 import ru.spbau.preprocessing.api.macros.MacroCall;
@@ -56,40 +56,7 @@ public class PreprocessingLexer<TokenTypeBase> {
 
     @Override
     public void visit(PreprocessorLanguageNode node) {
-      myLexemeGraphBuilder.setNodePresenceCondition(myContext.getCurrentPresenceCondition());
-      LanguageLexer<TokenTypeBase> langLexer = myLanguageProvider.createLanguageLexer();
-      langLexer.start(myText, node.getStartOffset(), node.getStartOffset() + node.getLength());
-      try {
-        for (langLexer.advance(); langLexer.tokenType() != null; langLexer.advance()) {
-          Lexeme<TokenTypeBase> lexeme = new Lexeme<TokenTypeBase>(langLexer.tokenType());
-          myLookAheadBuffer.add(lexeme);
-          if (myMacroCallMultiParser.needMoreTokens()) {
-            myMacroCallMultiParser.consumeLexeme(lexeme);
-          }
-          if (!myMacroCallMultiParser.needMoreTokens()) {
-            Collection<MacroCall<TokenTypeBase>> macroCalls = myMacroCallMultiParser.getParsedMacroCalls();
-            if (macroCalls.isEmpty()) {
-              myLexemeGraphBuilder.addLexeme(myLookAheadBuffer.poll());
-              myMacroCallMultiParser.reset();
-              //TODO reset the multiparser and feed it tokens from the buffer
-            }
-            else if (macroCalls.size() == 1) {
-              MacroCall<TokenTypeBase> call = macroCalls.iterator().next();
-              Collection<MacroDefinitionsTableImpl.Entry> entries =
-                      myContext.getMacroTable().getEntries(call.getMacroName(), call.getArity(), myContext);
-              if (myContext.getMacroTable().getMacroDefinitionState(call.getMacroName(), call.getArity(), myContext) != MacroDefinitionState.DEFINED) {
-                //TODO add an extra branch containing tokens of the macro call
-              }
-              //TODO fork
-            }
-            else {
-              //TODO fork for each macro call which resolves to something
-            }
-          }
-        }
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
+      processText(myText, node.getStartOffset(), node.getStartOffset() + node.getLength());
     }
 
     @Override
@@ -139,6 +106,70 @@ public class PreprocessingLexer<TokenTypeBase> {
     @Override
     public void visitConditional(PreprocessorLanguageConditionalNode node) {
       visitNodes(node.getCode());
+    }
+
+    private void processText(CharSequence text, int startOffset, int endOffset) {
+      myLexemeGraphBuilder.setNodePresenceCondition(myContext.getCurrentPresenceCondition());
+      LanguageLexer<TokenTypeBase> langLexer = myLanguageProvider.createLanguageLexer();
+      langLexer.start(text, startOffset, endOffset);
+      try {
+        for (langLexer.advance(); langLexer.tokenType() != null; langLexer.advance()) {
+          Lexeme<TokenTypeBase> lexeme = new Lexeme<TokenTypeBase>(langLexer.tokenType());
+          myLookAheadBuffer.add(lexeme);
+          if (myMacroCallMultiParser.needMoreTokens()) {
+            myMacroCallMultiParser.consumeLexeme(lexeme);
+          }
+          if (!myMacroCallMultiParser.needMoreTokens()) {
+            Collection<MacroCall<TokenTypeBase>> macroCalls = myMacroCallMultiParser.getParsedMacroCalls();
+            if (macroCalls.isEmpty()) {
+              myLexemeGraphBuilder.addLexeme(myLookAheadBuffer.poll());
+              myMacroCallMultiParser.reset();
+              //TODO reset the multiparser and feed it tokens from the buffer
+            }
+            else if (macroCalls.size() == 1) {
+              MacroCall<TokenTypeBase> call = macroCalls.iterator().next();
+              MacroDefinitionsTableImpl macroTable = myContext.getMacroTable();
+              switch (macroTable.getMacroDefinitionState(call.getMacroName(), call.getArity(), myContext)) {
+                case DEFINED: {
+                  expandMacro(call);
+                  break;
+                }
+                case UNDEFINED:
+                  myLexemeGraphBuilder.addLexeme(myLookAheadBuffer.poll());
+                  myMacroCallMultiParser.reset();
+                  //TODO reset the multiparser and feed it tokens from the buffer
+                  break;
+                case FREE:
+                  //TODO examine what's there - be sure to add a branch in case the macro is neither defined nor undefined.
+                  break;
+                default: throw new RuntimeException("unexpected enum member");
+              }
+            }
+            else {
+              //TODO fork for each macro call which resolves to something
+            }
+          }
+        }
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+
+    private void expandMacro(MacroCall<TokenTypeBase> call) {
+      Collection<MacroDefinitionsTableImpl.Entry> entries = myContext.getMacroTable().getEntries(call.getMacroName(), call.getArity(), myContext);
+      List<MacroDefinitionsTableImpl.DefinedEntry> definitions = Lists.newArrayList(MacroDefinitionsTableImpl.filterDefinedEntries(entries));
+      List<LexemeGraphBuilder<TokenTypeBase>> substitutionForks = myLexemeGraphBuilder.fork(definitions.size());
+      for (int i = 0; i < definitions.size(); i++) {
+        //TODO use a lexer which substitutes macro call argument references
+        LexemeGraphBuilder<TokenTypeBase> forkBuilder = substitutionForks.get(i);
+        MacroDefinitionsTableImpl.DefinedEntry definedEntry = definitions.get(i);
+        //TODO make sure this branch condition is ok
+        ConditionalContextImpl forkContext = myContext.copy().andCondition(definedEntry.getPresenceCondition());
+        PreprocessorLanguageMacroDefinitionNode definition = definedEntry.getDefinition();
+        new LexingPreprocessorLanguageNodeVisitor(forkContext, forkBuilder)
+                .processText(definition.getSubstitutionText(), 0, definition.getSubstitutionText().length());
+        forkBuilder.build();
+      }
     }
 
     private class MacroCallMultiParser {
