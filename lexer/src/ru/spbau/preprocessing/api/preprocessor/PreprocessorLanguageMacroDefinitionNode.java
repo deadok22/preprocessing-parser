@@ -10,5 +10,5 @@ public interface PreprocessorLanguageMacroDefinitionNode extends PreprocessorLan
   String getName();
   int getArity();
   List<String> getParameterNames();
-  String getSubstitution(List<String> macroArguments);
+  String getSubstitutionText();
 }

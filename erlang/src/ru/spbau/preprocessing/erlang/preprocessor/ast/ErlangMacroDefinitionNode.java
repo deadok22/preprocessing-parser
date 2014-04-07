@@ -38,9 +38,8 @@ public class ErlangMacroDefinitionNode extends ErlangPreprocessorNode
   }
 
   @Override
-  public String getSubstitution(List<String> macroArguments) {
-    //TODO
-    throw new UnsupportedOperationException("Not implemented");
+  public String getSubstitutionText() {
+    return getBuffer().subSequence(myMacroBodyStartOffset, myMacroBodyEndOffset).toString();
   }
 
   @Override
