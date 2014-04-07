@@ -58,20 +58,55 @@ public class MacroDefinitionsTableImpl implements MacroDefinitionsTable {
   }
 
   private MacroDefinitionState getMacroDefinitionState(String macroName, int arity, boolean arityIsSignificant, PresenceCondition currentPresenceCondition) {
-    //TODO handle all cases
     List<Entry> reachingEntries = getReachingEntries(macroName, currentPresenceCondition);
     EnumSet<MacroDefinitionState> states = EnumSet.noneOf(MacroDefinitionState.class);
+    PresenceCondition definitionPresenceCondition = null;
+    PresenceCondition undefinitionPresenceCondition = null;
     for (Entry reachingEntry : reachingEntries) {
-      if (arityIsSignificant && reachingEntry instanceof DefinedEntry && ((DefinedEntry)reachingEntry).arity() != arity) {
-        continue;
+      PresenceCondition presenceCondition = reachingEntry.getPresenceCondition();
+      if (reachingEntry instanceof DefinedEntry) {
+        DefinedEntry definedEntry = (DefinedEntry) reachingEntry;
+        if (arityIsSignificant && definedEntry.arity() == arity || !arityIsSignificant) {
+          if (definitionPresenceCondition == null) {
+            definitionPresenceCondition = presenceCondition;
+          }
+          else {
+            definitionPresenceCondition = definitionPresenceCondition.or(presenceCondition);
+          }
+          states.add(reachingEntry.type());
+        }
       }
-      states.add(reachingEntry.type());
+      else if (reachingEntry instanceof UndefinedEntry) {
+        if (undefinitionPresenceCondition == null) {
+          undefinitionPresenceCondition = presenceCondition;
+        }
+        else {
+          undefinitionPresenceCondition = undefinitionPresenceCondition.or(presenceCondition);
+        }
+        states.add(reachingEntry.type());
+      }
+      else {
+        states.add(reachingEntry.type());
+      }
     }
     if (states.size() == 1) {
-      return states.iterator().next();
+      MacroDefinitionState computedState = states.iterator().next();
+      switch (computedState) {
+        case UNDEFINED: {
+          assert undefinitionPresenceCondition != null;
+          return undefinitionPresenceCondition.value() == PresenceCondition.Value.TRUE ?
+                  MacroDefinitionState.UNDEFINED :
+                  MacroDefinitionState.FREE;
+        }
+        case DEFINED: {
+          assert definitionPresenceCondition != null;
+          return definitionPresenceCondition.value() == PresenceCondition.Value.TRUE ?
+                  MacroDefinitionState.DEFINED :
+                  MacroDefinitionState.FREE;
+        }
+        default : return computedState;
+      }
     }
-    //TODO deduce condition for macro to be defined or undefined
-    System.err.println("Macro definition state is not clear. We'll treat it as a free macro for now.");
     return MacroDefinitionState.FREE;
   }
 
