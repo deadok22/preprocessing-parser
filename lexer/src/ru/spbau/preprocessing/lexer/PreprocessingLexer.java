@@ -114,7 +114,8 @@ public class PreprocessingLexer<TokenTypeBase> {
       langLexer.start(text, startOffset, endOffset);
       try {
         for (langLexer.advance(); langLexer.tokenType() != null; langLexer.advance()) {
-          Lexeme<TokenTypeBase> lexeme = new Lexeme<TokenTypeBase>(langLexer.tokenType());
+          Lexeme<TokenTypeBase> lexeme = new Lexeme<TokenTypeBase>(langLexer.tokenType(),
+                  text.subSequence(langLexer.tokenStartOffset(), langLexer.tokenEndOffset()).toString());
           myLookAheadBuffer.add(lexeme);
           if (myMacroCallMultiParser.needMoreTokens()) {
             myMacroCallMultiParser.consumeLexeme(lexeme);

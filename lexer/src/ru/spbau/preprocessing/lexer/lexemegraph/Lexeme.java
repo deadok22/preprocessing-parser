@@ -2,9 +2,11 @@ package ru.spbau.preprocessing.lexer.lexemegraph;
 
 public class Lexeme<TokenTypeBase> {
   private final TokenTypeBase myType;
+  private final String myText;
 
-  public Lexeme(TokenTypeBase type) {
+  public Lexeme(TokenTypeBase type, String text) {
     myType = type;
+    myText = text;
   }
 
   public TokenTypeBase getType() {
@@ -12,8 +14,7 @@ public class Lexeme<TokenTypeBase> {
   }
 
   public String getText() {
-    //TODO return the actual token text
-    return "STUB";
+    return myText;
   }
 
   @Override
