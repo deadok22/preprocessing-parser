@@ -11,7 +11,10 @@ public class Lexeme<TokenTypeBase> {
     return myType;
   }
 
-  //TODO add methods to provide token text?
+  public String getText() {
+    //TODO return the actual token text
+    return "STUB";
+  }
 
   @Override
   public boolean equals(Object o) {
