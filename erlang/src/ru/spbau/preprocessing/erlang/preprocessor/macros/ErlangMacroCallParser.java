@@ -51,6 +51,7 @@ public final class ErlangMacroCallParser implements MacroCallParser<ErlangToken>
 
   @Override
   public boolean parse(Iterator<Lexeme<ErlangToken>> lexemeStream) {
+    reset();
     for (Lexeme<ErlangToken> lexeme = lexemeStream.next();
          lexeme != null && getState() == State.PARSING;
          lexeme = lexemeStream.next()) {
