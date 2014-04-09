@@ -3,14 +3,10 @@ package ru.spbau.preprocessing.erlang.preprocessor.macros;
 import com.google.common.collect.ImmutableMap;
 import ru.spbau.preprocessing.api.macros.MacroCall;
 import ru.spbau.preprocessing.api.macros.MacroCallParser;
-import ru.spbau.preprocessing.api.macros.MacroCallParserState;
 import ru.spbau.preprocessing.erlang.ErlangToken;
 import ru.spbau.preprocessing.lexer.lexemegraph.Lexeme;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
+import java.util.*;
 
 import static ru.spbau.preprocessing.erlang.ErlangToken.*;
 
@@ -43,7 +39,6 @@ public final class ErlangMacroCallParser implements MacroCallParser<ErlangToken>
     reset();
   }
 
-  @Override
   public void reset() {
     myRightBracesStack.clear();
     myIsFailed = false;
@@ -55,8 +50,17 @@ public final class ErlangMacroCallParser implements MacroCallParser<ErlangToken>
   }
 
   @Override
+  public boolean parse(Iterator<Lexeme<ErlangToken>> lexemeStream) {
+    for (Lexeme<ErlangToken> lexeme = lexemeStream.next();
+         lexeme != null && getState() == State.PARSING;
+         lexeme = lexemeStream.next()) {
+      consumeLexeme(lexeme);
+    }
+    return getState() == State.PARSED;
+  }
+
   public void consumeLexeme(Lexeme<ErlangToken> lexeme) {
-    assert getState() == MacroCallParserState.PARSING;
+    assert getState() == State.PARSING;
 
     ErlangToken token = lexeme.getType();
     switch (myExpectation) {
@@ -111,16 +115,15 @@ public final class ErlangMacroCallParser implements MacroCallParser<ErlangToken>
     myLexemesConsumed++;
   }
 
-  @Override
-  public MacroCallParserState getState() {
-    if (myIsFailed) return MacroCallParserState.NOT_PARSED;
-    if (myExpectation == Expectation.NOTHING) return MacroCallParserState.PARSED;
-    return MacroCallParserState.PARSING;
+  public State getState() {
+    if (myIsFailed) return State.NOT_PARSED;
+    if (myExpectation == Expectation.NOTHING) return State.PARSED;
+    return State.PARSING;
   }
 
   @Override
   public MacroCall<ErlangToken> getParsedCall() {
-    if (getState() != MacroCallParserState.PARSED) return null;
+    if (getState() != State.PARSED) return null;
     return new ErlangMacroCall(myMacroName, myCallArguments, myLexemesConsumed);
   }
 
@@ -143,5 +146,9 @@ public final class ErlangMacroCallParser implements MacroCallParser<ErlangToken>
 
   private static enum Expectation {
     QMARK, MACRO_NAME, ARGS_LIST, ARGUMENT, NOTHING
+  }
+
+  private static enum State {
+    NOT_PARSED, PARSED, PARSING
   }
 }

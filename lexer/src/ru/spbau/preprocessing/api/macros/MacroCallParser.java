@@ -2,9 +2,9 @@ package ru.spbau.preprocessing.api.macros;
 
 import ru.spbau.preprocessing.lexer.lexemegraph.Lexeme;
 
+import java.util.Iterator;
+
 public interface MacroCallParser<TokenTypeBase> {
-  void reset();
-  void consumeLexeme(Lexeme<TokenTypeBase> lexeme);
-  MacroCallParserState getState();
+  boolean parse(Iterator<Lexeme<TokenTypeBase>> lexemeStream);
   MacroCall<TokenTypeBase> getParsedCall();
 }
