@@ -1,0 +1,23 @@
+FORK   TRUE   TRUE
+ BRANCH   (X)   VARIANCE
+  LANG   (X)   VARIANCE
+   Lexeme: WHITESPACE
+   Lexeme: WHITESPACE
+ BRANCH   (!X)   VARIANCE
+  LANG   (!X)   VARIANCE
+   Lexeme: WHITESPACE
+  FORK   (!X)   VARIANCE
+   BRANCH   FALSE   FALSE
+    LANG   FALSE   FALSE
+     Lexeme: WHITESPACE
+     Lexeme: ATOM
+     Lexeme: PAR_LEFT
+     Lexeme: PAR_RIGHT
+     Lexeme: WHITESPACE
+     Lexeme: ARROW
+     Lexeme: WHITESPACE
+     Lexeme: ATOM
+     Lexeme: DOT
+     Lexeme: WHITESPACE
+  LANG   (!X)   VARIANCE
+   Lexeme: WHITESPACE

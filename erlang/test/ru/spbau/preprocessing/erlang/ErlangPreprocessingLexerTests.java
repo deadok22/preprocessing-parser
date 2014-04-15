@@ -27,6 +27,7 @@ public class ErlangPreprocessingLexerTests {
   @Test public void macroIsAllowedToBeFree()     throws Exception { doTest(); }
 
   //tests with macro substitution
+  @Test public void notReachingDefinitionDoesNotDefineMacro() throws Exception { doTest(); }
   @Test public void undefinedMacrosAreNotExpanded() throws Exception { doTest(); }
   @Test public void expandMultiplyDefinedMacro()    throws Exception { doTest(); }
   @Test public void expandDefinedMacro1()           throws Exception { doTest(); }
