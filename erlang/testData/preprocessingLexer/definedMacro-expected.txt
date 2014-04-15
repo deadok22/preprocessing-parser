@@ -1,8 +1,8 @@
 LANG   TRUE   TRUE
  Lexeme: WHITESPACE
 FORK   TRUE   TRUE
- BRANCH   ((TRUE & TRUE) & (is_defined DEFINED_MACRO))   TRUE
-  LANG   ((TRUE & TRUE) & (is_defined DEFINED_MACRO))   TRUE
+ BRANCH   TRUE   TRUE
+  LANG   TRUE   TRUE
    Lexeme: WHITESPACE
    Lexeme: ATOM
    Lexeme: PAR_LEFT
@@ -13,8 +13,8 @@ FORK   TRUE   TRUE
    Lexeme: ATOM
    Lexeme: DOT
    Lexeme: WHITESPACE
- BRANCH   ((TRUE & (TRUE & ! (is_defined DEFINED_MACRO))) & TRUE)   FALSE
-  LANG   ((TRUE & (TRUE & ! (is_defined DEFINED_MACRO))) & TRUE)   FALSE
+ BRANCH   FALSE   FALSE
+  LANG   FALSE   FALSE
    Lexeme: WHITESPACE
    Lexeme: ATOM
    Lexeme: PAR_LEFT

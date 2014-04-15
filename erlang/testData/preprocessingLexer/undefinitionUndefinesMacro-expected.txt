@@ -2,8 +2,8 @@ LANG   TRUE   TRUE
  Lexeme: WHITESPACE
  Lexeme: WHITESPACE
 FORK   TRUE   TRUE
- BRANCH   ((TRUE & TRUE) & (is_defined X))   FALSE
-  LANG   ((TRUE & TRUE) & (is_defined X))   FALSE
+ BRANCH   FALSE   FALSE
+  LANG   FALSE   FALSE
    Lexeme: WHITESPACE
    Lexeme: ATOM
    Lexeme: PAR_LEFT
