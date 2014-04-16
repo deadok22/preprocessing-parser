@@ -13,10 +13,7 @@ import ru.spbau.preprocessing.lexer.lexemegraph.LexemeGraphBuilder;
 import ru.spbau.preprocessing.lexer.lexemegraph.LexemeGraphNode;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class PreprocessingLexer<TokenTypeBase> {
   private final LanguageProvider<TokenTypeBase> myLanguageProvider;
@@ -129,14 +126,27 @@ public class PreprocessingLexer<TokenTypeBase> {
           continue;
         }
 
-        List<MacroCall<TokenTypeBase>> resolvedCalls = new ArrayList<MacroCall<TokenTypeBase>>(parsedMacroCalls.size());
+        //calculate resolved macro calls with corresponding presence conditions
+        class ConditionalMacroCall {
+          MacroCall<TokenTypeBase> myCall;
+          PresenceCondition myPresenceCondition;
+          ConditionalMacroCall(MacroCall<TokenTypeBase> call, PresenceCondition presenceCondition) {
+            myCall = call;
+            myPresenceCondition = presenceCondition;
+          }
+        }
+        List<ConditionalMacroCall> resolvedCalls = new ArrayList<ConditionalMacroCall>(parsedMacroCalls.size());
         for (MacroCall<TokenTypeBase> call : parsedMacroCalls) {
           if (macroTable.getMacroDefinitionState(call.getMacroName(), call.getArity(), myContext) != MacroDefinitionState.UNDEFINED) {
             // since the macro is not undefined, there could be some non-free reaching definitions
             Collection<MacroDefinitionsTableImpl.Entry> entries = macroTable.getEntries(call.getMacroName(), call.getArity(), myContext);
             Collection<MacroDefinitionsTableImpl.DefinedEntry> definedEntries = MacroDefinitionsTableImpl.filterDefinedEntries(entries);
             if (!definedEntries.isEmpty()) {
-              resolvedCalls.add(call);
+              PresenceCondition callPresenceCondition = myLanguageProvider.createPresenceConditionFactory().getFalse();
+              for (MacroDefinitionsTableImpl.DefinedEntry definedEntry : definedEntries) {
+                callPresenceCondition = callPresenceCondition.or(definedEntry.getPresenceCondition());
+              }
+              resolvedCalls.add(new ConditionalMacroCall(call, callPresenceCondition));
             }
           }
         }
@@ -146,45 +156,76 @@ public class PreprocessingLexer<TokenTypeBase> {
           continue;
         }
 
-        //TODO provide a strategy for choosing action when multiple calls are parsed and resolved starting at the same offset
-        //TODO under different presence conditions different macro calls should be used
-
-        //for now we'll select the one with biggest arity
-        MacroCall<TokenTypeBase> call = null;
-        for (MacroCall<TokenTypeBase> resolvedCall : resolvedCalls) {
-          if (call == null || call.getArity() < resolvedCall.getArity()) {
-            call = resolvedCall;
+        //store max macro call lexemes into a buffer so that
+        //lexemes could be reused in conditional branches
+        int maxMacroCallLexemesCount = 0;
+        for (ConditionalMacroCall resolvedCall : resolvedCalls) {
+          int lexemesCount = resolvedCall.myCall.getLexemesCount();
+          if (maxMacroCallLexemesCount < lexemesCount) {
+            maxMacroCallLexemesCount = lexemesCount;
           }
         }
-        assert call != null;
-
-        //TODO make sure to have an alternative where a maro call is not resolved
-        Collection<MacroDefinitionsTableImpl.Entry> entries = macroTable.getEntries(call.getMacroName(), call.getArity(), myContext);
-        List<MacroDefinitionsTableImpl.DefinedEntry> definedEntries =
-                new ArrayList<MacroDefinitionsTableImpl.DefinedEntry>(MacroDefinitionsTableImpl.filterDefinedEntries(entries));
-        List<LexemeGraphBuilder<TokenTypeBase>> forkBuilders = myLexemeGraphBuilder.fork(definedEntries.size());
-        for (int i = 0; i < forkBuilders.size(); i++) {
-          LexemeGraphBuilder<TokenTypeBase> substitutionForkBuilder = forkBuilders.get(i);
-          MacroDefinitionsTableImpl.DefinedEntry definedEntry = definedEntries.get(i);
-          PreprocessorLanguageMacroDefinitionNode definition = definedEntry.getDefinition();
-          PresenceCondition definitionPresenceCondition = definedEntry.getPresenceCondition();
-
-          //TODO process macro call arguments and macro calls in the substitution
-          String unprocessedSubstitutionText = definition.getSubstitutionText();
-          ConditionalContextImpl substitutionContext = myContext
-                  .copy().andCondition(definitionPresenceCondition);
-
-          new LexingPreprocessorLanguageNodeVisitor(substitutionContext, substitutionForkBuilder)
-                  .processText(unprocessedSubstitutionText, 0, unprocessedSubstitutionText.length());
-          substitutionForkBuilder.build();
+        ArrayList<Lexeme<TokenTypeBase>> macroCallLexemesBuffer = new ArrayList<Lexeme<TokenTypeBase>>(maxMacroCallLexemesCount);
+        for (int i = 0; i < maxMacroCallLexemesCount; i++) {
+          macroCallLexemesBuffer.add(buffer.next());
         }
 
-        //skip macro call lexemes
-        for (int i = 0; i < call.getLexemesCount(); i++) {
-          buffer.next();
+        //sort all resolved calls by their arity, biggest arity first
+        //smaller arity calls' presence conditions are obtained via andNot with bigger arity calls
+        Collections.sort(resolvedCalls, new Comparator<ConditionalMacroCall>() {
+          @Override
+          public int compare(ConditionalMacroCall o1, ConditionalMacroCall o2) {
+            return o2.myCall.getArity() - o1.myCall.getArity();
+          }
+        });
+
+        //fork for each resolved call
+        List<LexemeGraphBuilder<TokenTypeBase>> callForkBuilders = myLexemeGraphBuilder.fork(resolvedCalls.size());
+        PresenceCondition negationOfPreviousCallForkGuards = myLanguageProvider.createPresenceConditionFactory().getTrue();
+        for (int i = 0; i < callForkBuilders.size(); i++) {
+          ConditionalMacroCall call = resolvedCalls.get(i);
+          LexemeGraphBuilder<TokenTypeBase> callForkBuilder = callForkBuilders.get(i);
+
+          PresenceCondition callForkPresenceCondition = negationOfPreviousCallForkGuards.and(call.myPresenceCondition);
+          LexingPreprocessorLanguageNodeVisitor callForkPreprocessor =
+                  new LexingPreprocessorLanguageNodeVisitor(myContext.copy().andCondition(callForkPresenceCondition), callForkBuilder);
+          callForkPreprocessor.expandMacroCall(call.myCall);
+
+          //TODO process tokens after shorter macro calls - they can contain macro calls (i.e. ?M(?M) in case only ?M/-1 is defined)
+          // for now we just add them as text
+          for (int j = call.myCall.getLexemesCount(); j < maxMacroCallLexemesCount; j++) {
+            callForkBuilder.addLexeme(macroCallLexemesBuffer.get(j));
+          }
+          callForkBuilder.build();
+
+          negationOfPreviousCallForkGuards = negationOfPreviousCallForkGuards.and(call.myPresenceCondition.not());
         }
+        //TODO make sure to have an alternative where a macro call is not resolved
       }
 
+    }
+
+    private void expandMacroCall(MacroCall<TokenTypeBase> call) {
+      Collection<MacroDefinitionsTableImpl.Entry> entries = myContext.getMacroTable()
+              .getEntries(call.getMacroName(), call.getArity(), myContext);
+      List<MacroDefinitionsTableImpl.DefinedEntry> definedEntries =
+              new ArrayList<MacroDefinitionsTableImpl.DefinedEntry>(MacroDefinitionsTableImpl.filterDefinedEntries(entries));
+      List<LexemeGraphBuilder<TokenTypeBase>> forkBuilders = myLexemeGraphBuilder.fork(definedEntries.size());
+      for (int i = 0; i < forkBuilders.size(); i++) {
+        LexemeGraphBuilder<TokenTypeBase> substitutionForkBuilder = forkBuilders.get(i);
+        MacroDefinitionsTableImpl.DefinedEntry definedEntry = definedEntries.get(i);
+        PreprocessorLanguageMacroDefinitionNode definition = definedEntry.getDefinition();
+        PresenceCondition definitionPresenceCondition = definedEntry.getPresenceCondition();
+
+        //TODO process macro call arguments and macro calls in the substitution
+        String unprocessedSubstitutionText = definition.getSubstitutionText();
+        ConditionalContextImpl substitutionContext = myContext
+                .copy().andCondition(definitionPresenceCondition);
+
+        new LexingPreprocessorLanguageNodeVisitor(substitutionContext, substitutionForkBuilder)
+                .processText(unprocessedSubstitutionText, 0, unprocessedSubstitutionText.length());
+        substitutionForkBuilder.build();
+      }
     }
   }
 

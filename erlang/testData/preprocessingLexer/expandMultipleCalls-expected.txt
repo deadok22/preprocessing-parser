@@ -1,0 +1,68 @@
+LANG   TRUE   TRUE
+ Lexeme: WHITESPACE
+FORK   TRUE   TRUE
+ BRANCH   (X)   VARIANCE
+  LANG   (X)   VARIANCE
+   Lexeme: WHITESPACE
+   Lexeme: WHITESPACE
+LANG   TRUE   TRUE
+ Lexeme: WHITESPACE
+ Lexeme: ATOM
+ Lexeme: PAR_LEFT
+ Lexeme: PAR_RIGHT
+ Lexeme: WHITESPACE
+ Lexeme: ARROW
+ Lexeme: WHITESPACE
+ Lexeme: COMMENT
+ Lexeme: WHITESPACE
+ Lexeme: COMMENT
+ Lexeme: WHITESPACE
+ Lexeme: COMMENT
+ Lexeme: WHITESPACE
+FORK   TRUE   TRUE
+ BRANCH   (X)   VARIANCE
+  FORK   (X)   VARIANCE
+   BRANCH   (X)   VARIANCE
+    LANG   (X)   VARIANCE
+     Lexeme: WHITESPACE
+     Lexeme: ATOM
+ BRANCH   (!X)   VARIANCE
+  FORK   (!X)   VARIANCE
+   BRANCH   (!X)   VARIANCE
+    LANG   (!X)   VARIANCE
+     Lexeme: WHITESPACE
+     Lexeme: ATOM
+  LANG   (!X)   VARIANCE
+   Lexeme: PAR_LEFT
+   Lexeme: PAR_RIGHT
+LANG   TRUE   TRUE
+ Lexeme: PAR_LEFT
+ Lexeme: PAR_RIGHT
+ Lexeme: DOT
+ Lexeme: WHITESPACE
+ Lexeme: ATOM
+ Lexeme: PAR_LEFT
+ Lexeme: PAR_RIGHT
+ Lexeme: WHITESPACE
+ Lexeme: ARROW
+ Lexeme: WHITESPACE
+ Lexeme: FUN
+ Lexeme: WHITESPACE
+ Lexeme: PAR_LEFT
+ Lexeme: PAR_RIGHT
+ Lexeme: WHITESPACE
+ Lexeme: ARROW
+ Lexeme: WHITESPACE
+ Lexeme: ATOM
+ Lexeme: WHITESPACE
+ Lexeme: END
+ Lexeme: DOT
+ Lexeme: WHITESPACE
+ Lexeme: ATOM
+ Lexeme: PAR_LEFT
+ Lexeme: PAR_RIGHT
+ Lexeme: WHITESPACE
+ Lexeme: ARROW
+ Lexeme: WHITESPACE
+ Lexeme: ATOM
+ Lexeme: DOT

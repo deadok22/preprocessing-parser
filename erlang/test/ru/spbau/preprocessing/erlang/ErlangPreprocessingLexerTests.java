@@ -32,6 +32,8 @@ public class ErlangPreprocessingLexerTests {
   @Test public void expandMultiplyDefinedMacro()    throws Exception { doTest(); }
   @Test public void expandDefinedMacro1()           throws Exception { doTest(); }
   @Test public void expandDefinedMacro2()           throws Exception { doTest(); }
+  @Test public void expandMultipleCalls()           throws Exception { doTest(); }
+  @Test public void expandCallAfterMultipleCalls()  throws Exception { doTest(); }
 
   private static final String TEST_DATA_PATH = "erlang/testData/preprocessingLexer/";
 

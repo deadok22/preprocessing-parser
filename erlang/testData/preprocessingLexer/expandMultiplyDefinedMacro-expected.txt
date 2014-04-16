@@ -20,14 +20,16 @@ LANG   TRUE   TRUE
  Lexeme: ATOM
  Lexeme: PAR_LEFT
 FORK   TRUE   TRUE
- BRANCH   (X)   VARIANCE
-  LANG   (X)   VARIANCE
-   Lexeme: WHITESPACE
-   Lexeme: STRING
- BRANCH   (!X)   VARIANCE
-  LANG   (!X)   VARIANCE
-   Lexeme: WHITESPACE
-   Lexeme: STRING
+ BRANCH   TRUE   TRUE
+  FORK   TRUE   TRUE
+   BRANCH   (X)   VARIANCE
+    LANG   (X)   VARIANCE
+     Lexeme: WHITESPACE
+     Lexeme: STRING
+   BRANCH   (!X)   VARIANCE
+    LANG   (!X)   VARIANCE
+     Lexeme: WHITESPACE
+     Lexeme: STRING
 LANG   TRUE   TRUE
  Lexeme: PAR_RIGHT
  Lexeme: DOT
