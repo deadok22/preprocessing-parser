@@ -8,12 +8,10 @@ import com.google.common.collect.Sets;
 import ru.spbau.preprocessing.api.LanguageProvider;
 import ru.spbau.preprocessing.api.conditions.PresenceCondition;
 import ru.spbau.preprocessing.lexer.lexemegraph.*;
-import ru.spbau.preprocessing.parser.earley.ast.EarleyAstNode;
-import ru.spbau.preprocessing.parser.earley.grammar.EarleyGrammar;
-import ru.spbau.preprocessing.parser.earley.grammar.EarleyProduction;
-import ru.spbau.preprocessing.parser.earley.grammar.EarleySymbol;
-import ru.spbau.preprocessing.parser.earley.grammar.EarleyTerminal;
+import ru.spbau.preprocessing.parser.earley.ast.*;
+import ru.spbau.preprocessing.parser.earley.grammar.*;
 
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -51,8 +49,15 @@ public class EarleyParser<TokenTypeBase> {
     }
 
     public EarleyAstNode getParseTree() {
-      //TODO implement
-      throw new UnsupportedOperationException("Not implemented");
+      EarleySymbol startSymbol = myGrammar.getStartSymbol();
+      List<EarleyChart.Item> completedStartSymbolParses = myChart.lastState().getCompletionsOf((EarleyNonTerminal) startSymbol);
+
+      //input was not matched.
+      if (completedStartSymbolParses.isEmpty()) {
+        return null;
+      }
+
+      return buildAlternatives(completedStartSymbolParses, myChart.lastState());
     }
 
     @Override
@@ -125,6 +130,74 @@ public class EarleyParser<TokenTypeBase> {
           scan(item.getProduction().getLeft(), item.getStartState(), addToCurrentState);
         }
       }
+    }
+
+    private EarleyAstNode buildAlternatives(List<EarleyChart.Item> startSymbolParses, EarleyChart.State state) {
+      //TODO handle ambiguities which have the same presence condition
+      //TODO restore symbols' text
+      //TODO think of a merge strategy
+      //each symbol could have been obtained using different productions
+
+      List<EarleyConditionalBranchNode> branches = Lists.newArrayListWithExpectedSize(startSymbolParses.size());
+      for (EarleyChart.Item parse : startSymbolParses) {
+        EarleyAstNode subtree = buildSubtree(parse, state);
+        if (subtree == null) return null;
+        branches.add(new EarleyConditionalBranchNode(parse.getPresenceCondition(), Collections.singletonList(subtree)));
+      }
+
+      return new EarleyAlternativesNode(branches);
+    }
+
+    private EarleyAstNode buildSubtree(EarleyChart.Item item, EarleyChart.State itemCompletionState) {
+      assert item.isComplete();
+
+      EarleyProduction production = item.getProduction();
+      List<EarleySymbol> productionSymbols = production.getRight();
+
+      EarleyNonTerminal nodeSymbol = production.getLeft();
+      List<EarleyAstNode> reveresedChildrenList = Lists.newArrayListWithExpectedSize(productionSymbols.size());
+
+      Set<EarleyChart.State> states = Sets.newHashSet();
+      Set<EarleyChart.State> newStates = Sets.newHashSet();
+      newStates.add(itemCompletionState);
+
+      //TODO handle presence conditions
+      for (int i = productionSymbols.size() - 1; i >= 0; i--) {
+        Set<EarleyChart.State> tmp = states;
+        states = newStates;
+        newStates = tmp;
+        newStates.clear();
+
+        EarleySymbol symbol = productionSymbols.get(i);
+
+        if (symbol.isTerminal()) {
+          //TODO add different symbols for different completion states
+          //noinspection unchecked
+          reveresedChildrenList.add(new EarleyLeafNode((EarleyTerminal) symbol));
+          //this part of production was matched by scanning
+          for (EarleyChart.State state : states) {
+            EarleyChart.State previousState = state.previousState();
+            if (previousState != null) {
+              newStates.add(previousState);
+            }
+          }
+        }
+        else {
+          for (EarleyChart.State state : states) {
+            List<EarleyChart.Item> completions = state.getCompletionsOf((EarleyNonTerminal) symbol);
+            EarleyAstNode alternativesNode = buildAlternatives(completions, state);
+            reveresedChildrenList.add(alternativesNode);
+            newStates.addAll(Collections2.transform(completions, new Function<EarleyChart.Item, EarleyChart.State>() {
+              @Override
+              public EarleyChart.State apply(EarleyChart.Item item) {
+                return item.getStartState();
+              }
+            }));
+          }
+        }
+      }
+
+      return new EarleyCompositeNode(nodeSymbol, Lists.reverse(reveresedChildrenList));
     }
   }
 }

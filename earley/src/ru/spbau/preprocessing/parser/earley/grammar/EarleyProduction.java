@@ -4,16 +4,15 @@ import java.util.Collections;
 import java.util.List;
 
 public class EarleyProduction {
-  private final EarleySymbol myLeft;
+  private final EarleyNonTerminal myLeft;
   private final List<EarleySymbol> myRight;
 
-  EarleyProduction(EarleySymbol left, List<EarleySymbol> right) {
-    assert !left.isTerminal();
+  EarleyProduction(EarleyNonTerminal left, List<EarleySymbol> right) {
     myLeft = left;
     myRight = Collections.unmodifiableList(right);
   }
 
-  public EarleySymbol getLeft() {
+  public EarleyNonTerminal getLeft() {
     return myLeft;
   }
 

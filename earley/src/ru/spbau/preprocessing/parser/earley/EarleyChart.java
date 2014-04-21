@@ -1,11 +1,15 @@
 package ru.spbau.preprocessing.parser.earley;
 
+import com.google.common.base.Objects;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import ru.spbau.preprocessing.api.conditions.PresenceCondition;
+import ru.spbau.preprocessing.parser.earley.grammar.EarleyNonTerminal;
 import ru.spbau.preprocessing.parser.earley.grammar.EarleyProduction;
 import ru.spbau.preprocessing.parser.earley.grammar.EarleySymbol;
 
 import java.util.*;
+
 
 public class EarleyChart {
   private final List<State> myStates = new ArrayList<State>();
@@ -15,16 +19,18 @@ public class EarleyChart {
   }
 
   public State newState() {
-    State state = new State();
+    State state = new State(myStates.isEmpty() ? null : lastState());
     myStates.add(state);
     return state;
   }
 
   public static class State implements Iterable<Item> {
-    private LinkedHashSet<Item> myItems;
+    private final LinkedHashSet<Item> myItems;
+    private final State myPreviousState;
 
-    private State() {
+    private State(State previousState) {
       myItems = Sets.newLinkedHashSet();
+      myPreviousState = previousState;
     }
 
     public boolean addItems(Collection<Item> items) {
@@ -42,6 +48,20 @@ public class EarleyChart {
 
     public boolean containsAll(Collection<Item> items) {
       return myItems.containsAll(items);
+    }
+
+    public State previousState() {
+      return myPreviousState;
+    }
+
+    public List<Item> getCompletionsOf(EarleyNonTerminal symbol) {
+      List<Item> completionsOfSymbol = Lists.newArrayList();
+      for (Item item : this) {
+        if (Objects.equal(item.getProduction().getLeft(), symbol) && item.isComplete()) {
+          completionsOfSymbol.add(item);
+        }
+      }
+      return completionsOfSymbol;
     }
   }
 
@@ -80,6 +100,7 @@ public class EarleyChart {
       return myIndexInProduction < productionSymbols.size() ? productionSymbols.get(myIndexInProduction) : null;
     }
 
+    //TODO track the way the production is matched
     //TODO handle presence conditions correctly
     public Item matchOneSymbol() {
       assert myIndexInProduction < myProduction.getRight().size();
