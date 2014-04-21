@@ -40,7 +40,7 @@ public class EarleyParser<TokenTypeBase> {
     }));
     EarleyParsingVisitor visitor = new EarleyParsingVisitor(chart);
     lexemeGraph.accept(visitor);
-    return visitor.getParseResult();
+    return visitor.getParseTree();
   }
 
   private class EarleyParsingVisitor implements LexemeGraphVisitor {
@@ -50,9 +50,9 @@ public class EarleyParser<TokenTypeBase> {
       myChart = chart;
     }
 
-    public EarleyAstNode getParseResult() {
-
-      return null;
+    public EarleyAstNode getParseTree() {
+      //TODO implement
+      throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override
