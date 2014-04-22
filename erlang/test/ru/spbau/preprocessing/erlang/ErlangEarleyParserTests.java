@@ -22,7 +22,8 @@ import static ru.spbau.preprocessing.erlang.ErlangToken.WHITESPACE;
 public class ErlangEarleyParserTests extends ErlangAbstractFileResultTests {
   @Rule public ErlangEarleyParserCreatorRule myParserCreator = new ErlangEarleyParserCreatorRule();
 
-  @Test public void comment() throws IOException { doTest(); }
+  @Test public void endlinesAndComment() throws IOException { doTest(); }
+  @Test public void comment()            throws IOException { doTest(); }
 
 
   @Override
@@ -65,10 +66,10 @@ public class ErlangEarleyParserTests extends ErlangAbstractFileResultTests {
       EarleyGrammar grammar = EarleyGrammarBuilder.grammar(file)
 
               .rule(comment).terminal(COMMENT).completeRule()
-              .rule(comment).terminal(COMMENT).nonTerminal(comment).completeRule()
+              .rule(comment).nonTerminal(comment).nonTerminal(comment).completeRule()
 
               .rule(whitespace).terminal(WHITESPACE).completeRule()
-              .rule(whitespace).terminal(WHITESPACE).nonTerminal(whitespace).completeRule()
+              .rule(whitespace).nonTerminal(whitespace).nonTerminal(whitespace).completeRule()
 
               .rule(fileContent).nonTerminal(whitespace).completeRule()
               .rule(fileContent).nonTerminal(comment).completeRule()
