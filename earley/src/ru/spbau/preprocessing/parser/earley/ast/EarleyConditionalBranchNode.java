@@ -24,6 +24,11 @@ public class EarleyConditionalBranchNode extends EarleyAstNode {
     return myChildren;
   }
 
+  @Override
+  public void accept(EarleyAstVisitor visitor) {
+    visitor.visitConditionalBranchNode(this);
+  }
+
   public PresenceCondition getPresenceCondition() {
     return myPresenceCondition;
   }

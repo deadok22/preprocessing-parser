@@ -20,4 +20,9 @@ public class EarleyAlternativesNode extends EarleyAstNode {
   public List<EarleyConditionalBranchNode> getChildren() {
     return myAlternatives;
   }
+
+  @Override
+  public void accept(EarleyAstVisitor visitor) {
+    visitor.visitAlternativesNode(this);
+  }
 }

@@ -11,4 +11,6 @@ public abstract class EarleyAstNode {
   public List<? extends EarleyAstNode> getChildren() {
     return Collections.emptyList();
   }
+
+  public abstract void accept(EarleyAstVisitor visitor);
 }

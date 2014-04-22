@@ -22,4 +22,9 @@ public class EarleyCompositeNode extends EarleyAstNode {
   public List<EarleyAstNode> getChildren() {
     return myChildren;
   }
+
+  @Override
+  public void accept(EarleyAstVisitor visitor) {
+    visitor.visitCompositeNode(this);
+  }
 }
