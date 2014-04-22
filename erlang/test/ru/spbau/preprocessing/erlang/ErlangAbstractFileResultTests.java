@@ -11,6 +11,7 @@ import java.nio.charset.Charset;
 import static org.junit.Assert.assertEquals;
 
 public abstract class ErlangAbstractFileResultTests {
+  protected static final String CHARSET = "UTF8";
   @Rule
   public TestName myTestName = new TestName();
 
@@ -28,7 +29,7 @@ public abstract class ErlangAbstractFileResultTests {
   }
 
   protected String readFile(String fileName) throws IOException {
-    return Resources.toString(new File(getTestDataPath() + fileName).toURI().toURL(), Charset.forName("UTF8"));
+    return Resources.toString(new File(getTestDataPath() + fileName).toURI().toURL(), Charset.forName(CHARSET));
   }
 
   protected abstract String getTestDataPath();

@@ -1,6 +1,5 @@
 package ru.spbau.preprocessing.erlang;
 
-import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
@@ -9,21 +8,37 @@ import ru.spbau.preprocessing.lexer.PreprocessingLexer;
 import ru.spbau.preprocessing.lexer.lexemegraph.LexemeGraphNode;
 import ru.spbau.preprocessing.parser.earley.EarleyParser;
 import ru.spbau.preprocessing.parser.earley.ast.EarleyAstNode;
+import ru.spbau.preprocessing.parser.earley.ast.EarleyAstPrinter;
 import ru.spbau.preprocessing.parser.earley.grammar.EarleyGrammar;
 import ru.spbau.preprocessing.parser.earley.grammar.EarleyGrammarBuilder;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import static ru.spbau.preprocessing.erlang.ErlangToken.COMMENT;
 import static ru.spbau.preprocessing.erlang.ErlangToken.WHITESPACE;
 
-public class ErlangEarleyParserTests {
+public class ErlangEarleyParserTests extends ErlangAbstractFileResultTests {
   @Rule public ErlangEarleyParserCreatorRule myParserCreator = new ErlangEarleyParserCreatorRule();
 
-  @Test public void testWhitespace1() throws IOException {
-    String ws = "    ";
-    EarleyAstNode parse = parse(ws);
-    Assert.assertNotNull(parse);
+  @Test public void comment() throws IOException { doTest(); }
+
+
+  @Override
+  protected String getTestDataPath() {
+    return "erlang/testData/earleyParser/";
+  }
+
+  private void doTest() throws IOException {
+    String input = readFile(getInputFileName());
+    EarleyAstNode parseResult = parse(input);
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    PrintWriter printWriter = new PrintWriter(outputStream, true);
+    parseResult.accept(new EarleyAstPrinter(printWriter));
+    String result = outputStream.toString(CHARSET);
+    printWriter.close();
+    checkResult(result);
   }
 
   private EarleyAstNode parse(String text) throws IOException {

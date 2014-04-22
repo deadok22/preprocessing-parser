@@ -1,0 +1,4 @@
+COMPOSITE: File
+ COMPOSITE: FileContent
+  COMPOSITE: Comment
+   LEAF: 'COMMENT'
