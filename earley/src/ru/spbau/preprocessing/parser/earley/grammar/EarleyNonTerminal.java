@@ -14,7 +14,7 @@ public class EarleyNonTerminal implements EarleySymbol {
 
   @Override
   public boolean isTerminal() {
-    return true;
+    return false;
   }
 
   @Override
