@@ -49,6 +49,7 @@ public class EarleyParser<TokenTypeBase> {
     }
 
     public EarleyAstNode getParseTree() {
+      doPredictAndCompleteStep();
       EarleySymbol startSymbol = myGrammar.getStartSymbol();
       List<EarleyChart.Item> completedStartSymbolParses = myChart.lastState().getCompletionsOf((EarleyNonTerminal) startSymbol);
 
@@ -74,6 +75,19 @@ public class EarleyParser<TokenTypeBase> {
       }
     }
 
+    private void doPredictAndCompleteStep() {
+      //TODO remove duplicate code.
+      EarleyChart.State currentState = myChart.lastState();
+      LinkedHashSet<EarleyChart.Item> addToCurrentState = Sets.newLinkedHashSet();
+      do {
+        currentState.addItems(addToCurrentState);
+        addToCurrentState.clear();
+        //TODO make sure that this is the presence condition that should be here.
+        predict(currentState, addToCurrentState, myLanguageProvider.createPresenceConditionFactory().getTrue());
+        complete(currentState, addToCurrentState);
+      } while (!currentState.containsAll(addToCurrentState));
+    }
+
     private void doEarleyStep(Lexeme<?> lexeme, PresenceCondition presenceCondition) {
       EarleyTerminal<Object> terminal = new EarleyTerminal<Object>(lexeme.getType());
       EarleyChart.State currentState = myChart.lastState();
@@ -88,6 +102,8 @@ public class EarleyParser<TokenTypeBase> {
       do {
         currentState.addItems(addToCurrentState);
         nextState.addItems(addToNextState);
+        addToCurrentState.clear();
+        addToNextState.clear();
 
         predict(currentState, addToCurrentState, presenceCondition);
         scan(terminal, currentState, addToNextState);
@@ -133,6 +149,7 @@ public class EarleyParser<TokenTypeBase> {
     }
 
     private EarleyAstNode buildAlternatives(List<EarleyChart.Item> startSymbolParses, EarleyChart.State state) {
+      if (startSymbolParses.size() == 1) return buildSubtree(startSymbolParses.iterator().next(), state);
       //TODO handle ambiguities which have the same presence condition
       //TODO restore symbols' text
       //TODO think of a merge strategy
