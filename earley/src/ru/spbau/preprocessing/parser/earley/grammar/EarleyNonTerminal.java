@@ -29,4 +29,9 @@ public class EarleyNonTerminal implements EarleySymbol {
   public int hashCode() {
     return myName.hashCode();
   }
+
+  @Override
+  public String toString() {
+    return '{' + getName() + '}';
+  }
 }

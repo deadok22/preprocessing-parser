@@ -33,4 +33,9 @@ public class EarleyTerminal<TokenTypeBase> implements EarleySymbol {
   public int hashCode() {
     return myType.hashCode();
   }
+
+  @Override
+  public String toString() {
+    return '\'' + getName() + '\'';
+  }
 }

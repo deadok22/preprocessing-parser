@@ -134,5 +134,10 @@ public class EarleyChart {
       result = 31 * result + myStartState.hashCode();
       return result;
     }
+
+    @Override
+    public String toString() {
+      return  myIndexInProduction + " in " + myProduction.toString();
+    }
   }
 }

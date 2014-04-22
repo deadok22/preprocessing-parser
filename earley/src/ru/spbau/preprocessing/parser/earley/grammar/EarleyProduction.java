@@ -1,5 +1,7 @@
 package ru.spbau.preprocessing.parser.earley.grammar;
 
+import com.google.common.base.Joiner;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -37,5 +39,10 @@ public class EarleyProduction {
     int result = myLeft.hashCode();
     result = 31 * result + myRight.hashCode();
     return result;
+  }
+
+  @Override
+  public String toString() {
+    return myLeft.toString() + " ::= " + Joiner.on(' ').join(myRight);
   }
 }
