@@ -28,7 +28,7 @@ public abstract class ErlangAbstractFileResultTests {
   }
 
   protected String readFile(String fileName) throws IOException {
-    return Resources.toString(new File(getTestDataPath() + fileName).toURI().toURL(), Charset.forName("UTF-8"));
+    return Resources.toString(new File(getTestDataPath() + fileName).toURI().toURL(), Charset.forName("UTF8"));
   }
 
   protected abstract String getTestDataPath();
