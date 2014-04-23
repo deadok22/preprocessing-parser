@@ -1,6 +1,7 @@
 package ru.spbau.preprocessing.parser.earley;
 
 import com.google.common.base.Objects;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import ru.spbau.preprocessing.api.conditions.PresenceCondition;
@@ -25,16 +26,16 @@ public class EarleyChart {
   }
 
   public static class State implements Iterable<Item> {
-    private final LinkedHashSet<Item> myItems;
+    private final GeneratorTrackingItemSet myItems;
     private final State myPreviousState;
 
     private State(State previousState) {
-      myItems = Sets.newLinkedHashSet();
+      myItems = new GeneratorTrackingItemSet();
       myPreviousState = previousState;
     }
 
-    public boolean addItems(Collection<Item> items) {
-      return myItems.addAll(items);
+    public boolean addItems(GeneratorTrackingItemSet itemSet) {
+      return myItems.addAll(itemSet);
     }
 
     @Override
@@ -44,10 +45,6 @@ public class EarleyChart {
 
     public Item createItem(EarleyProduction production, PresenceCondition presenceCondition) {
       return new Item(production, 0, presenceCondition, this);
-    }
-
-    public boolean containsAll(Collection<Item> items) {
-      return myItems.containsAll(items);
     }
 
     public State previousState() {
@@ -62,6 +59,49 @@ public class EarleyChart {
         }
       }
       return completionsOfSymbol;
+    }
+  }
+
+  /**
+   * A set of chart items which tracks the way items were created.
+   * That is each item has a set of items which generated this item.
+   */
+  public static final class GeneratorTrackingItemSet implements Iterable<Item> {
+    private final LinkedHashSet<Item> myItems = Sets.newLinkedHashSet();
+    private final HashMultimap<Item, Item> myItemGenerators = HashMultimap.create();
+
+    public boolean addItem(Item item, Item generator) {
+      return addItem(item, Collections.singleton(generator));
+    }
+
+    public boolean addItem(Item item, Iterable<Item> generators) {
+      return myItems.add(item) | myItemGenerators.putAll(item, generators);
+    }
+
+    public boolean addAll(GeneratorTrackingItemSet itemSet) {
+      return myItems.addAll(itemSet.myItems) | myItemGenerators.putAll(itemSet.myItemGenerators);
+    }
+
+    public Set<Item> getGenerators(Item item) {
+      return myItemGenerators.get(item);
+    }
+
+    public void clear() {
+      myItems.clear();
+      myItemGenerators.clear();
+    }
+
+    @Override
+    public Iterator<Item> iterator() {
+      return myItems.iterator();
+    }
+
+    public static GeneratorTrackingItemSet from(Iterable<Item> itemIterable) {
+      GeneratorTrackingItemSet result = new GeneratorTrackingItemSet();
+      for (Item item : itemIterable) {
+        result.addItem(item, Collections.<Item>emptyList());
+      }
+      return result;
     }
   }
 
@@ -100,7 +140,6 @@ public class EarleyChart {
       return myIndexInProduction < productionSymbols.size() ? productionSymbols.get(myIndexInProduction) : null;
     }
 
-    //TODO track the way the production is matched
     //TODO handle presence conditions correctly
     public Item matchOneSymbol() {
       assert myIndexInProduction < myProduction.getRight().size();

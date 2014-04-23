@@ -12,7 +12,6 @@ import ru.spbau.preprocessing.parser.earley.ast.*;
 import ru.spbau.preprocessing.parser.earley.grammar.*;
 
 import java.util.Collections;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -30,12 +29,14 @@ public class EarleyParser<TokenTypeBase> {
     EarleySymbol startSymbol = myGrammar.getStartSymbol();
     Set<EarleyProduction> productions = myGrammar.getProductions(startSymbol.getName());
     final EarleyChart.State state = chart.newState();
-    state.addItems(Lists.transform(Lists.newArrayList(productions), new Function<EarleyProduction, EarleyChart.Item>() {
-      @Override
-      public EarleyChart.Item apply(EarleyProduction production) {
-        return state.createItem(production, myLanguageProvider.createPresenceConditionFactory().getTrue());
-      }
-    }));
+    state.addItems(EarleyChart.GeneratorTrackingItemSet.from(
+            Collections2.transform(productions, new Function<EarleyProduction, EarleyChart.Item>() {
+              @Override
+              public EarleyChart.Item apply(EarleyProduction production) {
+                return state.createItem(production, myLanguageProvider.createPresenceConditionFactory().getTrue());
+              }
+            })
+    ));
     EarleyParsingVisitor visitor = new EarleyParsingVisitor(chart);
     lexemeGraph.accept(visitor);
     return visitor.getParseTree();
@@ -78,14 +79,13 @@ public class EarleyParser<TokenTypeBase> {
     private void doPredictAndCompleteStep() {
       //TODO remove duplicate code.
       EarleyChart.State currentState = myChart.lastState();
-      LinkedHashSet<EarleyChart.Item> addToCurrentState = Sets.newLinkedHashSet();
+      EarleyChart.GeneratorTrackingItemSet addToCurrentState = new EarleyChart.GeneratorTrackingItemSet();
       do {
-        currentState.addItems(addToCurrentState);
         addToCurrentState.clear();
         //TODO make sure that this is the presence condition that should be here.
         predict(currentState, addToCurrentState, myLanguageProvider.createPresenceConditionFactory().getTrue());
         complete(currentState, addToCurrentState);
-      } while (!currentState.containsAll(addToCurrentState));
+      } while (currentState.addItems(addToCurrentState));
     }
 
     private void doEarleyStep(Lexeme<?> lexeme, PresenceCondition presenceCondition) {
@@ -93,54 +93,50 @@ public class EarleyParser<TokenTypeBase> {
       EarleyChart.State currentState = myChart.lastState();
       EarleyChart.State nextState = myChart.newState();
 
-      LinkedHashSet<EarleyChart.Item> addToCurrentState = Sets.newLinkedHashSet();
-      LinkedHashSet<EarleyChart.Item> addToNextState = Sets.newLinkedHashSet();
+      EarleyChart.GeneratorTrackingItemSet addToCurrentState = new EarleyChart.GeneratorTrackingItemSet();
+      EarleyChart.GeneratorTrackingItemSet addToNextState = new EarleyChart.GeneratorTrackingItemSet();
 
       //TODO this loop can be optimized:
       //TODO - items can be added rightaway and considered in predict, scan and complete
       //TODO - newly added items can be cached
       do {
-        currentState.addItems(addToCurrentState);
-        nextState.addItems(addToNextState);
         addToCurrentState.clear();
         addToNextState.clear();
 
         predict(currentState, addToCurrentState, presenceCondition);
         scan(terminal, currentState, addToNextState);
         complete(currentState, addToCurrentState);
-      } while (changesWillBeMade(currentState, nextState, addToCurrentState, addToNextState));
+      } while (currentState.addItems(addToCurrentState) || nextState.addItems(addToNextState));
     }
 
-    private boolean changesWillBeMade(EarleyChart.State currentState, EarleyChart.State nextState,
-                                      LinkedHashSet<EarleyChart.Item> addToCurrentState, LinkedHashSet<EarleyChart.Item> addToNextState) {
-      return !currentState.containsAll(addToCurrentState) || !nextState.containsAll(addToNextState);
-    }
-
-    private void predict(final EarleyChart.State currentState, LinkedHashSet<EarleyChart.Item> addToCurrentState, final PresenceCondition presenceCondition) {
+    private void predict(final EarleyChart.State currentState, EarleyChart.GeneratorTrackingItemSet addToCurrentState, final PresenceCondition presenceCondition) {
       for (EarleyChart.Item item : currentState) {
         EarleySymbol nextExpectedSymbol = item.getNextExpectedSymbol();
         if (nextExpectedSymbol != null && !nextExpectedSymbol.isTerminal()) {
           Set<EarleyProduction> productions = myGrammar.getProductions(nextExpectedSymbol.getName());
-          addToCurrentState.addAll(Collections2.transform(productions, new Function<EarleyProduction, EarleyChart.Item>() {
-            @Override
-            public EarleyChart.Item apply(EarleyProduction production) {
-              return currentState.createItem(production, presenceCondition);
-            }
-          }));
+          addToCurrentState.addAll(EarleyChart.GeneratorTrackingItemSet.from(
+                          Collections2.transform(productions, new Function<EarleyProduction, EarleyChart.Item>() {
+                            @Override
+                            public EarleyChart.Item apply(EarleyProduction production) {
+                              return currentState.createItem(production, presenceCondition);
+                            }
+                          })
+                  )
+          );
         }
       }
     }
 
-    private void scan(EarleySymbol nextSymbol, EarleyChart.State currentState, LinkedHashSet<EarleyChart.Item> addToNextState) {
+    private void scan(EarleySymbol nextSymbol, EarleyChart.State currentState, EarleyChart.GeneratorTrackingItemSet addToNextState) {
       for (EarleyChart.Item item : currentState) {
         EarleySymbol nextExpectedSymbol = item.getNextExpectedSymbol();
         if (Objects.equal(nextExpectedSymbol, nextSymbol)) {
-          addToNextState.add(item.matchOneSymbol());
+          addToNextState.addItem(item.matchOneSymbol(), item);
         }
       }
     }
 
-    private void complete(EarleyChart.State currentState, LinkedHashSet<EarleyChart.Item> addToCurrentState) {
+    private void complete(EarleyChart.State currentState, EarleyChart.GeneratorTrackingItemSet addToCurrentState) {
       for (EarleyChart.Item item : currentState) {
         if (item.isComplete()) {
           scan(item.getProduction().getLeft(), item.getStartState(), addToCurrentState);
