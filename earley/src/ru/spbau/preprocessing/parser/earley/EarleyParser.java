@@ -52,6 +52,7 @@ public class EarleyParser<TokenTypeBase> {
     public EarleyAstNode getParseTree() {
       doPredictAndCompleteStep();
       EarleySymbol startSymbol = myGrammar.getStartSymbol();
+      //TODO only use parse trees spanning across the whole input.
       List<EarleyChart.Item> completedStartSymbolParses = myChart.lastState().getCompletionsOf((EarleyNonTerminal) startSymbol);
 
       //input was not matched.
