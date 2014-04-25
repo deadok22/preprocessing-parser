@@ -109,22 +109,36 @@ public class EarleyParser {
 
   private void buildNodesForPreviousSymbols(List<EarleyAstNode> reversedChildren, EarleyItem item, EarleyItemDescriptor descriptor, EarleyChartColumn column) {
     if (item.getLastMatchedSymbol() == null) return;
+    EarleyItem predecessor = descriptor.getPredecessor();
+
     Set<EarleyItem> reductionItems = descriptor.getReductionItems();
-    EarleyChartColumn predecessorEndColumn;
     if (reductionItems.isEmpty()) {
       EarleySymbol lastMatchedSymbol = item.getLastMatchedSymbol();
       assert lastMatchedSymbol.isTerminal();
       //noinspection unchecked
       reversedChildren.add(new EarleyLeafNode<Object>((EarleyTerminal<Object>)lastMatchedSymbol));
-      predecessorEndColumn = column.previousColumn();
+      buildNodesForPredecessor(reversedChildren, predecessor, column.previousColumn());
+    }
+    else if (reductionItems.size() == 1) {
+      EarleyItem reductionItem = reductionItems.iterator().next();
+      EarleyAstNode nodeForReduction = buildCompleteNode(reductionItem, column);
+      reversedChildren.add(nodeForReduction);
+      buildNodesForPredecessor(reversedChildren, predecessor, reductionItem.getStartColumn());
     }
     else {
-      EarleyAstNode lastChild = buildNode(reductionItems, column);
-      reversedChildren.add(lastChild);
-      predecessorEndColumn = reductionItems.iterator().next().getStartColumn();
+      List<EarleyConditionalBranchNode> branchNodes = Lists.newArrayListWithExpectedSize(reductionItems.size());
+      for (EarleyItem reductionItem : reductionItems) {
+        EarleyAstNode nodeForReduction = buildCompleteNode(reductionItem, column);
+        List<EarleyAstNode> reversedBranchNodes = Lists.newArrayList();
+        reversedBranchNodes.add(nodeForReduction);
+        buildNodesForPredecessor(reversedBranchNodes, predecessor, reductionItem.getStartColumn());
+        branchNodes.add(new EarleyConditionalBranchNode(null, Lists.reverse(reversedBranchNodes)));
+      }
+      reversedChildren.add(new EarleyAlternativesNode(branchNodes));
     }
+  }
 
-    EarleyItem predecessor = descriptor.getPredecessor();
+  private void buildNodesForPredecessor(List<EarleyAstNode> reversedChildren, EarleyItem predecessor, EarleyChartColumn predecessorEndColumn) {
     Set<EarleyItemDescriptor> predecessorDescriptors = predecessorEndColumn.getDescriptors(predecessor);
     if (predecessorDescriptors.isEmpty()) return;
     if (predecessorDescriptors.size() == 1) {
