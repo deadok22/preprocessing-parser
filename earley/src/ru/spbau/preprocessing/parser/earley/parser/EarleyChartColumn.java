@@ -9,9 +9,13 @@ import java.util.Iterator;
 import java.util.Set;
 
 class EarleyChartColumn implements Iterable<EarleyItem> {
+  private final EarleyChart myChart;
+
+
   private LinkedHashMultimap<EarleyItem, EarleyItemDescriptor> myItems = LinkedHashMultimap.create();
 
-  EarleyChartColumn() {
+  EarleyChartColumn(EarleyChart chart) {
+    myChart = chart;
   }
 
   public Set<EarleyItemDescriptor> getDescriptors(EarleyItem item) {
@@ -72,5 +76,9 @@ class EarleyChartColumn implements Iterable<EarleyItem> {
   @Override
   public Iterator<EarleyItem> iterator() {
     return ImmutableSet.copyOf(myItems.keySet()).iterator();
+  }
+
+  public EarleyChartColumn previousColumn() {
+    return myChart.getColumnBefore(this);
   }
 }

@@ -12,7 +12,7 @@ class EarleyChart {
   }
 
   public EarleyChartColumn newColumn() {
-    EarleyChartColumn column = new EarleyChartColumn();
+    EarleyChartColumn column = new EarleyChartColumn(this);
     myChart.add(column);
     return column;
   }
@@ -23,5 +23,10 @@ class EarleyChart {
 
   public boolean isFirstColumn(EarleyChartColumn chartColumn) {
     return !myChart.isEmpty() && chartColumn == myChart.get(0);
+  }
+
+  EarleyChartColumn getColumnBefore(EarleyChartColumn column) {
+    int i = myChart.indexOf(column);
+    return i > 0 ? myChart.get(i - 1) : null;
   }
 }

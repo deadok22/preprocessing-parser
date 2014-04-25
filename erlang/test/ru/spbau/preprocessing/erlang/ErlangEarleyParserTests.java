@@ -6,11 +6,11 @@ import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import ru.spbau.preprocessing.lexer.PreprocessingLexer;
 import ru.spbau.preprocessing.lexer.lexemegraph.LexemeGraphNode;
-import ru.spbau.preprocessing.parser.earley.EarleyParser;
 import ru.spbau.preprocessing.parser.earley.ast.EarleyAstNode;
 import ru.spbau.preprocessing.parser.earley.ast.EarleyAstPrinter;
 import ru.spbau.preprocessing.parser.earley.grammar.EarleyGrammar;
 import ru.spbau.preprocessing.parser.earley.grammar.EarleyGrammarBuilder;
+import ru.spbau.preprocessing.parser.earley.parser.EarleyParser;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -53,7 +53,7 @@ public class ErlangEarleyParserTests extends ErlangAbstractFileResultTests {
   }
 
   public static class ErlangEarleyParserCreatorRule extends TestWatcher {
-    private EarleyParser<ErlangToken> myParser;
+    private EarleyParser myParser;
 
     @Override
     protected void starting(Description description) {
@@ -79,10 +79,10 @@ public class ErlangEarleyParserTests extends ErlangAbstractFileResultTests {
 
               .build();
 
-      myParser = new EarleyParser<ErlangToken>(new ErlangLanguageProvider(), grammar);
+      myParser = new EarleyParser(grammar);
     }
 
-    public EarleyParser<ErlangToken> getParser() {
+    public EarleyParser getParser() {
       return myParser;
     }
   }
