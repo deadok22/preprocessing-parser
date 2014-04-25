@@ -1,5 +1,7 @@
 package ru.spbau.preprocessing.parser.earley.ast;
 
+import ru.spbau.preprocessing.api.conditions.PresenceCondition;
+
 import java.io.PrintWriter;
 
 public class EarleyAstPrinter extends EarleyAstVisitor {
@@ -29,7 +31,8 @@ public class EarleyAstPrinter extends EarleyAstVisitor {
 
   @Override
   public void visitConditionalBranchNode(EarleyConditionalBranchNode conditionalBranchNode) {
-    printLine("CONDITIONAL: " + conditionalBranchNode.getPresenceCondition() + " <" + conditionalBranchNode.getPresenceCondition().value() + ">");
+    PresenceCondition presenceCondition = conditionalBranchNode.getPresenceCondition();
+    printLine("CONDITIONAL: " + (presenceCondition != null ? presenceCondition + " <" + presenceCondition.value() + ">" : "null"));
     visitNodes(conditionalBranchNode.getChildren());
   }
 
