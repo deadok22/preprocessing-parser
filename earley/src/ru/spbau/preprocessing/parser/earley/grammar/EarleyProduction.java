@@ -26,6 +26,11 @@ public class EarleyProduction {
     return myLeft.getName();
   }
 
+  public boolean isLeftAssociative() {
+    //TODO provide options for associativity of rules
+    return true;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;

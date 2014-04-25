@@ -48,8 +48,9 @@ public class EarleyParser {
 
   /**
    * Build a subtree for a set of different completion variants of the same symbol.
+   *
    * @param completedItems a set of completed items with the same span, but possibly different productions/presence conditions
-   * @param column an Earley chart column where completed items were completed.
+   * @param column         an Earley chart column where completed items were completed.
    * @return a subtree or null if a subtree cannot be parsed.
    */
   private EarleyAstNode buildNode(Collection<EarleyItem> completedItems, EarleyChartColumn column) {
@@ -116,25 +117,28 @@ public class EarleyParser {
       EarleySymbol lastMatchedSymbol = item.getLastMatchedSymbol();
       assert lastMatchedSymbol.isTerminal();
       //noinspection unchecked
-      reversedChildren.add(new EarleyLeafNode<Object>((EarleyTerminal<Object>)lastMatchedSymbol));
+      reversedChildren.add(new EarleyLeafNode<Object>((EarleyTerminal<Object>) lastMatchedSymbol));
       buildNodesForPredecessor(reversedChildren, predecessor, column.previousColumn());
     }
-    else if (reductionItems.size() == 1) {
-      EarleyItem reductionItem = reductionItems.iterator().next();
-      EarleyAstNode nodeForReduction = buildCompleteNode(reductionItem, column);
-      reversedChildren.add(nodeForReduction);
-      buildNodesForPredecessor(reversedChildren, predecessor, reductionItem.getStartColumn());
-    }
     else {
-      List<EarleyConditionalBranchNode> branchNodes = Lists.newArrayListWithExpectedSize(reductionItems.size());
-      for (EarleyItem reductionItem : reductionItems) {
+      reductionItems = excludeReductionAmbiguities(item, reductionItems);
+      if (reductionItems.size() == 1) {
+        EarleyItem reductionItem = reductionItems.iterator().next();
         EarleyAstNode nodeForReduction = buildCompleteNode(reductionItem, column);
-        List<EarleyAstNode> reversedBranchNodes = Lists.newArrayList();
-        reversedBranchNodes.add(nodeForReduction);
-        buildNodesForPredecessor(reversedBranchNodes, predecessor, reductionItem.getStartColumn());
-        branchNodes.add(new EarleyConditionalBranchNode(null, Lists.reverse(reversedBranchNodes)));
+        reversedChildren.add(nodeForReduction);
+        buildNodesForPredecessor(reversedChildren, predecessor, reductionItem.getStartColumn());
       }
-      reversedChildren.add(new EarleyAlternativesNode(branchNodes));
+      else {
+        List<EarleyConditionalBranchNode> branchNodes = Lists.newArrayListWithExpectedSize(reductionItems.size());
+        for (EarleyItem reductionItem : reductionItems) {
+          EarleyAstNode nodeForReduction = buildCompleteNode(reductionItem, column);
+          List<EarleyAstNode> reversedBranchNodes = Lists.newArrayList();
+          reversedBranchNodes.add(nodeForReduction);
+          buildNodesForPredecessor(reversedBranchNodes, predecessor, reductionItem.getStartColumn());
+          branchNodes.add(new EarleyConditionalBranchNode(null, Lists.reverse(reversedBranchNodes)));
+        }
+        reversedChildren.add(new EarleyAlternativesNode(branchNodes));
+      }
     }
   }
 
@@ -155,5 +159,19 @@ public class EarleyParser {
       }
       reversedChildren.add(new EarleyAlternativesNode(branchNodes));
     }
+  }
+
+  //TODO improve
+  private Set<EarleyItem> excludeReductionAmbiguities(EarleyItem currentItem, Set<EarleyItem> reductions) {
+    if (currentItem.getProduction().isLeftAssociative()) {
+      EarleyItem rightmostStartingItem = null;
+      for (EarleyItem reduction : reductions) {
+        if (rightmostStartingItem == null || rightmostStartingItem.getStartColumn().isBefore(reduction.getStartColumn())) {
+          rightmostStartingItem = reduction;
+        }
+      }
+      return Collections.singleton(rightmostStartingItem);
+    }
+    return reductions;
   }
 }

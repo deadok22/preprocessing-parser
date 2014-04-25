@@ -11,7 +11,6 @@ import java.util.Set;
 class EarleyChartColumn implements Iterable<EarleyItem> {
   private final EarleyChart myChart;
 
-
   private LinkedHashMultimap<EarleyItem, EarleyItemDescriptor> myItems = LinkedHashMultimap.create();
 
   EarleyChartColumn(EarleyChart chart) {
@@ -80,5 +79,16 @@ class EarleyChartColumn implements Iterable<EarleyItem> {
 
   public EarleyChartColumn previousColumn() {
     return myChart.getColumnBefore(this);
+  }
+
+  //TODO remove this. Relative column positions should be determined some other way.
+  public boolean isBefore(EarleyChartColumn column) {
+    if (column == this) return false;
+    while ((column = column.previousColumn()) != null) {
+      if (column == this) {
+        return true;
+      }
+    }
+    return false;
   }
 }
