@@ -57,8 +57,6 @@ class EarleyRecognizer implements LexemeGraphVisitor {
         columnAfterFork.addAllFrom(lastForkColumn);
       }
     }
-    //TODO implement
-    throw new UnsupportedOperationException("Not implemented.");
   }
 
   @Override
