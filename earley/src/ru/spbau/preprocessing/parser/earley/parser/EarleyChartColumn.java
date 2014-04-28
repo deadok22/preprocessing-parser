@@ -2,6 +2,7 @@ package ru.spbau.preprocessing.parser.earley.parser;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.LinkedHashMultimap;
+import ru.spbau.preprocessing.api.conditions.PresenceCondition;
 import ru.spbau.preprocessing.parser.earley.grammar.EarleyProduction;
 import ru.spbau.preprocessing.parser.earley.grammar.EarleyTerminal;
 
@@ -25,11 +26,13 @@ class EarleyChartColumn implements Iterable<EarleyItem> {
    * Add an item in initial state.
    *
    * @param production a production for this item.
+   * @param presenceCondition
    * @return added item or null if the column was not modified.
    */
-  public EarleyItem addItem(EarleyProduction production) {
-    EarleyItem earleyItem = new EarleyItem(production, this);
-    return myItems.put(earleyItem, new EarleyItemDescriptor(null)) ? earleyItem : null;
+  public EarleyItem addItem(EarleyProduction production, PresenceCondition presenceCondition) {
+    EarleyItem newItem = new EarleyItem(production, this);
+    EarleyItemDescriptor newItemDescriptor = new EarleyItemDescriptor(null, presenceCondition);
+    return addItem(newItem, newItemDescriptor);
   }
 
   /**
@@ -37,11 +40,13 @@ class EarleyChartColumn implements Iterable<EarleyItem> {
    *
    * @param predecessor the predecessor of this item.
    * @param terminal a terminal consumed.
+   * @param presenceCondition
    * @return added item or null if the column was not modified.
    */
-  public EarleyItem addItem(EarleyItem predecessor, EarleyTerminal<?> terminal) {
+  public EarleyItem addItem(EarleyItem predecessor, EarleyTerminal<?> terminal, PresenceCondition presenceCondition) {
     EarleyItem newItem = predecessor.advanceWith(terminal);
-    return myItems.put(newItem, new EarleyItemDescriptor(predecessor)) ? newItem : null;
+    EarleyItemDescriptor newItemDescriptor = new EarleyItemDescriptor(predecessor, presenceCondition);
+    return myItems.put(newItem, newItemDescriptor) ? newItem : null;
   }
 
   /**
@@ -49,24 +54,29 @@ class EarleyChartColumn implements Iterable<EarleyItem> {
    *
    * @param predecessor the predecessor of this item.
    * @param reduction a reduction item.
+   * @param presenceCondition
    * @return added item or null if the column was not modified.
    */
-  public EarleyItem addItem(EarleyItem predecessor, EarleyItem reduction) {
+  public EarleyItem addItem(EarleyItem predecessor, EarleyItem reduction, PresenceCondition presenceCondition) {
     EarleyItem newItem = predecessor.advanceWith(reduction.getSymbol());
-    EarleyItemDescriptor newItemDescriptor = new EarleyItemDescriptor(predecessor);
-    if (myItems.containsEntry(newItem, newItemDescriptor)) {
+    EarleyItemDescriptor newItemDescriptor = new EarleyItemDescriptor(predecessor, presenceCondition);
+    newItemDescriptor.addReductionItem(reduction);
+    return addItem(newItem, newItemDescriptor);
+  }
+
+  private EarleyItem addItem(EarleyItem newItem, EarleyItemDescriptor newItemDescriptor) {
+    if (!myItems.put(newItem, newItemDescriptor)) {
       Set<EarleyItemDescriptor> descriptors = myItems.get(newItem);
       for (EarleyItemDescriptor descriptor : descriptors) {
         if (newItemDescriptor.equals(descriptor)) {
-          return descriptor.addReductionItem(reduction) ? newItem : null;
+          boolean changesWereMade = descriptor.expandPresenceCondition(newItemDescriptor.getPresenceCondition());
+          changesWereMade |= descriptor.addReductionItems(newItemDescriptor.getReductionItems());
+          return changesWereMade ? newItem : null;
         }
       }
+      return null;
     }
-    else {
-      newItemDescriptor.addReductionItem(reduction);
-      return myItems.put(newItem, newItemDescriptor) ? newItem : null;
-    }
-    return null;
+    return newItem;
   }
 
   /**

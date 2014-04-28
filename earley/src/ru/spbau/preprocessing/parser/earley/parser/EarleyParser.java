@@ -1,6 +1,7 @@
 package ru.spbau.preprocessing.parser.earley.parser;
 
 import com.google.common.collect.Lists;
+import ru.spbau.preprocessing.api.conditions.PresenceConditionFactory;
 import ru.spbau.preprocessing.lexer.lexemegraph.LexemeGraphNode;
 import ru.spbau.preprocessing.parser.earley.ast.*;
 import ru.spbau.preprocessing.parser.earley.grammar.EarleyGrammar;
@@ -15,13 +16,15 @@ import java.util.Set;
 
 public class EarleyParser {
   private final EarleyGrammar myGrammar;
+  private final PresenceConditionFactory myPresenceConditionFactory;
 
-  public EarleyParser(EarleyGrammar grammar) {
+  public EarleyParser(EarleyGrammar grammar, PresenceConditionFactory presenceConditionFactory) {
     myGrammar = grammar;
+    myPresenceConditionFactory = presenceConditionFactory;
   }
 
   public EarleyAstNode parse(LexemeGraphNode lexemeGraphNode) {
-    EarleyRecognizer recognizer = new EarleyRecognizer(myGrammar);
+    EarleyRecognizer recognizer = new EarleyRecognizer(myPresenceConditionFactory, myGrammar);
     lexemeGraphNode.accept(recognizer);
     EarleyChart chart = recognizer.completeChart();
     return buildAst(chart);

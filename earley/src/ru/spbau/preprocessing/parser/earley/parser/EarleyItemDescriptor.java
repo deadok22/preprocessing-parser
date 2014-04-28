@@ -2,6 +2,7 @@ package ru.spbau.preprocessing.parser.earley.parser;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.Sets;
+import ru.spbau.preprocessing.api.conditions.PresenceCondition;
 
 import java.util.Set;
 
@@ -19,9 +20,11 @@ import java.util.Set;
  class EarleyItemDescriptor {
   private final EarleyItem myPredecessor;
   private final Set<EarleyItem> myReductionItems;
+  private PresenceCondition myPresenceCondition;
 
-  EarleyItemDescriptor(EarleyItem predecessor) {
+  EarleyItemDescriptor(EarleyItem predecessor, PresenceCondition presenceCondition) {
     myPredecessor = predecessor;
+    myPresenceCondition = presenceCondition;
     myReductionItems = Sets.newHashSet();
   }
 
@@ -30,12 +33,36 @@ import java.util.Set;
     return myReductionItems.add(reductionItem);
   }
 
+  public boolean addReductionItems(Iterable<EarleyItem> reductionItems) {
+    boolean reductionSetChanged = false;
+    for (EarleyItem reductionItem : reductionItems) {
+      reductionSetChanged |= addReductionItem(reductionItem);
+    }
+    return reductionSetChanged;
+  }
+
+  /**
+   * Alter a presence condition of this object to indicate that this item can also be created under
+   * different presence condition.
+   * @param expansion a new presence condition under which this item can be created.
+   * @return true if this item's presence condition has been changed.
+   */
+  public boolean expandPresenceCondition(PresenceCondition expansion) {
+    PresenceCondition oldPresenceCondition = myPresenceCondition;
+    myPresenceCondition = myPresenceCondition.or(expansion);
+    return !Objects.equal(oldPresenceCondition, myPresenceCondition);
+  }
+
   public EarleyItem getPredecessor() {
     return myPredecessor;
   }
 
   public Set<EarleyItem> getReductionItems() {
     return myReductionItems;
+  }
+
+  public PresenceCondition getPresenceCondition() {
+    return myPresenceCondition;
   }
 
   @Override

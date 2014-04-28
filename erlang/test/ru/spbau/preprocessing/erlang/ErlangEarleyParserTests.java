@@ -239,7 +239,7 @@ public class ErlangEarleyParserTests extends ErlangAbstractFileResultTests {
 
               .build();
 
-      myParser = new EarleyParser(grammar);
+      myParser = new EarleyParser(grammar, new ErlangLanguageProvider().createPresenceConditionFactory());
     }
 
     public EarleyParser getParser() {
