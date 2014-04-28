@@ -1,12 +1,10 @@
 package ru.spbau.preprocessing.parser.earley.parser;
 
 import com.google.common.base.Objects;
+import com.google.common.collect.Lists;
 import ru.spbau.preprocessing.api.conditions.PresenceCondition;
 import ru.spbau.preprocessing.api.conditions.PresenceConditionFactory;
-import ru.spbau.preprocessing.lexer.lexemegraph.Lexeme;
-import ru.spbau.preprocessing.lexer.lexemegraph.LexemeGraphForkNode;
-import ru.spbau.preprocessing.lexer.lexemegraph.LexemeGraphLangNode;
-import ru.spbau.preprocessing.lexer.lexemegraph.LexemeGraphVisitor;
+import ru.spbau.preprocessing.lexer.lexemegraph.*;
 import ru.spbau.preprocessing.parser.earley.grammar.EarleyGrammar;
 import ru.spbau.preprocessing.parser.earley.grammar.EarleyProduction;
 import ru.spbau.preprocessing.parser.earley.grammar.EarleySymbol;
@@ -21,10 +19,14 @@ class EarleyRecognizer implements LexemeGraphVisitor {
   private final EarleyChart myChart;
 
   EarleyRecognizer(PresenceConditionFactory presenceConditionFactory, EarleyGrammar grammar) {
+    this(presenceConditionFactory, grammar, new EarleyChart());
+    createFirstChartColumn();
+  }
+
+  private EarleyRecognizer(PresenceConditionFactory presenceConditionFactory, EarleyGrammar grammar, EarleyChart chart) {
     myPresenceConditionFactory = presenceConditionFactory;
     myGrammar = grammar;
-    myChart = new EarleyChart();
-    createFirstChartColumn();
+    myChart = chart;
   }
 
   private void createFirstChartColumn() {
@@ -38,9 +40,23 @@ class EarleyRecognizer implements LexemeGraphVisitor {
 
   @Override
   public void visitForkNode(LexemeGraphForkNode forkNode) {
+    EarleyChartColumn columnBeforeFork = myChart.lastColumn();
     //TODO create a subchart for each alternative branch
     //TODO add a new chart column to this myChart filling it with join of items from all branches.
     //TODO BUT be sure not to complete items from one branch with items from another!
+    List<EarleyRecognizer> forkRecognizers = Lists.newArrayListWithExpectedSize(forkNode.getChildren().size());
+    for (LexemeGraphNode lexemeGraphNode : forkNode.getChildren()) {
+      EarleyRecognizer recognizer = new EarleyRecognizer(myPresenceConditionFactory, myGrammar, myChart.createSubChart());
+      forkRecognizers.add(recognizer);
+      lexemeGraphNode.accept(recognizer);
+    }
+    EarleyChartColumn columnAfterFork = myChart.newColumn();
+    for (EarleyRecognizer forkRecognizer : forkRecognizers) {
+      EarleyChartColumn lastForkColumn = forkRecognizer.myChart.lastColumn();
+      if (lastForkColumn != columnBeforeFork) {
+        columnAfterFork.addAllFrom(lastForkColumn);
+      }
+    }
     //TODO implement
     throw new UnsupportedOperationException("Not implemented.");
   }

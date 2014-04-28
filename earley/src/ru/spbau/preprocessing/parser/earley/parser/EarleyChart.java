@@ -25,6 +25,12 @@ class EarleyChart {
     return !myChart.isEmpty() && chartColumn == myChart.get(0);
   }
 
+  public EarleyChart createSubChart() {
+    EarleyChart subChart = new EarleyChart();
+    subChart.myChart.add(lastColumn());
+    return subChart;
+  }
+
   EarleyChartColumn getColumnBefore(EarleyChartColumn column) {
     int i = myChart.indexOf(column);
     return i > 0 ? myChart.get(i - 1) : null;
