@@ -1,0 +1,28 @@
+COMPOSITE: Forms
+ COMPOSITE: Form
+  COMPOSITE: Function
+   COMPOSITE: Function clauses
+    COMPOSITE: Function clause
+     LEAF: 'ATOM'
+     COMPOSITE: Clause args
+      COMPOSITE: Argument list
+       LEAF: 'PAR_LEFT'
+       LEAF: 'PAR_RIGHT'
+     COMPOSITE: Clause body
+      LEAF: 'ARROW'
+      COMPOSITE: Expressions
+       COMPOSITE: Expression
+        COMPOSITE: Expression_100
+         COMPOSITE: Expression_150
+          COMPOSITE: Expression_160
+           COMPOSITE: Expression_200
+            COMPOSITE: Expression_300
+             COMPOSITE: Expression_400
+              COMPOSITE: Expression_500
+               COMPOSITE: Expression_600
+                COMPOSITE: Expression_700
+                 COMPOSITE: Expression_800
+                  COMPOSITE: Max expression
+                   COMPOSITE: Atomic
+                    LEAF: 'ATOM'
+  LEAF: 'DOT'
