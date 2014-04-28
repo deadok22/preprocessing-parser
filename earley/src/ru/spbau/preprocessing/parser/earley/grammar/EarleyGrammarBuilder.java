@@ -3,26 +3,36 @@ package ru.spbau.preprocessing.parser.earley.grammar;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.SetMultimap;
+import com.google.common.collect.Sets;
 
 import java.util.List;
+import java.util.Set;
 
 public class EarleyGrammarBuilder {
   private EarleySymbol myStartSymbol;
   private SetMultimap<String, EarleyProduction> myProductions;
+  private Set<EarleySymbol> myIgnoredSymbols;
 
   private EarleyGrammarBuilder(EarleySymbol startSymbol) {
     myStartSymbol = startSymbol;
     myProductions = LinkedHashMultimap.create();
+    myIgnoredSymbols = Sets.newHashSet();
   }
 
   public RuleBuilder rule(String ruleName) {
     return new RuleBuilder(ruleName);
   }
 
+  public EarleyGrammarBuilder ignoreTerminal(Object token) {
+    myIgnoredSymbols.add(new EarleyTerminal<Object>(token));
+    return this;
+  }
+
   public EarleyGrammar build() {
-    EarleyGrammar grammar = new EarleyGrammar(myStartSymbol, myProductions);
+    EarleyGrammar grammar = new EarleyGrammar(myStartSymbol, myProductions, myIgnoredSymbols);
     myStartSymbol = null;
     myProductions = null;
+    myIgnoredSymbols = null;
     return grammar;
   }
 

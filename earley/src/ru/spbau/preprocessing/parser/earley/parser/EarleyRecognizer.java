@@ -54,6 +54,8 @@ class EarleyRecognizer implements LexemeGraphVisitor {
 
   private void doEarleyStep(Lexeme<?> lexeme) {
     EarleyTerminal<Object> terminal = new EarleyTerminal<Object>(lexeme.getType());
+    if (myGrammar.isIgnoredSymbol(terminal)) return;
+
     EarleyChartColumn currentColumn = myChart.lastColumn();
     EarleyChartColumn nextColumn = myChart.newColumn();
 
