@@ -69,7 +69,6 @@ public enum ErlangToken {
   SEMI,
   STRING,
   TRY,
-  UNI_PATTERN,
   VAR,
   WHEN,
   XOR,

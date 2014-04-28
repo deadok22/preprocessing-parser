@@ -91,9 +91,7 @@ NameChars = {NameChar}+
 QuotedCharacter = \\' | {EscapeSequence}  | [^'\\] /* [a-zA-Z0-9#_.@,;:!?/&%$+*~\^-] */
 AtomLiteral = ({ErlangLowercase} {NameChar}*) | "''" | (' {QuotedCharacter}+ ')
 
-Variable = (_ {NameChars}) | ({ErlangUppercase} {NameChars}?)
-
-UniversalPattern = _
+Variable = (_ {NameChars}) | ({ErlangUppercase} {NameChars}?) | _
 
 %%
  {Comment}                     { return COMMENT; }
@@ -151,8 +149,6 @@ UniversalPattern = _
 
  {IntegerLiteral}              { return INTEGER; }
  {FloatLiteral}                { return FLOAT; }
- {UniversalPattern}            { return UNI_PATTERN; }
-
  {CharLiteral}                 { return CHAR; }
  {StringLiteral}               { return STRING; }
  {AtomLiteral}                 { return ATOM; }
