@@ -153,11 +153,9 @@ public class EarleyParser {
     }
     else {
       List<EarleyConditionalBranchNode> branchNodes = Lists.newArrayListWithExpectedSize(predecessorDescriptors.size());
-      for (int i = 0; i < predecessorDescriptors.size(); i++) {
+      for (EarleyItemDescriptor predecessorDescriptor : predecessorDescriptors) {
         List<EarleyAstNode> reversedBranchItems = Lists.newArrayList();
-        for (EarleyItemDescriptor predecessorDescriptor : predecessorDescriptors) {
-          buildNodesForPreviousSymbols(reversedBranchItems, predecessor, predecessorDescriptor, predecessorEndColumn);
-        }
+        buildNodesForPreviousSymbols(reversedBranchItems, predecessor, predecessorDescriptor, predecessorEndColumn);
         branchNodes.add(new EarleyConditionalBranchNode(null, Lists.reverse(reversedBranchItems)));
       }
       reversedChildren.add(new EarleyAlternativesNode(branchNodes));
