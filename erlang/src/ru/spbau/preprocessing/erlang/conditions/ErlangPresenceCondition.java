@@ -46,6 +46,19 @@ public class ErlangPresenceCondition implements PresenceCondition {
     return myExpression.toString();
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    ErlangPresenceCondition that = (ErlangPresenceCondition) o;
+    return myExpression.equals(that.myExpression);
+  }
+
+  @Override
+  public int hashCode() {
+    return myExpression.hashCode();
+  }
+
   static ErlangPresenceCondition macroDefined(String macroName, boolean positive) {
     return new ErlangPresenceCondition(ErlangConjunctiveClause.macroDefined(macroName, positive));
   }

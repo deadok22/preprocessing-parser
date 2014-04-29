@@ -18,4 +18,7 @@ public abstract class ErlangBooleanExpression {
 
   @Override
   public abstract String toString();
+
+  public abstract boolean equals(Object o);
+  public abstract int hashCode();
 }

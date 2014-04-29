@@ -57,4 +57,14 @@ public abstract class ErlangBooleanConstant extends ErlangBooleanExpression {
 
   private ErlangBooleanConstant() {
   }
+
+  @Override
+  public boolean equals(Object o) {
+    return o == this;
+  }
+
+  @Override
+  public int hashCode() {
+    return isTrue() ? 1 : 0;
+  }
 }

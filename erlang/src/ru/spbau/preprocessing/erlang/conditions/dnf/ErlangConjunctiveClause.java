@@ -2,14 +2,9 @@ package ru.spbau.preprocessing.erlang.conditions.dnf;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
+import com.google.common.collect.*;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
+import java.util.*;
 
 public class ErlangConjunctiveClause extends ErlangBooleanExpression {
   /**
@@ -39,7 +34,7 @@ public class ErlangConjunctiveClause extends ErlangBooleanExpression {
       return ebe.or(this);
     }
     if (ebe instanceof ErlangConjunctiveClause) {
-      return or(Arrays.asList(this, (ErlangConjunctiveClause) ebe));
+      return or(Iterators.forArray(this, (ErlangConjunctiveClause) ebe));
     }
     throw new AssertionError("Unexpected erlang boolean expression type");
   }
@@ -62,6 +57,19 @@ public class ErlangConjunctiveClause extends ErlangBooleanExpression {
       }
     });
     return "(" + Joiner.on(" & ").join(conjunctStrings) + ")";
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    ErlangConjunctiveClause that = (ErlangConjunctiveClause) o;
+    return myConjuncts.equals(that.myConjuncts);
+  }
+
+  @Override
+  public int hashCode() {
+    return myConjuncts.hashCode();
   }
 
   public static ErlangBooleanExpression and(Iterable<ErlangConjunctiveClause> conjunctiveClauses) {
@@ -87,9 +95,11 @@ public class ErlangConjunctiveClause extends ErlangBooleanExpression {
     return new ErlangConjunctiveClause(ImmutableMap.copyOf(andPrototype));
   }
 
-  public static ErlangBooleanExpression or(Collection<ErlangConjunctiveClause> conjunctiveClauses) {
+  public static ErlangBooleanExpression or(Iterator<ErlangConjunctiveClause> conjunctiveClausesIterator) {
+    HashSet<ErlangConjunctiveClause> conjunctiveClauses = Sets.newHashSet(conjunctiveClausesIterator);
     if (andNot(conjunctiveClauses) == ErlangBooleanConstant.FALSE) return ErlangBooleanConstant.TRUE;
-    return new ErlangDisjunctiveNormalForm(ImmutableList.copyOf(conjunctiveClauses));
+    return conjunctiveClauses.size() == 1 ? conjunctiveClauses.iterator().next() :
+            new ErlangDisjunctiveNormalForm(ImmutableList.copyOf(conjunctiveClauses));
   }
 
   public static ErlangBooleanExpression andNot(Collection<ErlangConjunctiveClause> conjunctiveClauses) {

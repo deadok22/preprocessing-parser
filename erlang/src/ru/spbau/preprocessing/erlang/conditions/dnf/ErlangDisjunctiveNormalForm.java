@@ -3,7 +3,6 @@ package ru.spbau.preprocessing.erlang.conditions.dnf;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterators;
-import com.google.common.collect.Lists;
 
 import java.util.Iterator;
 
@@ -41,7 +40,7 @@ public class ErlangDisjunctiveNormalForm extends ErlangBooleanExpression {
     if (ebe instanceof ErlangBooleanConstant) {
       return ebe.or(this);
     }
-    return ErlangConjunctiveClause.or(Lists.newArrayList(Iterators.concat(myClauses.iterator(), iterateClauses(ebe))));
+    return ErlangConjunctiveClause.or(Iterators.concat(myClauses.iterator(), iterateClauses(ebe)));
   }
 
   @Override
@@ -62,5 +61,18 @@ public class ErlangDisjunctiveNormalForm extends ErlangBooleanExpression {
       return ((ErlangDisjunctiveNormalForm) ebe).myClauses.iterator();
     }
     throw new AssertionError("Unexpected erlang boolean expression type");
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    ErlangDisjunctiveNormalForm that = (ErlangDisjunctiveNormalForm) o;
+    return myClauses.equals(that.myClauses);
+  }
+
+  @Override
+  public int hashCode() {
+    return myClauses.hashCode();
   }
 }
