@@ -22,10 +22,11 @@ import static ru.spbau.preprocessing.erlang.ErlangToken.*;
 public class ErlangEarleyParserTests extends ErlangAbstractFileResultTests {
   @Rule public ErlangEarleyParserCreatorRule myParserCreator = new ErlangEarleyParserCreatorRule();
 
-  @Test public void functionWithTwoClauses() throws Exception { doTest(); }
-  @Test public void singleFunction()         throws Exception { doTest(); }
-  @Test public void twoFunctions()           throws Exception { doTest(); }
-  @Test public void functionWithArgs()       throws Exception { doTest(); }
+  @Test public void functionWithTwoClauses()        throws Exception { doTest(); }
+  @Test public void singleFunction()                throws Exception { doTest(); }
+  @Test public void twoFunctions()                  throws Exception { doTest(); }
+  @Test public void functionWithArgs()              throws Exception { doTest(); }
+  @Test public void conditionallyCompiledFunction() throws Exception { doTest(); }
 
   @Override
   protected String getTestDataPath() {
