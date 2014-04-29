@@ -137,7 +137,7 @@ class EarleyRecognizer implements LexemeGraphVisitor {
   }
 
   private PresenceCondition getOrOfPresenceConditions(EarleyItem item, EarleyChartColumn column) {
-    PresenceCondition presenceCondition = myPresenceConditionFactory.getTrue();
+    PresenceCondition presenceCondition = myPresenceConditionFactory.getFalse();
     Set<EarleyItemDescriptor> descriptors = column.getDescriptors(item);
     for (EarleyItemDescriptor descriptor : descriptors) {
       presenceCondition = presenceCondition.or(descriptor.getPresenceCondition());
