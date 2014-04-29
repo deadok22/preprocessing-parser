@@ -107,7 +107,9 @@ class EarleyRecognizer implements LexemeGraphVisitor {
   private void scan(EarleyTerminal<?> terminal, EarleyChartColumn currentColumn, EarleyChartColumn nextColumn, PresenceCondition presenceCondition) {
     for (EarleyItem item : currentColumn) {
       if (Objects.equal(terminal, item.getNextExpectedSymbol())) {
-        nextColumn.addItem(item, terminal, presenceCondition.and(getOrOfPresenceConditions(item, currentColumn)));
+        PresenceCondition itemPresenceCondition = getOrOfPresenceConditions(item, currentColumn);
+        PresenceCondition newItemPresenceCondition = presenceCondition.and(itemPresenceCondition);
+        nextColumn.addItem(item, terminal, newItemPresenceCondition);
       }
     }
   }
@@ -124,7 +126,9 @@ class EarleyRecognizer implements LexemeGraphVisitor {
     if (startColumn == null || !item.isComplete()) return;
     for (EarleyItem startColumnItem : startColumn) {
       if (Objects.equal(item.getSymbol(), startColumnItem.getNextExpectedSymbol())) {
-        EarleyItem newItem = nextColumn.addItem(startColumnItem, item, itemPresenceCondition.and(getOrOfPresenceConditions(startColumnItem, startColumn)));
+        PresenceCondition startColumnItemPresenceCondition = getOrOfPresenceConditions(startColumnItem, startColumn);
+        PresenceCondition newItemPresenceCondition = itemPresenceCondition.and(startColumnItemPresenceCondition);
+        EarleyItem newItem = nextColumn.addItem(startColumnItem, item, newItemPresenceCondition);
         if (newItem != null) {
           completeForItem(newItem, nextColumn);
         }
