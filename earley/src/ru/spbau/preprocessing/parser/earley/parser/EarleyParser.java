@@ -114,34 +114,34 @@ public class EarleyParser {
   private void buildNodesForPreviousSymbols(List<EarleyAstNode> reversedChildren, EarleyItem item, EarleyItemDescriptor descriptor, EarleyChartColumn column) {
     if (item.getLastMatchedSymbol() == null) return;
     EarleyItem predecessor = descriptor.getPredecessor();
+    Set<EarleyReduction> reductions = excludeReductionAmbiguities(item, descriptor.getReductions());
 
-    Set<EarleyItem> reductionItems = descriptor.getReductionItems();
-    if (reductionItems.isEmpty()) {
-      EarleySymbol lastMatchedSymbol = item.getLastMatchedSymbol();
-      assert lastMatchedSymbol.isTerminal();
-      //noinspection unchecked
-      reversedChildren.add(new EarleyLeafNode<Object>((EarleyTerminal<Object>) lastMatchedSymbol));
-      buildNodesForPredecessor(reversedChildren, predecessor, column.previousColumn());
+    if (reductions.size() == 1) {
+      EarleyReduction reduction = reductions.iterator().next();
+      EarleyAstNode nodeForReduction = buildNodeForReduction(reduction, column);
+      reversedChildren.add(nodeForReduction);
+      buildNodesForPredecessor(reversedChildren, predecessor, reduction.getStartColumn());
     }
     else {
-      reductionItems = excludeReductionAmbiguities(item, reductionItems);
-      if (reductionItems.size() == 1) {
-        EarleyItem reductionItem = reductionItems.iterator().next();
-        EarleyAstNode nodeForReduction = buildCompleteNode(reductionItem, column);
-        reversedChildren.add(nodeForReduction);
-        buildNodesForPredecessor(reversedChildren, predecessor, reductionItem.getStartColumn());
+      List<EarleyConditionalBranchNode> branchNodes = Lists.newArrayListWithExpectedSize(reductions.size());
+      for (EarleyReduction reduction : reductions) {
+        EarleyAstNode nodeForReduction = buildNodeForReduction(reduction, column);
+        List<EarleyAstNode> reversedBranchNodes = Lists.newArrayList();
+        reversedBranchNodes.add(nodeForReduction);
+        buildNodesForPredecessor(reversedBranchNodes, predecessor, reduction.getStartColumn());
+        branchNodes.add(new EarleyConditionalBranchNode(null, Lists.reverse(reversedBranchNodes)));
       }
-      else {
-        List<EarleyConditionalBranchNode> branchNodes = Lists.newArrayListWithExpectedSize(reductionItems.size());
-        for (EarleyItem reductionItem : reductionItems) {
-          EarleyAstNode nodeForReduction = buildCompleteNode(reductionItem, column);
-          List<EarleyAstNode> reversedBranchNodes = Lists.newArrayList();
-          reversedBranchNodes.add(nodeForReduction);
-          buildNodesForPredecessor(reversedBranchNodes, predecessor, reductionItem.getStartColumn());
-          branchNodes.add(new EarleyConditionalBranchNode(null, Lists.reverse(reversedBranchNodes)));
-        }
-        reversedChildren.add(new EarleyAlternativesNode(branchNodes));
-      }
+      reversedChildren.add(new EarleyAlternativesNode(branchNodes));
+    }
+  }
+
+  private EarleyAstNode buildNodeForReduction(EarleyReduction reduction, EarleyChartColumn column) {
+    if (reduction.getSymbol().isTerminal()) {
+      //noinspection unchecked
+      return new EarleyLeafNode<Object>((EarleyTerminal<Object>) reduction.getTerminal());
+    }
+    else {
+      return buildCompleteNode(reduction.getCompletedItem(), column);
     }
   }
 
@@ -165,10 +165,10 @@ public class EarleyParser {
   }
 
   //TODO improve
-  private Set<EarleyItem> excludeReductionAmbiguities(EarleyItem currentItem, Set<EarleyItem> reductions) {
+  private Set<EarleyReduction> excludeReductionAmbiguities(EarleyItem currentItem, Set<EarleyReduction> reductions) {
     if (currentItem.getProduction().isLeftAssociative()) {
-      EarleyItem rightmostStartingItem = null;
-      for (EarleyItem reduction : reductions) {
+      EarleyReduction rightmostStartingItem = null;
+      for (EarleyReduction reduction : reductions) {
         if (rightmostStartingItem == null || rightmostStartingItem.getStartColumn().isBefore(reduction.getStartColumn())) {
           rightmostStartingItem = reduction;
         }

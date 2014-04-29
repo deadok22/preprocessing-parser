@@ -109,7 +109,7 @@ class EarleyRecognizer implements LexemeGraphVisitor {
       if (Objects.equal(terminal, item.getNextExpectedSymbol())) {
         PresenceCondition itemPresenceCondition = getOrOfPresenceConditions(item, currentColumn);
         PresenceCondition newItemPresenceCondition = presenceCondition.and(itemPresenceCondition);
-        nextColumn.addItem(item, terminal, newItemPresenceCondition);
+        nextColumn.addItem(item, terminal, currentColumn, newItemPresenceCondition);
       }
     }
   }

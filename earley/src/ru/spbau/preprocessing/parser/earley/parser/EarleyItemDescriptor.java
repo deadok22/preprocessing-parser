@@ -3,6 +3,7 @@ package ru.spbau.preprocessing.parser.earley.parser;
 import com.google.common.base.Objects;
 import com.google.common.collect.Sets;
 import ru.spbau.preprocessing.api.conditions.PresenceCondition;
+import ru.spbau.preprocessing.parser.earley.grammar.EarleyTerminal;
 
 import java.util.Set;
 
@@ -10,7 +11,7 @@ import java.util.Set;
  * Describes the way an Earley item was produced.
  *
  * An Earley item can be produced via
- * a) scanning - reduction items set is empty;
+ * a) scanning - see b)
  * b) reducing - reduction items set contains one or more items
  *               which were used to advance this Earley item's production index;
  * c) creating - reduction items set is empty, predecessor is null.
@@ -19,7 +20,7 @@ import java.util.Set;
  */
  class EarleyItemDescriptor {
   private final EarleyItem myPredecessor;
-  private final Set<EarleyItem> myReductionItems;
+  private final Set<EarleyReduction> myReductionItems;
   private PresenceCondition myPresenceCondition;
 
   EarleyItemDescriptor(EarleyItem predecessor, PresenceCondition presenceCondition) {
@@ -29,14 +30,22 @@ import java.util.Set;
   }
 
   public boolean addReductionItem(EarleyItem reductionItem) {
-    assert Objects.equal(myPredecessor.getNextExpectedSymbol(), reductionItem.getSymbol());
-    return myReductionItems.add(reductionItem);
+    return addReduction(new EarleyReduction(reductionItem));
   }
 
-  public boolean addReductionItems(Iterable<EarleyItem> reductionItems) {
+  public boolean addReduction(EarleyTerminal<?> terminal, EarleyChartColumn column) {
+    return addReduction(new EarleyReduction(terminal, column));
+  }
+
+  public boolean addReduction(EarleyReduction reduction) {
+    assert Objects.equal(myPredecessor.getNextExpectedSymbol(), reduction.getSymbol());
+    return myReductionItems.add(reduction);
+  }
+
+  public boolean addReductionItems(Iterable<EarleyReduction> reductionItems) {
     boolean reductionSetChanged = false;
-    for (EarleyItem reductionItem : reductionItems) {
-      reductionSetChanged |= addReductionItem(reductionItem);
+    for (EarleyReduction reductionItem : reductionItems) {
+      reductionSetChanged |= addReduction(reductionItem);
     }
     return reductionSetChanged;
   }
@@ -57,7 +66,7 @@ import java.util.Set;
     return myPredecessor;
   }
 
-  public Set<EarleyItem> getReductionItems() {
+  public Set<EarleyReduction> getReductions() {
     return myReductionItems;
   }
 

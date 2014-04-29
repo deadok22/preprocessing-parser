@@ -40,13 +40,15 @@ class EarleyChartColumn implements Iterable<EarleyItem> {
    *
    * @param predecessor the predecessor of this item.
    * @param terminal a terminal consumed.
+   * @param previousColumn
    * @param presenceCondition
    * @return added item or null if the column was not modified.
    */
-  public EarleyItem addItem(EarleyItem predecessor, EarleyTerminal<?> terminal, PresenceCondition presenceCondition) {
+  public EarleyItem addItem(EarleyItem predecessor, EarleyTerminal<?> terminal, EarleyChartColumn previousColumn, PresenceCondition presenceCondition) {
     EarleyItem newItem = predecessor.advanceWith(terminal);
     EarleyItemDescriptor newItemDescriptor = new EarleyItemDescriptor(predecessor, presenceCondition);
-    return myItems.put(newItem, newItemDescriptor) ? newItem : null;
+    newItemDescriptor.addReduction(terminal, previousColumn);
+    return addItem(newItem, newItemDescriptor);
   }
 
   /**
@@ -70,7 +72,7 @@ class EarleyChartColumn implements Iterable<EarleyItem> {
       for (EarleyItemDescriptor descriptor : descriptors) {
         if (newItemDescriptor.equals(descriptor)) {
           boolean changesWereMade = descriptor.expandPresenceCondition(newItemDescriptor.getPresenceCondition());
-          changesWereMade |= descriptor.addReductionItems(newItemDescriptor.getReductionItems());
+          changesWereMade |= descriptor.addReductionItems(newItemDescriptor.getReductions());
           return changesWereMade ? newItem : null;
         }
       }
