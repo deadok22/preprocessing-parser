@@ -241,8 +241,8 @@ public class ErlangFormsLexer {
     this(new java.io.StringReader(text.toString()));
   }
 
-  private int myFormStart = -1;
-  private int myFormLength = -1;
+  private int myFormStart = 0;
+  private int myFormLength = 0;
 
   public final int getFormStart(){
     return myFormStart;
@@ -258,7 +258,7 @@ public class ErlangFormsLexer {
   }
 
   private void formStarted() {
-    myFormStart = zzStartRead;
+    myFormStart = myFormStart + myFormLength;
     myFormLength = yylength();
     yybegin(FORM);
   }

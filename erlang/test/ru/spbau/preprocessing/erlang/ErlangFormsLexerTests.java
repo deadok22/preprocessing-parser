@@ -17,6 +17,7 @@ public class ErlangFormsLexerTests {
   @Parameters
   public static Collection<Object[]> testData() {
     return Arrays.asList(new Object[][] {
+                    {"\n%x", 2},
                     {"b() -> ok.", 1},
                     {"-ifdef(MACRO).\nb() -> ok.\n-endif.", 5},
                     {"b%foo\n() -> ok.", 1}
