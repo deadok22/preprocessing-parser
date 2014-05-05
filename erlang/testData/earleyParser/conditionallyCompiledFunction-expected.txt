@@ -1,1 +1,28 @@
-add expected tree here
+COMPOSITE: Forms: (X) <VARIANCE>
+ COMPOSITE: Form: (X) <VARIANCE>
+  COMPOSITE: Function: (X) <VARIANCE>
+   COMPOSITE: Function clauses: (X) <VARIANCE>
+    COMPOSITE: Function clause: (X) <VARIANCE>
+     LEAF: 'ATOM': TRUE <TRUE>
+     COMPOSITE: Clause args: (X) <VARIANCE>
+      COMPOSITE: Argument list: (X) <VARIANCE>
+       LEAF: 'PAR_LEFT': (X) <VARIANCE>
+       LEAF: 'PAR_RIGHT': (X) <VARIANCE>
+     COMPOSITE: Clause body: (X) <VARIANCE>
+      LEAF: 'ARROW': (X) <VARIANCE>
+      COMPOSITE: Expressions: (X) <VARIANCE>
+       COMPOSITE: Expression: (X) <VARIANCE>
+        COMPOSITE: Expression_100: (X) <VARIANCE>
+         COMPOSITE: Expression_150: (X) <VARIANCE>
+          COMPOSITE: Expression_160: (X) <VARIANCE>
+           COMPOSITE: Expression_200: (X) <VARIANCE>
+            COMPOSITE: Expression_300: (X) <VARIANCE>
+             COMPOSITE: Expression_400: (X) <VARIANCE>
+              COMPOSITE: Expression_500: (X) <VARIANCE>
+               COMPOSITE: Expression_600: (X) <VARIANCE>
+                COMPOSITE: Expression_700: (X) <VARIANCE>
+                 COMPOSITE: Expression_800: (X) <VARIANCE>
+                  COMPOSITE: Max expression: (X) <VARIANCE>
+                   COMPOSITE: Atomic: (X) <VARIANCE>
+                    LEAF: 'ATOM': (X) <VARIANCE>
+  LEAF: 'DOT': (X) <VARIANCE>
