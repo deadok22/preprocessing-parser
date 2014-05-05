@@ -73,15 +73,13 @@ public class EarleyParser {
   }
 
   private EarleyAlternativesNode buildAlternatives(Collection<EarleyItem> completedItems, EarleyChartColumn column) {
-    //TODO handle presence conditions
     List<EarleyConditionalBranchNode> alternatives = Lists.newArrayListWithExpectedSize(completedItems.size());
-    EarleyAlternativesNode alternativesNode = new EarleyAlternativesNode(alternatives);
     for (EarleyItem item : completedItems) {
       EarleyAstNode branchBody = buildCompleteNode(item, column);
-      EarleyConditionalBranchNode branchNode = new EarleyConditionalBranchNode(null, Collections.singletonList(branchBody));
+      EarleyConditionalBranchNode branchNode = new EarleyConditionalBranchNode(branchBody.getPresenceCondition(), Collections.singletonList(branchBody));
       alternatives.add(branchNode);
     }
-    return alternativesNode;
+    return new EarleyAlternativesNode(alternatives, getAndOfPresenceConditions(alternatives, column.getPresenceCondition()));
   }
 
   private EarleyAstNode buildCompleteNode(EarleyItem item, EarleyChartColumn column) {
@@ -98,20 +96,21 @@ public class EarleyParser {
 
     //these are either unresolved ambiguities or are under different presence conditions
     List<EarleyConditionalBranchNode> alternatives = Lists.newArrayListWithExpectedSize(descriptors.size());
-    EarleyAlternativesNode alternativesNode = new EarleyAlternativesNode(alternatives);
     for (EarleyItemDescriptor descriptor : descriptors) {
       EarleyAstNode branchBody = buildNodeForDescriptor(item, descriptor, column);
-      EarleyConditionalBranchNode branchNode = new EarleyConditionalBranchNode(null, Collections.singletonList(branchBody));
+      PresenceCondition presenceCondition = descriptor.getPresenceCondition().and(branchBody.getPresenceCondition());
+      EarleyConditionalBranchNode branchNode = new EarleyConditionalBranchNode(presenceCondition, Collections.singletonList(branchBody));
       alternatives.add(branchNode);
     }
-    return alternativesNode;
+    return new EarleyAlternativesNode(alternatives, getAndOfPresenceConditions(alternatives, column.getPresenceCondition()));
   }
 
   private EarleyAstNode buildNodeForDescriptor(EarleyItem item, EarleyItemDescriptor descriptor, EarleyChartColumn column) {
     EarleyNonTerminal symbol = item.getSymbol();
     List<EarleyAstNode> reversedChildren = Lists.newArrayList();
     buildNodesForPreviousSymbols(reversedChildren, item, descriptor, column);
-    return new EarleyCompositeNode(symbol, Lists.reverse(reversedChildren));
+    PresenceCondition presenceCondition = getAndOfPresenceConditions(reversedChildren, descriptor.getPresenceCondition());
+    return new EarleyCompositeNode(symbol, Lists.reverse(reversedChildren), presenceCondition);
   }
 
   private void buildNodesForPreviousSymbols(List<EarleyAstNode> reversedChildren, EarleyItem item, EarleyItemDescriptor descriptor, EarleyChartColumn column) {
@@ -132,16 +131,17 @@ public class EarleyParser {
         List<EarleyAstNode> reversedBranchNodes = Lists.newArrayList();
         reversedBranchNodes.add(nodeForReduction);
         buildNodesForPredecessor(reversedBranchNodes, predecessor, reduction.getStartColumn());
-        branchNodes.add(new EarleyConditionalBranchNode(null, Lists.reverse(reversedBranchNodes)));
+        PresenceCondition presenceCondition = getAndOfPresenceConditions(reversedBranchNodes, column.getPresenceCondition());
+        branchNodes.add(new EarleyConditionalBranchNode(presenceCondition, Lists.reverse(reversedBranchNodes)));
       }
-      reversedChildren.add(new EarleyAlternativesNode(branchNodes));
+      reversedChildren.add(new EarleyAlternativesNode(branchNodes, getAndOfPresenceConditions(branchNodes, descriptor.getPresenceCondition())));
     }
   }
 
   private EarleyAstNode buildNodeForReduction(EarleyReduction reduction, EarleyChartColumn column) {
     if (reduction.getSymbol().isTerminal()) {
       //noinspection unchecked
-      return new EarleyLeafNode<Object>((EarleyTerminal<Object>) reduction.getTerminal());
+      return new EarleyLeafNode<Object>((EarleyTerminal<Object>) reduction.getTerminal(), column.getPresenceCondition());
     }
     else {
       return buildCompleteNode(reduction.getCompletedItem(), column);
@@ -159,9 +159,10 @@ public class EarleyParser {
       for (EarleyItemDescriptor predecessorDescriptor : predecessorDescriptors) {
         List<EarleyAstNode> reversedBranchItems = Lists.newArrayList();
         buildNodesForPreviousSymbols(reversedBranchItems, predecessor, predecessorDescriptor, predecessorEndColumn);
-        branchNodes.add(new EarleyConditionalBranchNode(null, Lists.reverse(reversedBranchItems)));
+        PresenceCondition presenceCondition = getAndOfPresenceConditions(reversedBranchItems, predecessorDescriptor.getPresenceCondition());
+        branchNodes.add(new EarleyConditionalBranchNode(presenceCondition, Lists.reverse(reversedBranchItems)));
       }
-      reversedChildren.add(new EarleyAlternativesNode(branchNodes));
+      reversedChildren.add(new EarleyAlternativesNode(branchNodes, getAndOfPresenceConditions(branchNodes, predecessorEndColumn.getPresenceCondition())));
     }
   }
 
@@ -211,5 +212,13 @@ public class EarleyParser {
       presenceCondition = presenceCondition.or(descriptor.getPresenceCondition());
     }
     return presenceCondition;
+  }
+
+  private static PresenceCondition getAndOfPresenceConditions(Iterable<? extends EarleyAstNode> nodes, PresenceCondition initialCondition) {
+    PresenceCondition condition = initialCondition;
+    for (EarleyAstNode node : nodes) {
+      condition = condition.and(node.getPresenceCondition());
+    }
+    return condition;
   }
 }

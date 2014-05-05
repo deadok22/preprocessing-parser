@@ -21,23 +21,19 @@ class EarleyRecognizer implements LexemeGraphVisitor {
   private final EarleyChart myChart;
 
   EarleyRecognizer(PresenceConditionFactory presenceConditionFactory, EarleyGrammar grammar) {
-    this(presenceConditionFactory, grammar, new EarleyChart());
-    createFirstChartColumn();
-  }
-
-  private EarleyRecognizer(PresenceConditionFactory presenceConditionFactory, EarleyGrammar grammar, EarleyChart chart) {
-    myPresenceConditionFactory = presenceConditionFactory;
-    myGrammar = grammar;
-    myChart = chart;
-  }
-
-  private void createFirstChartColumn() {
+    this(presenceConditionFactory, grammar, new EarleyChart(presenceConditionFactory.getTrue()));
     EarleySymbol startSymbol = myGrammar.getStartSymbol();
     EarleyChartColumn firstColumn = myChart.newColumn();
     Set<EarleyProduction> productions = myGrammar.getProductions(startSymbol.getName());
     for (EarleyProduction production : productions) {
       firstColumn.addItem(production, myPresenceConditionFactory.getTrue());
     }
+  }
+
+  private EarleyRecognizer(PresenceConditionFactory presenceConditionFactory, EarleyGrammar grammar, EarleyChart chart) {
+    myPresenceConditionFactory = presenceConditionFactory;
+    myGrammar = grammar;
+    myChart = chart;
   }
 
   @Override
@@ -48,7 +44,8 @@ class EarleyRecognizer implements LexemeGraphVisitor {
     //TODO BUT be sure not to complete items from one branch with items from another!
     List<EarleyRecognizer> forkRecognizers = Lists.newArrayListWithExpectedSize(forkNode.getChildren().size());
     for (LexemeGraphNode lexemeGraphNode : forkNode.getChildren()) {
-      EarleyRecognizer recognizer = new EarleyRecognizer(myPresenceConditionFactory, myGrammar, myChart.createSubChart());
+      EarleyChart subChart = myChart.createSubChart(columnBeforeFork.getPresenceCondition().and(lexemeGraphNode.getPresenceCondition()));
+      EarleyRecognizer recognizer = new EarleyRecognizer(myPresenceConditionFactory, myGrammar, subChart);
       forkRecognizers.add(recognizer);
       lexemeGraphNode.accept(recognizer);
     }

@@ -1,5 +1,6 @@
 package ru.spbau.preprocessing.parser.earley.ast;
 
+import ru.spbau.preprocessing.api.conditions.PresenceCondition;
 import ru.spbau.preprocessing.parser.earley.grammar.EarleySymbol;
 
 import java.util.List;
@@ -7,7 +8,8 @@ import java.util.List;
 public class EarleyAlternativesNode extends EarleyAstNode {
   private final List<EarleyConditionalBranchNode> myAlternatives;
 
-  public EarleyAlternativesNode(List<EarleyConditionalBranchNode> alternatives) {
+  public EarleyAlternativesNode(List<EarleyConditionalBranchNode> alternatives, PresenceCondition presenceCondition) {
+    super(presenceCondition);
     myAlternatives = alternatives;
   }
 

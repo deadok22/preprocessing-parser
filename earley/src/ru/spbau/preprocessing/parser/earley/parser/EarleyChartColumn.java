@@ -111,4 +111,8 @@ class EarleyChartColumn implements Iterable<EarleyItem> {
       }
     }
   }
+
+  public PresenceCondition getPresenceCondition() {
+    return myChart.getBasePresenceCondition();
+  }
 }
