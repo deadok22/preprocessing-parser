@@ -178,12 +178,7 @@ public class EarleyParser {
       else {
         //TODO consider presence conditions for reductions obtained via lexeme consuming
         // for now we'll use a presence condition of it's parent, which is wrong and can lead to incorrect parse trees
-        Set<EarleyItemDescriptor> descriptors = column.getDescriptors(currentItem);
-        PresenceCondition presenceCondition = myPresenceConditionFactory.getFalse();
-        for (EarleyItemDescriptor descriptor : descriptors) {
-          presenceCondition = presenceCondition.or(descriptor.getPresenceCondition());
-        }
-        possibleAmbiguities.put(presenceCondition, reduction);
+        possibleAmbiguities.put(getItemPresenceCondition(currentItem, column), reduction);
       }
     }
 
@@ -204,5 +199,17 @@ public class EarleyParser {
     }
 
     return reductions;
+  }
+
+  /**
+   * @return logical or of item's presence conditions
+   */
+  private PresenceCondition getItemPresenceCondition(EarleyItem currentItem, EarleyChartColumn column) {
+    Set<EarleyItemDescriptor> descriptors = column.getDescriptors(currentItem);
+    PresenceCondition presenceCondition = myPresenceConditionFactory.getFalse();
+    for (EarleyItemDescriptor descriptor : descriptors) {
+      presenceCondition = presenceCondition.or(descriptor.getPresenceCondition());
+    }
+    return presenceCondition;
   }
 }
