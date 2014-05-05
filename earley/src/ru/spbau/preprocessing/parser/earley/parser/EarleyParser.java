@@ -141,7 +141,7 @@ public class EarleyParser {
   private EarleyAstNode buildNodeForReduction(EarleyReduction reduction, EarleyChartColumn column) {
     if (reduction.getSymbol().isTerminal()) {
       //noinspection unchecked
-      return new EarleyLeafNode<Object>((EarleyTerminal<Object>) reduction.getTerminal(), column.getPresenceCondition());
+      return new EarleyLeafNode<Object>((EarleyTerminal<Object>) reduction.getTerminal(), reduction.getStartColumn().getPresenceCondition());
     }
     else {
       return buildCompleteNode(reduction.getCompletedItem(), column);
