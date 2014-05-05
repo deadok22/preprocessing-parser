@@ -1,1 +1,33 @@
-add expected tree here
+COMPOSITE: Forms: TRUE <TRUE>
+ COMPOSITE: Form: TRUE <TRUE>
+  COMPOSITE: Function: TRUE <TRUE>
+   COMPOSITE: Function clauses: TRUE <TRUE>
+    COMPOSITE: Function clause: TRUE <TRUE>
+     LEAF: 'ATOM': TRUE <TRUE>
+     COMPOSITE: Clause args: TRUE <TRUE>
+      COMPOSITE: Argument list: TRUE <TRUE>
+       LEAF: 'PAR_LEFT': TRUE <TRUE>
+       LEAF: 'PAR_RIGHT': TRUE <TRUE>
+     COMPOSITE: Clause body: TRUE <TRUE>
+      LEAF: 'ARROW': TRUE <TRUE>
+      COMPOSITE: Expressions: TRUE <TRUE>
+       COMPOSITE: Expression: TRUE <TRUE>
+        COMPOSITE: Expression_100: TRUE <TRUE>
+         COMPOSITE: Expression_150: TRUE <TRUE>
+          COMPOSITE: Expression_160: TRUE <TRUE>
+           COMPOSITE: Expression_200: TRUE <TRUE>
+            COMPOSITE: Expression_300: TRUE <TRUE>
+             COMPOSITE: Expression_400: TRUE <TRUE>
+              COMPOSITE: Expression_500: TRUE <TRUE>
+               COMPOSITE: Expression_600: TRUE <TRUE>
+                COMPOSITE: Expression_700: TRUE <TRUE>
+                 COMPOSITE: Expression_800: TRUE <TRUE>
+                  COMPOSITE: Max expression: TRUE <TRUE>
+                   ALTERNATIVES: TRUE <TRUE>
+                    CONDITIONAL: (X) <VARIANCE>
+                     COMPOSITE: Atomic: (X) <VARIANCE>
+                      LEAF: 'ATOM': TRUE <TRUE>
+                    CONDITIONAL: (!X) <VARIANCE>
+                     COMPOSITE: Atomic: (!X) <VARIANCE>
+                      LEAF: 'INTEGER': TRUE <TRUE>
+  LEAF: 'DOT': TRUE <TRUE>

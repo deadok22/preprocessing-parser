@@ -1,90 +1,90 @@
-COMPOSITE: Forms
- COMPOSITE: Form
-  COMPOSITE: Function
-   COMPOSITE: Function clauses
-    COMPOSITE: Function clause
-     LEAF: 'ATOM'
-     COMPOSITE: Clause args
-      COMPOSITE: Argument list
-       LEAF: 'PAR_LEFT'
-       COMPOSITE: Expressions
-        COMPOSITE: Expression
-         COMPOSITE: Expression_100
-          COMPOSITE: Expression_150
-           COMPOSITE: Expression_160
-            COMPOSITE: Expression_200
-             COMPOSITE: Expression_300
-              COMPOSITE: Expression_400
-               COMPOSITE: Expression_500
-                COMPOSITE: Expression_600
-                 COMPOSITE: Expression_700
-                  COMPOSITE: Expression_800
-                   COMPOSITE: Max expression
-                    COMPOSITE: Atomic
-                     LEAF: 'ATOM'
-        LEAF: 'COMMA'
-        COMPOSITE: Expressions
-         COMPOSITE: Expression
-          COMPOSITE: Expression_100
-           COMPOSITE: Expression_150
-            COMPOSITE: Expression_160
-             COMPOSITE: Expression_200
-              COMPOSITE: Expression_300
-               COMPOSITE: Expression_400
-                COMPOSITE: Expression_500
-                 COMPOSITE: Expression_600
-                  COMPOSITE: Expression_700
-                   COMPOSITE: Expression_800
-                    COMPOSITE: Max expression
-                     COMPOSITE: Atomic
-                      LEAF: 'ATOM'
-         LEAF: 'COMMA'
-         COMPOSITE: Expressions
-          COMPOSITE: Expression
-           COMPOSITE: Expression_100
-            COMPOSITE: Expression_150
-             COMPOSITE: Expression_160
-              COMPOSITE: Expression_200
-               COMPOSITE: Expression_300
-                COMPOSITE: Expression_400
-                 COMPOSITE: Expression_500
-                  COMPOSITE: Expression_600
-                   COMPOSITE: Expression_700
-                    COMPOSITE: Expression_800
-                     COMPOSITE: Max expression
-                      COMPOSITE: Atomic
-                       LEAF: 'INTEGER'
-          LEAF: 'COMMA'
-          COMPOSITE: Expressions
-           COMPOSITE: Expression
-            COMPOSITE: Expression_100
-             COMPOSITE: Expression_150
-              COMPOSITE: Expression_160
-               COMPOSITE: Expression_200
-                COMPOSITE: Expression_300
-                 COMPOSITE: Expression_400
-                  COMPOSITE: Expression_500
-                   COMPOSITE: Expression_600
-                    COMPOSITE: Expression_700
-                     COMPOSITE: Expression_800
-                      COMPOSITE: Max expression
-                       LEAF: 'VAR'
-       LEAF: 'PAR_RIGHT'
-     COMPOSITE: Clause body
-      LEAF: 'ARROW'
-      COMPOSITE: Expressions
-       COMPOSITE: Expression
-        COMPOSITE: Expression_100
-         COMPOSITE: Expression_150
-          COMPOSITE: Expression_160
-           COMPOSITE: Expression_200
-            COMPOSITE: Expression_300
-             COMPOSITE: Expression_400
-              COMPOSITE: Expression_500
-               COMPOSITE: Expression_600
-                COMPOSITE: Expression_700
-                 COMPOSITE: Expression_800
-                  COMPOSITE: Max expression
-                   COMPOSITE: Atomic
-                    LEAF: 'ATOM'
-  LEAF: 'DOT'
+COMPOSITE: Forms: TRUE <TRUE>
+ COMPOSITE: Form: TRUE <TRUE>
+  COMPOSITE: Function: TRUE <TRUE>
+   COMPOSITE: Function clauses: TRUE <TRUE>
+    COMPOSITE: Function clause: TRUE <TRUE>
+     LEAF: 'ATOM': TRUE <TRUE>
+     COMPOSITE: Clause args: TRUE <TRUE>
+      COMPOSITE: Argument list: TRUE <TRUE>
+       LEAF: 'PAR_LEFT': TRUE <TRUE>
+       COMPOSITE: Expressions: TRUE <TRUE>
+        COMPOSITE: Expression: TRUE <TRUE>
+         COMPOSITE: Expression_100: TRUE <TRUE>
+          COMPOSITE: Expression_150: TRUE <TRUE>
+           COMPOSITE: Expression_160: TRUE <TRUE>
+            COMPOSITE: Expression_200: TRUE <TRUE>
+             COMPOSITE: Expression_300: TRUE <TRUE>
+              COMPOSITE: Expression_400: TRUE <TRUE>
+               COMPOSITE: Expression_500: TRUE <TRUE>
+                COMPOSITE: Expression_600: TRUE <TRUE>
+                 COMPOSITE: Expression_700: TRUE <TRUE>
+                  COMPOSITE: Expression_800: TRUE <TRUE>
+                   COMPOSITE: Max expression: TRUE <TRUE>
+                    COMPOSITE: Atomic: TRUE <TRUE>
+                     LEAF: 'ATOM': TRUE <TRUE>
+        LEAF: 'COMMA': TRUE <TRUE>
+        COMPOSITE: Expressions: TRUE <TRUE>
+         COMPOSITE: Expression: TRUE <TRUE>
+          COMPOSITE: Expression_100: TRUE <TRUE>
+           COMPOSITE: Expression_150: TRUE <TRUE>
+            COMPOSITE: Expression_160: TRUE <TRUE>
+             COMPOSITE: Expression_200: TRUE <TRUE>
+              COMPOSITE: Expression_300: TRUE <TRUE>
+               COMPOSITE: Expression_400: TRUE <TRUE>
+                COMPOSITE: Expression_500: TRUE <TRUE>
+                 COMPOSITE: Expression_600: TRUE <TRUE>
+                  COMPOSITE: Expression_700: TRUE <TRUE>
+                   COMPOSITE: Expression_800: TRUE <TRUE>
+                    COMPOSITE: Max expression: TRUE <TRUE>
+                     COMPOSITE: Atomic: TRUE <TRUE>
+                      LEAF: 'ATOM': TRUE <TRUE>
+         LEAF: 'COMMA': TRUE <TRUE>
+         COMPOSITE: Expressions: TRUE <TRUE>
+          COMPOSITE: Expression: TRUE <TRUE>
+           COMPOSITE: Expression_100: TRUE <TRUE>
+            COMPOSITE: Expression_150: TRUE <TRUE>
+             COMPOSITE: Expression_160: TRUE <TRUE>
+              COMPOSITE: Expression_200: TRUE <TRUE>
+               COMPOSITE: Expression_300: TRUE <TRUE>
+                COMPOSITE: Expression_400: TRUE <TRUE>
+                 COMPOSITE: Expression_500: TRUE <TRUE>
+                  COMPOSITE: Expression_600: TRUE <TRUE>
+                   COMPOSITE: Expression_700: TRUE <TRUE>
+                    COMPOSITE: Expression_800: TRUE <TRUE>
+                     COMPOSITE: Max expression: TRUE <TRUE>
+                      COMPOSITE: Atomic: TRUE <TRUE>
+                       LEAF: 'INTEGER': TRUE <TRUE>
+          LEAF: 'COMMA': TRUE <TRUE>
+          COMPOSITE: Expressions: TRUE <TRUE>
+           COMPOSITE: Expression: TRUE <TRUE>
+            COMPOSITE: Expression_100: TRUE <TRUE>
+             COMPOSITE: Expression_150: TRUE <TRUE>
+              COMPOSITE: Expression_160: TRUE <TRUE>
+               COMPOSITE: Expression_200: TRUE <TRUE>
+                COMPOSITE: Expression_300: TRUE <TRUE>
+                 COMPOSITE: Expression_400: TRUE <TRUE>
+                  COMPOSITE: Expression_500: TRUE <TRUE>
+                   COMPOSITE: Expression_600: TRUE <TRUE>
+                    COMPOSITE: Expression_700: TRUE <TRUE>
+                     COMPOSITE: Expression_800: TRUE <TRUE>
+                      COMPOSITE: Max expression: TRUE <TRUE>
+                       LEAF: 'VAR': TRUE <TRUE>
+       LEAF: 'PAR_RIGHT': TRUE <TRUE>
+     COMPOSITE: Clause body: TRUE <TRUE>
+      LEAF: 'ARROW': TRUE <TRUE>
+      COMPOSITE: Expressions: TRUE <TRUE>
+       COMPOSITE: Expression: TRUE <TRUE>
+        COMPOSITE: Expression_100: TRUE <TRUE>
+         COMPOSITE: Expression_150: TRUE <TRUE>
+          COMPOSITE: Expression_160: TRUE <TRUE>
+           COMPOSITE: Expression_200: TRUE <TRUE>
+            COMPOSITE: Expression_300: TRUE <TRUE>
+             COMPOSITE: Expression_400: TRUE <TRUE>
+              COMPOSITE: Expression_500: TRUE <TRUE>
+               COMPOSITE: Expression_600: TRUE <TRUE>
+                COMPOSITE: Expression_700: TRUE <TRUE>
+                 COMPOSITE: Expression_800: TRUE <TRUE>
+                  COMPOSITE: Max expression: TRUE <TRUE>
+                   COMPOSITE: Atomic: TRUE <TRUE>
+                    LEAF: 'ATOM': TRUE <TRUE>
+  LEAF: 'DOT': TRUE <TRUE>
