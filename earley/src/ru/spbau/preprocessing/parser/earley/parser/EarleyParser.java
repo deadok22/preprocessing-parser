@@ -189,6 +189,7 @@ public class EarleyParser {
 
     //TODO this ambiguity resolution is primitive - you should use grammar rules precedence, associativity, etc. here.
     if (currentItem.getProduction().isLeftAssociative()) {
+      //TODO see testData/earleyParser/alternativeSubstitution.erl example - Atomic rule should have a conditional under it - the rule itself should not.
       Set<EarleyReduction> unambiguousReductionSet = Sets.newHashSet();
       for (PresenceCondition presenceCondition : possibleAmbiguities.keySet()) {
         EarleyReduction rightmostStartingItem = null;
