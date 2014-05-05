@@ -79,7 +79,7 @@ public class EarleyParser {
       EarleyConditionalBranchNode branchNode = new EarleyConditionalBranchNode(branchBody.getPresenceCondition(), Collections.singletonList(branchBody));
       alternatives.add(branchNode);
     }
-    return new EarleyAlternativesNode(alternatives, getAndOfPresenceConditions(alternatives, column.getPresenceCondition()));
+    return new EarleyAlternativesNode(alternatives, getOrOfPresenceConditions(alternatives, column.getPresenceCondition()));
   }
 
   private EarleyAstNode buildCompleteNode(EarleyItem item, EarleyChartColumn column) {
@@ -102,7 +102,7 @@ public class EarleyParser {
       EarleyConditionalBranchNode branchNode = new EarleyConditionalBranchNode(presenceCondition, Collections.singletonList(branchBody));
       alternatives.add(branchNode);
     }
-    return new EarleyAlternativesNode(alternatives, getAndOfPresenceConditions(alternatives, column.getPresenceCondition()));
+    return new EarleyAlternativesNode(alternatives, getOrOfPresenceConditions(alternatives, column.getPresenceCondition()));
   }
 
   private EarleyAstNode buildNodeForDescriptor(EarleyItem item, EarleyItemDescriptor descriptor, EarleyChartColumn column) {
@@ -134,7 +134,7 @@ public class EarleyParser {
         PresenceCondition presenceCondition = getAndOfPresenceConditions(reversedBranchNodes, column.getPresenceCondition());
         branchNodes.add(new EarleyConditionalBranchNode(presenceCondition, Lists.reverse(reversedBranchNodes)));
       }
-      reversedChildren.add(new EarleyAlternativesNode(branchNodes, getAndOfPresenceConditions(branchNodes, descriptor.getPresenceCondition())));
+      reversedChildren.add(new EarleyAlternativesNode(branchNodes, getOrOfPresenceConditions(branchNodes, descriptor.getPresenceCondition())));
     }
   }
 
@@ -162,7 +162,7 @@ public class EarleyParser {
         PresenceCondition presenceCondition = getAndOfPresenceConditions(reversedBranchItems, predecessorDescriptor.getPresenceCondition());
         branchNodes.add(new EarleyConditionalBranchNode(presenceCondition, Lists.reverse(reversedBranchItems)));
       }
-      reversedChildren.add(new EarleyAlternativesNode(branchNodes, getAndOfPresenceConditions(branchNodes, predecessorEndColumn.getPresenceCondition())));
+      reversedChildren.add(new EarleyAlternativesNode(branchNodes, getOrOfPresenceConditions(branchNodes, predecessorEndColumn.getPresenceCondition())));
     }
   }
 
@@ -218,6 +218,14 @@ public class EarleyParser {
     PresenceCondition condition = initialCondition;
     for (EarleyAstNode node : nodes) {
       condition = condition.and(node.getPresenceCondition());
+    }
+    return condition;
+  }
+
+  private static PresenceCondition getOrOfPresenceConditions(Iterable<? extends EarleyAstNode> nodes, PresenceCondition initialCondition) {
+    PresenceCondition condition = initialCondition;
+    for (EarleyAstNode node : nodes) {
+      condition = condition.or(node.getPresenceCondition());
     }
     return condition;
   }
