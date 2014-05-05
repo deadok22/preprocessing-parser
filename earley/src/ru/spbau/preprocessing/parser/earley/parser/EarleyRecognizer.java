@@ -1,7 +1,9 @@
 package ru.spbau.preprocessing.parser.earley.parser;
 
+import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import ru.spbau.preprocessing.api.conditions.PresenceCondition;
 import ru.spbau.preprocessing.api.conditions.PresenceConditionFactory;
 import ru.spbau.preprocessing.lexer.lexemegraph.*;
@@ -50,11 +52,19 @@ class EarleyRecognizer implements LexemeGraphVisitor {
       forkRecognizers.add(recognizer);
       lexemeGraphNode.accept(recognizer);
     }
-    EarleyChartColumn columnAfterFork = myChart.newColumn();
-    for (EarleyRecognizer forkRecognizer : forkRecognizers) {
-      EarleyChartColumn lastForkColumn = forkRecognizer.myChart.lastColumn();
-      if (lastForkColumn != columnBeforeFork) {
-        columnAfterFork.addAllFrom(lastForkColumn);
+    Set<EarleyChartColumn> forkLastColumns =
+            Sets.newHashSet(Lists.transform(forkRecognizers, new Function<EarleyRecognizer, EarleyChartColumn>() {
+              @Override
+              public EarleyChartColumn apply(EarleyRecognizer forkRecognizer) {
+                return forkRecognizer.myChart.lastColumn();
+              }
+            }));
+
+    //only create a join column if at least one of the branches created a new column
+    if (forkLastColumns.size() != 1  || columnBeforeFork != forkLastColumns.iterator().next()) {
+      EarleyChartColumn columnAfterFork = myChart.newColumn();
+      for (EarleyChartColumn forkLastColumn : forkLastColumns) {
+        columnAfterFork.addAllFrom(forkLastColumn);
       }
     }
   }
