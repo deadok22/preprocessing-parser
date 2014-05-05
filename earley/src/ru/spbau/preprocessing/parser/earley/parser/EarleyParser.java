@@ -1,6 +1,9 @@
 package ru.spbau.preprocessing.parser.earley.parser;
 
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import ru.spbau.preprocessing.api.conditions.PresenceCondition;
 import ru.spbau.preprocessing.api.conditions.PresenceConditionFactory;
 import ru.spbau.preprocessing.lexer.lexemegraph.LexemeGraphNode;
 import ru.spbau.preprocessing.parser.earley.ast.*;
@@ -114,7 +117,7 @@ public class EarleyParser {
   private void buildNodesForPreviousSymbols(List<EarleyAstNode> reversedChildren, EarleyItem item, EarleyItemDescriptor descriptor, EarleyChartColumn column) {
     if (item.getLastMatchedSymbol() == null) return;
     EarleyItem predecessor = descriptor.getPredecessor();
-    Set<EarleyReduction> reductions = excludeReductionAmbiguities(item, descriptor.getReductions());
+    Set<EarleyReduction> reductions = excludeReductionAmbiguities(item, descriptor.getReductions(), column);
 
     if (reductions.size() == 1) {
       EarleyReduction reduction = reductions.iterator().next();
@@ -162,17 +165,43 @@ public class EarleyParser {
     }
   }
 
-  //TODO improve
-  private Set<EarleyReduction> excludeReductionAmbiguities(EarleyItem currentItem, Set<EarleyReduction> reductions) {
-    if (currentItem.getProduction().isLeftAssociative()) {
-      EarleyReduction rightmostStartingItem = null;
-      for (EarleyReduction reduction : reductions) {
-        if (rightmostStartingItem == null || rightmostStartingItem.getStartColumn().isBefore(reduction.getStartColumn())) {
-          rightmostStartingItem = reduction;
+  private Set<EarleyReduction> excludeReductionAmbiguities(EarleyItem currentItem, Set<EarleyReduction> reductions, EarleyChartColumn column) {
+    HashMultimap<PresenceCondition, EarleyReduction> possibleAmbiguities = HashMultimap.create();
+    for (EarleyReduction reduction : reductions) {
+      if (reduction.getTerminal() == null) {
+        EarleyItem reductionItem = reduction.getCompletedItem();
+        Set<EarleyItemDescriptor> descriptors = column.getDescriptors(reductionItem);
+        for (EarleyItemDescriptor descriptor : descriptors) {
+          possibleAmbiguities.put(descriptor.getPresenceCondition(), reduction);
         }
       }
-      return Collections.singleton(rightmostStartingItem);
+      else {
+        //TODO consider presence conditions for reductions obtained via lexeme consuming
+        // for now we'll use a presence condition of it's parent, which is wrong and can lead to incorrect parse trees
+        Set<EarleyItemDescriptor> descriptors = column.getDescriptors(currentItem);
+        PresenceCondition presenceCondition = myPresenceConditionFactory.getFalse();
+        for (EarleyItemDescriptor descriptor : descriptors) {
+          presenceCondition = presenceCondition.or(descriptor.getPresenceCondition());
+        }
+        possibleAmbiguities.put(presenceCondition, reduction);
+      }
     }
+
+    //TODO this ambiguity resolution is primitive - you should use grammar rules precedence, associativity, etc. here.
+    if (currentItem.getProduction().isLeftAssociative()) {
+      Set<EarleyReduction> unambiguousReductionSet = Sets.newHashSet();
+      for (PresenceCondition presenceCondition : possibleAmbiguities.keySet()) {
+        EarleyReduction rightmostStartingItem = null;
+        for (EarleyReduction reduction : possibleAmbiguities.get(presenceCondition)) {
+          if (rightmostStartingItem == null || rightmostStartingItem.getStartColumn().isBefore(reduction.getStartColumn())) {
+            rightmostStartingItem = reduction;
+          }
+        }
+        unambiguousReductionSet.add(rightmostStartingItem);
+      }
+      return unambiguousReductionSet;
+    }
+
     return reductions;
   }
 }
