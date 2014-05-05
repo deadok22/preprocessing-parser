@@ -14,26 +14,32 @@ public class EarleyAstPrinter extends EarleyAstVisitor {
 
   @Override
   public void visitAlternativesNode(EarleyAlternativesNode alternativesNode) {
-    printLine("ALTERNATIVES");
-    visitNodes(alternativesNode.getChildren());
+    printAndVisitChildren("ALTERNATIVES", alternativesNode);
   }
 
   @Override
   public void visitCompositeNode(EarleyCompositeNode compositeNode) {
-    printLine("COMPOSITE: " + compositeNode.getSymbol().getName());
-    visitNodes(compositeNode.getChildren());
+    printAndVisitChildren("COMPOSITE: " + compositeNode.getSymbol().getName(), compositeNode);
   }
 
   @Override
   public void visitLeafNode(EarleyLeafNode<?> leafNode) {
-    printLine("LEAF: " + leafNode.getSymbol());
+    printAndVisitChildren("LEAF: " + leafNode.getSymbol(), leafNode);
   }
 
   @Override
   public void visitConditionalBranchNode(EarleyConditionalBranchNode conditionalBranchNode) {
-    PresenceCondition presenceCondition = conditionalBranchNode.getPresenceCondition();
-    printLine("CONDITIONAL: " + (presenceCondition != null ? presenceCondition + " <" + presenceCondition.value() + ">" : "null"));
-    visitNodes(conditionalBranchNode.getChildren());
+    printAndVisitChildren("CONDITIONAL", conditionalBranchNode);
+  }
+
+  private void printAndVisitChildren(String line, EarleyAstNode node) {
+    printLine(line + ": " + getConditionalString(node));
+    visitNodes(node.getChildren());
+  }
+
+  private String getConditionalString(EarleyAstNode node) {
+    PresenceCondition presenceCondition = node.getPresenceCondition();
+    return presenceCondition != null ? presenceCondition + " <" + presenceCondition.value() + ">" : "null";
   }
 
   private void visitNodes(Iterable<? extends EarleyAstNode> nodes) {
