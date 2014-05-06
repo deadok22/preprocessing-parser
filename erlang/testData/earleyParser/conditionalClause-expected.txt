@@ -1,0 +1,125 @@
+COMPOSITE: Forms: TRUE <TRUE>
+ COMPOSITE: Form: TRUE <TRUE>
+  COMPOSITE: Function: TRUE <TRUE>
+   ALTERNATIVES: TRUE <TRUE>
+    CONDITIONAL: (FOO_NOT_OK) <VARIANCE>
+     COMPOSITE: Function clauses: (FOO_NOT_OK) <VARIANCE>
+      COMPOSITE: Function clause: (FOO_NOT_OK) <VARIANCE>
+       LEAF: 'ATOM': TRUE <TRUE>
+       COMPOSITE: Clause args: TRUE <TRUE>
+        COMPOSITE: Argument list: TRUE <TRUE>
+         LEAF: 'PAR_LEFT': TRUE <TRUE>
+         COMPOSITE: Expressions: TRUE <TRUE>
+          COMPOSITE: Expression: TRUE <TRUE>
+           COMPOSITE: Expression_100: TRUE <TRUE>
+            COMPOSITE: Expression_150: TRUE <TRUE>
+             COMPOSITE: Expression_160: TRUE <TRUE>
+              COMPOSITE: Expression_200: TRUE <TRUE>
+               COMPOSITE: Expression_300: TRUE <TRUE>
+                COMPOSITE: Expression_400: TRUE <TRUE>
+                 COMPOSITE: Expression_500: TRUE <TRUE>
+                  COMPOSITE: Expression_600: TRUE <TRUE>
+                   COMPOSITE: Expression_700: TRUE <TRUE>
+                    COMPOSITE: Expression_800: TRUE <TRUE>
+                     COMPOSITE: Max expression: TRUE <TRUE>
+                      COMPOSITE: Atomic: TRUE <TRUE>
+                       LEAF: 'ATOM': TRUE <TRUE>
+         LEAF: 'PAR_RIGHT': TRUE <TRUE>
+       COMPOSITE: Clause body: (FOO_NOT_OK) <VARIANCE>
+        LEAF: 'ARROW': TRUE <TRUE>
+        COMPOSITE: Expressions: (FOO_NOT_OK) <VARIANCE>
+         COMPOSITE: Expression: (FOO_NOT_OK) <VARIANCE>
+          COMPOSITE: Expression_100: (FOO_NOT_OK) <VARIANCE>
+           COMPOSITE: Expression_150: (FOO_NOT_OK) <VARIANCE>
+            COMPOSITE: Expression_160: (FOO_NOT_OK) <VARIANCE>
+             COMPOSITE: Expression_200: (FOO_NOT_OK) <VARIANCE>
+              COMPOSITE: Expression_300: (FOO_NOT_OK) <VARIANCE>
+               COMPOSITE: Expression_400: (FOO_NOT_OK) <VARIANCE>
+                COMPOSITE: Expression_500: (FOO_NOT_OK) <VARIANCE>
+                 COMPOSITE: Expression_600: (FOO_NOT_OK) <VARIANCE>
+                  COMPOSITE: Expression_700: (FOO_NOT_OK) <VARIANCE>
+                   COMPOSITE: Expression_800: (FOO_NOT_OK) <VARIANCE>
+                    COMPOSITE: Max expression: (FOO_NOT_OK) <VARIANCE>
+                     COMPOSITE: Atomic: (FOO_NOT_OK) <VARIANCE>
+                      LEAF: 'ATOM': TRUE <TRUE>
+      LEAF: 'SEMI': (FOO_NOT_OK) <VARIANCE>
+      COMPOSITE: Function clauses: (FOO_NOT_OK) <VARIANCE>
+       COMPOSITE: Function clause: (FOO_NOT_OK) <VARIANCE>
+        LEAF: 'ATOM': (FOO_NOT_OK) <VARIANCE>
+        COMPOSITE: Clause args: (FOO_NOT_OK) <VARIANCE>
+         COMPOSITE: Argument list: (FOO_NOT_OK) <VARIANCE>
+          LEAF: 'PAR_LEFT': (FOO_NOT_OK) <VARIANCE>
+          COMPOSITE: Expressions: (FOO_NOT_OK) <VARIANCE>
+           COMPOSITE: Expression: (FOO_NOT_OK) <VARIANCE>
+            COMPOSITE: Expression_100: (FOO_NOT_OK) <VARIANCE>
+             COMPOSITE: Expression_150: (FOO_NOT_OK) <VARIANCE>
+              COMPOSITE: Expression_160: (FOO_NOT_OK) <VARIANCE>
+               COMPOSITE: Expression_200: (FOO_NOT_OK) <VARIANCE>
+                COMPOSITE: Expression_300: (FOO_NOT_OK) <VARIANCE>
+                 COMPOSITE: Expression_400: (FOO_NOT_OK) <VARIANCE>
+                  COMPOSITE: Expression_500: (FOO_NOT_OK) <VARIANCE>
+                   COMPOSITE: Expression_600: (FOO_NOT_OK) <VARIANCE>
+                    COMPOSITE: Expression_700: (FOO_NOT_OK) <VARIANCE>
+                     COMPOSITE: Expression_800: (FOO_NOT_OK) <VARIANCE>
+                      COMPOSITE: Max expression: (FOO_NOT_OK) <VARIANCE>
+                       COMPOSITE: Atomic: (FOO_NOT_OK) <VARIANCE>
+                        LEAF: 'ATOM': (FOO_NOT_OK) <VARIANCE>
+          LEAF: 'PAR_RIGHT': (FOO_NOT_OK) <VARIANCE>
+        COMPOSITE: Clause body: (FOO_NOT_OK) <VARIANCE>
+         LEAF: 'ARROW': (FOO_NOT_OK) <VARIANCE>
+         COMPOSITE: Expressions: (FOO_NOT_OK) <VARIANCE>
+          COMPOSITE: Expression: (FOO_NOT_OK) <VARIANCE>
+           COMPOSITE: Expression_100: (FOO_NOT_OK) <VARIANCE>
+            COMPOSITE: Expression_150: (FOO_NOT_OK) <VARIANCE>
+             COMPOSITE: Expression_160: (FOO_NOT_OK) <VARIANCE>
+              COMPOSITE: Expression_200: (FOO_NOT_OK) <VARIANCE>
+               COMPOSITE: Expression_300: (FOO_NOT_OK) <VARIANCE>
+                COMPOSITE: Expression_400: (FOO_NOT_OK) <VARIANCE>
+                 COMPOSITE: Expression_500: (FOO_NOT_OK) <VARIANCE>
+                  COMPOSITE: Expression_600: (FOO_NOT_OK) <VARIANCE>
+                   COMPOSITE: Expression_700: (FOO_NOT_OK) <VARIANCE>
+                    COMPOSITE: Expression_800: (FOO_NOT_OK) <VARIANCE>
+                     COMPOSITE: Max expression: (FOO_NOT_OK) <VARIANCE>
+                      COMPOSITE: Atomic: (FOO_NOT_OK) <VARIANCE>
+                       LEAF: 'ATOM': (FOO_NOT_OK) <VARIANCE>
+    CONDITIONAL: (!FOO_NOT_OK) <VARIANCE>
+     COMPOSITE: Function clauses: (!FOO_NOT_OK) <VARIANCE>
+      COMPOSITE: Function clause: (!FOO_NOT_OK) <VARIANCE>
+       LEAF: 'ATOM': TRUE <TRUE>
+       COMPOSITE: Clause args: TRUE <TRUE>
+        COMPOSITE: Argument list: TRUE <TRUE>
+         LEAF: 'PAR_LEFT': TRUE <TRUE>
+         COMPOSITE: Expressions: TRUE <TRUE>
+          COMPOSITE: Expression: TRUE <TRUE>
+           COMPOSITE: Expression_100: TRUE <TRUE>
+            COMPOSITE: Expression_150: TRUE <TRUE>
+             COMPOSITE: Expression_160: TRUE <TRUE>
+              COMPOSITE: Expression_200: TRUE <TRUE>
+               COMPOSITE: Expression_300: TRUE <TRUE>
+                COMPOSITE: Expression_400: TRUE <TRUE>
+                 COMPOSITE: Expression_500: TRUE <TRUE>
+                  COMPOSITE: Expression_600: TRUE <TRUE>
+                   COMPOSITE: Expression_700: TRUE <TRUE>
+                    COMPOSITE: Expression_800: TRUE <TRUE>
+                     COMPOSITE: Max expression: TRUE <TRUE>
+                      COMPOSITE: Atomic: TRUE <TRUE>
+                       LEAF: 'ATOM': TRUE <TRUE>
+         LEAF: 'PAR_RIGHT': TRUE <TRUE>
+       COMPOSITE: Clause body: (!FOO_NOT_OK) <VARIANCE>
+        LEAF: 'ARROW': TRUE <TRUE>
+        COMPOSITE: Expressions: (!FOO_NOT_OK) <VARIANCE>
+         COMPOSITE: Expression: (!FOO_NOT_OK) <VARIANCE>
+          COMPOSITE: Expression_100: (!FOO_NOT_OK) <VARIANCE>
+           COMPOSITE: Expression_150: (!FOO_NOT_OK) <VARIANCE>
+            COMPOSITE: Expression_160: (!FOO_NOT_OK) <VARIANCE>
+             COMPOSITE: Expression_200: (!FOO_NOT_OK) <VARIANCE>
+              COMPOSITE: Expression_300: (!FOO_NOT_OK) <VARIANCE>
+               COMPOSITE: Expression_400: (!FOO_NOT_OK) <VARIANCE>
+                COMPOSITE: Expression_500: (!FOO_NOT_OK) <VARIANCE>
+                 COMPOSITE: Expression_600: (!FOO_NOT_OK) <VARIANCE>
+                  COMPOSITE: Expression_700: (!FOO_NOT_OK) <VARIANCE>
+                   COMPOSITE: Expression_800: (!FOO_NOT_OK) <VARIANCE>
+                    COMPOSITE: Max expression: (!FOO_NOT_OK) <VARIANCE>
+                     COMPOSITE: Atomic: (!FOO_NOT_OK) <VARIANCE>
+                      LEAF: 'ATOM': TRUE <TRUE>
+  LEAF: 'DOT': TRUE <TRUE>
