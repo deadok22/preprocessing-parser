@@ -196,7 +196,15 @@ public class EarleyParser {
         }
         unambiguousReductionSet.add(rightmostStartingItem);
       }
-      return unambiguousReductionSet;
+
+      //preserve the original order of reductions
+      Set<EarleyReduction> sortedUnambiguousReductionSet = Sets.newLinkedHashSetWithExpectedSize(unambiguousReductionSet.size());
+      for (EarleyReduction reduction : reductions) {
+        if (unambiguousReductionSet.contains(reduction)) {
+          sortedUnambiguousReductionSet.add(reduction);
+        }
+      }
+      return sortedUnambiguousReductionSet;
     }
 
     return reductions;
