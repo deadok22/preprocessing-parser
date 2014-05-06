@@ -56,13 +56,26 @@ class EarleyRecognizer implements LexemeGraphVisitor {
               }
             }));
 
-    //only create a join column if at least one of the branches created a new column
-    if (forkLastColumns.size() != 1  || columnBeforeFork != forkLastColumns.iterator().next()) {
-      EarleyChartColumn columnAfterFork = myChart.newColumn();
-      for (EarleyChartColumn forkLastColumn : forkLastColumns) {
-        columnAfterFork.addAllFrom(forkLastColumn);
-      }
+    // this means we have a single fork branch and it is degenerate - no new columns were created
+    if (forkLastColumns.size() == 1 && forkLastColumns.iterator().next() == columnBeforeFork) return;
+
+    // create a merge column for all of fork's branches
+    EarleyChartColumn columnAfterFork = myChart.newColumn();
+    for (EarleyChartColumn forkLastColumn : forkLastColumns) {
+      columnAfterFork.addAllFrom(forkLastColumn);
     }
+
+    // determine whether fork branches coverage is exhaustive (i.e. at least one branch is always selected)
+    PresenceCondition orOfForkBranches = myPresenceConditionFactory.getFalse();
+    for (EarleyRecognizer forkRecognizer : forkRecognizers) {
+      PresenceCondition branchBasePresenceCondition = forkRecognizer.myChart.getBasePresenceCondition();
+      orOfForkBranches = orOfForkBranches.or(branchBasePresenceCondition);
+    }
+    if (orOfForkBranches.value() == PresenceCondition.Value.TRUE || myChart.getBasePresenceCondition().equals(orOfForkBranches)) return;
+
+    // fork branches coverage is not exhaustive, it's possible that none of the branches is selected
+    // add items from column before fork to handle this case
+    columnAfterFork.addAllFrom(columnBeforeFork);
   }
 
   @Override
