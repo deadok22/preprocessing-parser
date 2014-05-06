@@ -28,6 +28,7 @@ public class ErlangEarleyParserTests extends ErlangAbstractFileResultTests {
   @Test public void functionWithArgs()               throws Exception { doTest(); }
   @Test public void conditionallyCompiledFunction()  throws Exception { doTest(); }
   @Test public void conditionallyCompiledFunction2() throws Exception { doTest(); }
+  @Test public void conditionallyCompiledFunctions() throws Exception { doTest(); }
   @Test public void alternativeFunctionDefinitions() throws Exception { doTest(); }
   @Test public void alternativeSubstitution()        throws Exception { doTest(); }
   @Test public void alternativeExpressions()         throws Exception { doTest(); }
