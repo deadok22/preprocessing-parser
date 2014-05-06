@@ -49,7 +49,7 @@ class EarleyRecognizer implements LexemeGraphVisitor {
       lexemeGraphNode.accept(recognizer);
     }
     Set<EarleyChartColumn> forkLastColumns =
-            Sets.newHashSet(Lists.transform(forkRecognizers, new Function<EarleyRecognizer, EarleyChartColumn>() {
+            Sets.newLinkedHashSet(Lists.transform(forkRecognizers, new Function<EarleyRecognizer, EarleyChartColumn>() {
               @Override
               public EarleyChartColumn apply(EarleyRecognizer forkRecognizer) {
                 return forkRecognizer.myChart.lastColumn();
