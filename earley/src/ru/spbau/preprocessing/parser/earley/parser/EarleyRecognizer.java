@@ -39,9 +39,7 @@ class EarleyRecognizer implements LexemeGraphVisitor {
   @Override
   public void visitForkNode(LexemeGraphForkNode forkNode) {
     EarleyChartColumn columnBeforeFork = myChart.lastColumn();
-    //TODO create a subchart for each alternative branch
-    //TODO add a new chart column to this myChart filling it with join of items from all branches.
-    //TODO BUT be sure not to complete items from one branch with items from another!
+    //TODO be sure not to complete items from one branch with items from another!
     List<EarleyRecognizer> forkRecognizers = Lists.newArrayListWithExpectedSize(forkNode.getChildren().size());
     for (LexemeGraphNode lexemeGraphNode : forkNode.getChildren()) {
       PresenceCondition branchBasePresenceCondition = columnBeforeFork.getPresenceCondition().and(lexemeGraphNode.getPresenceCondition());
