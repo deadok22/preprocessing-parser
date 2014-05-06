@@ -1,0 +1,87 @@
+ALTERNATIVES: TRUE <TRUE>
+ CONDITIONAL: TRUE <TRUE>
+  COMPOSITE: Forms: TRUE <TRUE>
+   COMPOSITE: Form: TRUE <TRUE>
+    COMPOSITE: Function: TRUE <TRUE>
+     COMPOSITE: Function clauses: TRUE <TRUE>
+      COMPOSITE: Function clause: TRUE <TRUE>
+       LEAF: 'ATOM': TRUE <TRUE>
+       COMPOSITE: Clause args: TRUE <TRUE>
+        COMPOSITE: Argument list: TRUE <TRUE>
+         LEAF: 'PAR_LEFT': TRUE <TRUE>
+         LEAF: 'PAR_RIGHT': TRUE <TRUE>
+       COMPOSITE: Clause body: TRUE <TRUE>
+        LEAF: 'ARROW': TRUE <TRUE>
+        COMPOSITE: Expressions: TRUE <TRUE>
+         COMPOSITE: Expression: TRUE <TRUE>
+          COMPOSITE: Expression_100: TRUE <TRUE>
+           COMPOSITE: Expression_150: TRUE <TRUE>
+            COMPOSITE: Expression_160: TRUE <TRUE>
+             COMPOSITE: Expression_200: TRUE <TRUE>
+              COMPOSITE: Expression_300: TRUE <TRUE>
+               COMPOSITE: Expression_400: TRUE <TRUE>
+                COMPOSITE: Expression_500: TRUE <TRUE>
+                 COMPOSITE: Expression_600: TRUE <TRUE>
+                  COMPOSITE: Expression_700: TRUE <TRUE>
+                   COMPOSITE: Expression_800: TRUE <TRUE>
+                    COMPOSITE: Max expression: TRUE <TRUE>
+                     COMPOSITE: Atomic: TRUE <TRUE>
+                      LEAF: 'INTEGER': TRUE <TRUE>
+    LEAF: 'DOT': TRUE <TRUE>
+ CONDITIONAL: (X) <VARIANCE>
+  COMPOSITE: Forms: (X) <VARIANCE>
+   COMPOSITE: Forms: (X) <VARIANCE>
+    COMPOSITE: Form: (X) <VARIANCE>
+     COMPOSITE: Function: (X) <VARIANCE>
+      COMPOSITE: Function clauses: (X) <VARIANCE>
+       COMPOSITE: Function clause: (X) <VARIANCE>
+        LEAF: 'ATOM': TRUE <TRUE>
+        COMPOSITE: Clause args: (X) <VARIANCE>
+         COMPOSITE: Argument list: (X) <VARIANCE>
+          LEAF: 'PAR_LEFT': (X) <VARIANCE>
+          LEAF: 'PAR_RIGHT': (X) <VARIANCE>
+        COMPOSITE: Clause body: (X) <VARIANCE>
+         LEAF: 'ARROW': (X) <VARIANCE>
+         COMPOSITE: Expressions: (X) <VARIANCE>
+          COMPOSITE: Expression: (X) <VARIANCE>
+           COMPOSITE: Expression_100: (X) <VARIANCE>
+            COMPOSITE: Expression_150: (X) <VARIANCE>
+             COMPOSITE: Expression_160: (X) <VARIANCE>
+              COMPOSITE: Expression_200: (X) <VARIANCE>
+               COMPOSITE: Expression_300: (X) <VARIANCE>
+                COMPOSITE: Expression_400: (X) <VARIANCE>
+                 COMPOSITE: Expression_500: (X) <VARIANCE>
+                  COMPOSITE: Expression_600: (X) <VARIANCE>
+                   COMPOSITE: Expression_700: (X) <VARIANCE>
+                    COMPOSITE: Expression_800: (X) <VARIANCE>
+                     COMPOSITE: Max expression: (X) <VARIANCE>
+                      COMPOSITE: Atomic: (X) <VARIANCE>
+                       LEAF: 'ATOM': (X) <VARIANCE>
+     LEAF: 'DOT': (X) <VARIANCE>
+   COMPOSITE: Form: TRUE <TRUE>
+    COMPOSITE: Function: TRUE <TRUE>
+     COMPOSITE: Function clauses: TRUE <TRUE>
+      COMPOSITE: Function clause: TRUE <TRUE>
+       LEAF: 'ATOM': TRUE <TRUE>
+       COMPOSITE: Clause args: TRUE <TRUE>
+        COMPOSITE: Argument list: TRUE <TRUE>
+         LEAF: 'PAR_LEFT': TRUE <TRUE>
+         LEAF: 'PAR_RIGHT': TRUE <TRUE>
+       COMPOSITE: Clause body: TRUE <TRUE>
+        LEAF: 'ARROW': TRUE <TRUE>
+        COMPOSITE: Expressions: TRUE <TRUE>
+         COMPOSITE: Expression: TRUE <TRUE>
+          COMPOSITE: Expression_100: TRUE <TRUE>
+           COMPOSITE: Expression_150: TRUE <TRUE>
+            COMPOSITE: Expression_160: TRUE <TRUE>
+             COMPOSITE: Expression_200: TRUE <TRUE>
+              COMPOSITE: Expression_300: TRUE <TRUE>
+               COMPOSITE: Expression_400: TRUE <TRUE>
+                COMPOSITE: Expression_500: TRUE <TRUE>
+                 COMPOSITE: Expression_600: TRUE <TRUE>
+                  COMPOSITE: Expression_700: TRUE <TRUE>
+                   COMPOSITE: Expression_800: TRUE <TRUE>
+                    COMPOSITE: Max expression: TRUE <TRUE>
+                     COMPOSITE: Atomic: TRUE <TRUE>
+                      LEAF: 'INTEGER': TRUE <TRUE>
+    LEAF: 'DOT': TRUE <TRUE>
