@@ -107,7 +107,7 @@ class EarleyChartColumn implements Iterable<EarleyItem> {
   public void addAllFrom(EarleyChartColumn otherColumn) {
     for (EarleyItem item : otherColumn) {
       for (EarleyItemDescriptor descriptor : otherColumn.getDescriptors(item)) {
-        addItem(item, descriptor);
+        addItem(item, new EarleyItemDescriptor(descriptor));
       }
     }
   }
