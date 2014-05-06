@@ -44,7 +44,8 @@ class EarleyRecognizer implements LexemeGraphVisitor {
     //TODO BUT be sure not to complete items from one branch with items from another!
     List<EarleyRecognizer> forkRecognizers = Lists.newArrayListWithExpectedSize(forkNode.getChildren().size());
     for (LexemeGraphNode lexemeGraphNode : forkNode.getChildren()) {
-      EarleyChart subChart = myChart.createSubChart(columnBeforeFork.getPresenceCondition().and(lexemeGraphNode.getPresenceCondition()));
+      PresenceCondition branchBasePresenceCondition = columnBeforeFork.getPresenceCondition().and(lexemeGraphNode.getPresenceCondition());
+      EarleyChart subChart = myChart.createSubChart(branchBasePresenceCondition);
       EarleyRecognizer recognizer = new EarleyRecognizer(myPresenceConditionFactory, myGrammar, subChart);
       forkRecognizers.add(recognizer);
       lexemeGraphNode.accept(recognizer);
