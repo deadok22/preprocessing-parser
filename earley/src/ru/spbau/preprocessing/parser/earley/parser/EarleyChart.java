@@ -1,6 +1,6 @@
 package ru.spbau.preprocessing.parser.earley.parser;
 
-import com.google.common.collect.HashMultimap;
+import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
 import ru.spbau.preprocessing.api.conditions.PresenceCondition;
 
@@ -9,7 +9,7 @@ import java.util.List;
 class EarleyChart {
   private final List<EarleyChartColumn> myChart;
   // maps indexes in this chart's column list to subcharts created at these indexes.
-  private final HashMultimap<Integer, EarleyChart> mySubCharts = HashMultimap.create();
+  private final LinkedHashMultimap<Integer, EarleyChart> mySubCharts = LinkedHashMultimap.create();
   // condition of a conditional branch corresponding to this chart
   private final PresenceCondition myBasePresenceCondition;
 
