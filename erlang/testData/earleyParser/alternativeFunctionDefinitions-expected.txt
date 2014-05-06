@@ -1,1 +1,71 @@
-add expected tree here
+COMPOSITE: Forms: TRUE <TRUE>
+ COMPOSITE: Form: TRUE <TRUE>
+  ALTERNATIVES: TRUE <TRUE>
+   CONDITIONAL: (FOO_0) <VARIANCE>
+    COMPOSITE: Function: (FOO_0) <VARIANCE>
+     COMPOSITE: Function clauses: (FOO_0) <VARIANCE>
+      COMPOSITE: Function clause: (FOO_0) <VARIANCE>
+       LEAF: 'ATOM': TRUE <TRUE>
+       COMPOSITE: Clause args: (FOO_0) <VARIANCE>
+        COMPOSITE: Argument list: (FOO_0) <VARIANCE>
+         LEAF: 'PAR_LEFT': (FOO_0) <VARIANCE>
+         LEAF: 'PAR_RIGHT': (FOO_0) <VARIANCE>
+       COMPOSITE: Clause body: (FOO_0) <VARIANCE>
+        LEAF: 'ARROW': (FOO_0) <VARIANCE>
+        COMPOSITE: Expressions: (FOO_0) <VARIANCE>
+         COMPOSITE: Expression: (FOO_0) <VARIANCE>
+          COMPOSITE: Expression_100: (FOO_0) <VARIANCE>
+           COMPOSITE: Expression_150: (FOO_0) <VARIANCE>
+            COMPOSITE: Expression_160: (FOO_0) <VARIANCE>
+             COMPOSITE: Expression_200: (FOO_0) <VARIANCE>
+              COMPOSITE: Expression_300: (FOO_0) <VARIANCE>
+               COMPOSITE: Expression_400: (FOO_0) <VARIANCE>
+                COMPOSITE: Expression_500: (FOO_0) <VARIANCE>
+                 COMPOSITE: Expression_600: (FOO_0) <VARIANCE>
+                  COMPOSITE: Expression_700: (FOO_0) <VARIANCE>
+                   COMPOSITE: Expression_800: (FOO_0) <VARIANCE>
+                    COMPOSITE: Max expression: (FOO_0) <VARIANCE>
+                     COMPOSITE: Atomic: (FOO_0) <VARIANCE>
+                      LEAF: 'ATOM': (FOO_0) <VARIANCE>
+    LEAF: 'DOT': (FOO_0) <VARIANCE>
+   CONDITIONAL: (!FOO_0) <VARIANCE>
+    COMPOSITE: Function: (!FOO_0) <VARIANCE>
+     COMPOSITE: Function clauses: (!FOO_0) <VARIANCE>
+      COMPOSITE: Function clause: (!FOO_0) <VARIANCE>
+       LEAF: 'ATOM': TRUE <TRUE>
+       COMPOSITE: Clause args: (!FOO_0) <VARIANCE>
+        COMPOSITE: Argument list: (!FOO_0) <VARIANCE>
+         LEAF: 'PAR_LEFT': (!FOO_0) <VARIANCE>
+         COMPOSITE: Expressions: (!FOO_0) <VARIANCE>
+          COMPOSITE: Expression: (!FOO_0) <VARIANCE>
+           COMPOSITE: Expression_100: (!FOO_0) <VARIANCE>
+            COMPOSITE: Expression_150: (!FOO_0) <VARIANCE>
+             COMPOSITE: Expression_160: (!FOO_0) <VARIANCE>
+              COMPOSITE: Expression_200: (!FOO_0) <VARIANCE>
+               COMPOSITE: Expression_300: (!FOO_0) <VARIANCE>
+                COMPOSITE: Expression_400: (!FOO_0) <VARIANCE>
+                 COMPOSITE: Expression_500: (!FOO_0) <VARIANCE>
+                  COMPOSITE: Expression_600: (!FOO_0) <VARIANCE>
+                   COMPOSITE: Expression_700: (!FOO_0) <VARIANCE>
+                    COMPOSITE: Expression_800: (!FOO_0) <VARIANCE>
+                     COMPOSITE: Max expression: (!FOO_0) <VARIANCE>
+                      LEAF: 'VAR': (!FOO_0) <VARIANCE>
+         LEAF: 'PAR_RIGHT': (!FOO_0) <VARIANCE>
+       COMPOSITE: Clause body: (!FOO_0) <VARIANCE>
+        LEAF: 'ARROW': (!FOO_0) <VARIANCE>
+        COMPOSITE: Expressions: (!FOO_0) <VARIANCE>
+         COMPOSITE: Expression: (!FOO_0) <VARIANCE>
+          COMPOSITE: Expression_100: (!FOO_0) <VARIANCE>
+           COMPOSITE: Expression_150: (!FOO_0) <VARIANCE>
+            COMPOSITE: Expression_160: (!FOO_0) <VARIANCE>
+             COMPOSITE: Expression_200: (!FOO_0) <VARIANCE>
+              COMPOSITE: Expression_300: (!FOO_0) <VARIANCE>
+               COMPOSITE: Expression_400: (!FOO_0) <VARIANCE>
+                COMPOSITE: Expression_500: (!FOO_0) <VARIANCE>
+                 COMPOSITE: Expression_600: (!FOO_0) <VARIANCE>
+                  COMPOSITE: Expression_700: (!FOO_0) <VARIANCE>
+                   COMPOSITE: Expression_800: (!FOO_0) <VARIANCE>
+                    COMPOSITE: Max expression: (!FOO_0) <VARIANCE>
+                     COMPOSITE: Atomic: (!FOO_0) <VARIANCE>
+                      LEAF: 'ATOM': (!FOO_0) <VARIANCE>
+    LEAF: 'DOT': (!FOO_0) <VARIANCE>
