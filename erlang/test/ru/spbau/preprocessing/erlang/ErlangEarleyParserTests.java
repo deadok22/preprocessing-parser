@@ -29,6 +29,7 @@ public class ErlangEarleyParserTests extends ErlangAbstractFileResultTests {
   @Test public void conditionallyCompiledFunction()  throws Exception { doTest(); }
   @Test public void alternativeFunctionDefinitions() throws Exception { doTest(); }
   @Test public void alternativeSubstitution()        throws Exception { doTest(); }
+  @Test public void alternativeExpressions()         throws Exception { doTest(); }
 
   @Override
   protected String getTestDataPath() {
