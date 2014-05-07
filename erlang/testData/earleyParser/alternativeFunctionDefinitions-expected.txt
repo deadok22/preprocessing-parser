@@ -5,13 +5,13 @@ COMPOSITE: Forms: TRUE <TRUE>
     COMPOSITE: Function: (FOO_0) <VARIANCE>
      COMPOSITE: Function clauses: (FOO_0) <VARIANCE>
       COMPOSITE: Function clause: (FOO_0) <VARIANCE>
-       LEAF: 'ATOM': TRUE <TRUE>
+       LEAF: 'ATOM' "foo" [16@erlang/testData/earleyParser/alternativeFunctionDefinitions.erl]: TRUE <TRUE>
        COMPOSITE: Clause args: (FOO_0) <VARIANCE>
         COMPOSITE: Argument list: (FOO_0) <VARIANCE>
-         LEAF: 'PAR_LEFT': (FOO_0) <VARIANCE>
-         LEAF: 'PAR_RIGHT': (FOO_0) <VARIANCE>
+         LEAF: 'PAR_LEFT' "(" [19@erlang/testData/earleyParser/alternativeFunctionDefinitions.erl]: (FOO_0) <VARIANCE>
+         LEAF: 'PAR_RIGHT' ")" [20@erlang/testData/earleyParser/alternativeFunctionDefinitions.erl]: (FOO_0) <VARIANCE>
        COMPOSITE: Clause body: (FOO_0) <VARIANCE>
-        LEAF: 'ARROW': (FOO_0) <VARIANCE>
+        LEAF: 'ARROW' "->" [22@erlang/testData/earleyParser/alternativeFunctionDefinitions.erl]: (FOO_0) <VARIANCE>
         COMPOSITE: Expressions: (FOO_0) <VARIANCE>
          COMPOSITE: Expression: (FOO_0) <VARIANCE>
           COMPOSITE: Expression_100: (FOO_0) <VARIANCE>
@@ -26,16 +26,16 @@ COMPOSITE: Forms: TRUE <TRUE>
                    COMPOSITE: Expression_800: (FOO_0) <VARIANCE>
                     COMPOSITE: Max expression: (FOO_0) <VARIANCE>
                      COMPOSITE: Atomic: (FOO_0) <VARIANCE>
-                      LEAF: 'ATOM': (FOO_0) <VARIANCE>
-    LEAF: 'DOT': (FOO_0) <VARIANCE>
+                      LEAF: 'ATOM' "ok" [29@erlang/testData/earleyParser/alternativeFunctionDefinitions.erl]: (FOO_0) <VARIANCE>
+    LEAF: 'DOT' "." [31@erlang/testData/earleyParser/alternativeFunctionDefinitions.erl]: (FOO_0) <VARIANCE>
    CONDITIONAL: (!FOO_0) <VARIANCE>
     COMPOSITE: Function: (!FOO_0) <VARIANCE>
      COMPOSITE: Function clauses: (!FOO_0) <VARIANCE>
       COMPOSITE: Function clause: (!FOO_0) <VARIANCE>
-       LEAF: 'ATOM': TRUE <TRUE>
+       LEAF: 'ATOM' "foo" [42@erlang/testData/earleyParser/alternativeFunctionDefinitions.erl]: TRUE <TRUE>
        COMPOSITE: Clause args: (!FOO_0) <VARIANCE>
         COMPOSITE: Argument list: (!FOO_0) <VARIANCE>
-         LEAF: 'PAR_LEFT': (!FOO_0) <VARIANCE>
+         LEAF: 'PAR_LEFT' "(" [45@erlang/testData/earleyParser/alternativeFunctionDefinitions.erl]: (!FOO_0) <VARIANCE>
          COMPOSITE: Expressions: (!FOO_0) <VARIANCE>
           COMPOSITE: Expression: (!FOO_0) <VARIANCE>
            COMPOSITE: Expression_100: (!FOO_0) <VARIANCE>
@@ -49,10 +49,10 @@ COMPOSITE: Forms: TRUE <TRUE>
                    COMPOSITE: Expression_700: (!FOO_0) <VARIANCE>
                     COMPOSITE: Expression_800: (!FOO_0) <VARIANCE>
                      COMPOSITE: Max expression: (!FOO_0) <VARIANCE>
-                      LEAF: 'VAR': (!FOO_0) <VARIANCE>
-         LEAF: 'PAR_RIGHT': (!FOO_0) <VARIANCE>
+                      LEAF: 'VAR' "_" [46@erlang/testData/earleyParser/alternativeFunctionDefinitions.erl]: (!FOO_0) <VARIANCE>
+         LEAF: 'PAR_RIGHT' ")" [47@erlang/testData/earleyParser/alternativeFunctionDefinitions.erl]: (!FOO_0) <VARIANCE>
        COMPOSITE: Clause body: (!FOO_0) <VARIANCE>
-        LEAF: 'ARROW': (!FOO_0) <VARIANCE>
+        LEAF: 'ARROW' "->" [49@erlang/testData/earleyParser/alternativeFunctionDefinitions.erl]: (!FOO_0) <VARIANCE>
         COMPOSITE: Expressions: (!FOO_0) <VARIANCE>
          COMPOSITE: Expression: (!FOO_0) <VARIANCE>
           COMPOSITE: Expression_100: (!FOO_0) <VARIANCE>
@@ -67,5 +67,5 @@ COMPOSITE: Forms: TRUE <TRUE>
                    COMPOSITE: Expression_800: (!FOO_0) <VARIANCE>
                     COMPOSITE: Max expression: (!FOO_0) <VARIANCE>
                      COMPOSITE: Atomic: (!FOO_0) <VARIANCE>
-                      LEAF: 'ATOM': (!FOO_0) <VARIANCE>
-    LEAF: 'DOT': (!FOO_0) <VARIANCE>
+                      LEAF: 'ATOM' "ok" [56@erlang/testData/earleyParser/alternativeFunctionDefinitions.erl]: (!FOO_0) <VARIANCE>
+    LEAF: 'DOT' "." [58@erlang/testData/earleyParser/alternativeFunctionDefinitions.erl]: (!FOO_0) <VARIANCE>

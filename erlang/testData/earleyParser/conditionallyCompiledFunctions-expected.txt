@@ -5,13 +5,13 @@ ALTERNATIVES: TRUE <TRUE>
     COMPOSITE: Function: TRUE <TRUE>
      COMPOSITE: Function clauses: TRUE <TRUE>
       COMPOSITE: Function clause: TRUE <TRUE>
-       LEAF: 'ATOM': TRUE <TRUE>
+       LEAF: 'ATOM' "foo3" [71@erlang/testData/earleyParser/conditionallyCompiledFunctions.erl]: TRUE <TRUE>
        COMPOSITE: Clause args: TRUE <TRUE>
         COMPOSITE: Argument list: TRUE <TRUE>
-         LEAF: 'PAR_LEFT': TRUE <TRUE>
-         LEAF: 'PAR_RIGHT': TRUE <TRUE>
+         LEAF: 'PAR_LEFT' "(" [75@erlang/testData/earleyParser/conditionallyCompiledFunctions.erl]: TRUE <TRUE>
+         LEAF: 'PAR_RIGHT' ")" [76@erlang/testData/earleyParser/conditionallyCompiledFunctions.erl]: TRUE <TRUE>
        COMPOSITE: Clause body: TRUE <TRUE>
-        LEAF: 'ARROW': TRUE <TRUE>
+        LEAF: 'ARROW' "->" [78@erlang/testData/earleyParser/conditionallyCompiledFunctions.erl]: TRUE <TRUE>
         COMPOSITE: Expressions: TRUE <TRUE>
          COMPOSITE: Expression: TRUE <TRUE>
           COMPOSITE: Expression_100: TRUE <TRUE>
@@ -26,8 +26,8 @@ ALTERNATIVES: TRUE <TRUE>
                    COMPOSITE: Expression_800: TRUE <TRUE>
                     COMPOSITE: Max expression: TRUE <TRUE>
                      COMPOSITE: Atomic: TRUE <TRUE>
-                      LEAF: 'ATOM': TRUE <TRUE>
-    LEAF: 'DOT': TRUE <TRUE>
+                      LEAF: 'ATOM' "ok" [85@erlang/testData/earleyParser/conditionallyCompiledFunctions.erl]: TRUE <TRUE>
+    LEAF: 'DOT' "." [87@erlang/testData/earleyParser/conditionallyCompiledFunctions.erl]: TRUE <TRUE>
  CONDITIONAL: (X) <VARIANCE>
   COMPOSITE: Forms: (X) <VARIANCE>
    COMPOSITE: Forms: (X) <VARIANCE>
@@ -36,13 +36,13 @@ ALTERNATIVES: TRUE <TRUE>
       COMPOSITE: Function: (X) <VARIANCE>
        COMPOSITE: Function clauses: (X) <VARIANCE>
         COMPOSITE: Function clause: (X) <VARIANCE>
-         LEAF: 'ATOM': TRUE <TRUE>
+         LEAF: 'ATOM' "foo1" [15@erlang/testData/earleyParser/conditionallyCompiledFunctions.erl]: TRUE <TRUE>
          COMPOSITE: Clause args: (X) <VARIANCE>
           COMPOSITE: Argument list: (X) <VARIANCE>
-           LEAF: 'PAR_LEFT': (X) <VARIANCE>
-           LEAF: 'PAR_RIGHT': (X) <VARIANCE>
+           LEAF: 'PAR_LEFT' "(" [19@erlang/testData/earleyParser/conditionallyCompiledFunctions.erl]: (X) <VARIANCE>
+           LEAF: 'PAR_RIGHT' ")" [20@erlang/testData/earleyParser/conditionallyCompiledFunctions.erl]: (X) <VARIANCE>
          COMPOSITE: Clause body: (X) <VARIANCE>
-          LEAF: 'ARROW': (X) <VARIANCE>
+          LEAF: 'ARROW' "->" [22@erlang/testData/earleyParser/conditionallyCompiledFunctions.erl]: (X) <VARIANCE>
           COMPOSITE: Expressions: (X) <VARIANCE>
            COMPOSITE: Expression: (X) <VARIANCE>
             COMPOSITE: Expression_100: (X) <VARIANCE>
@@ -57,19 +57,19 @@ ALTERNATIVES: TRUE <TRUE>
                      COMPOSITE: Expression_800: (X) <VARIANCE>
                       COMPOSITE: Max expression: (X) <VARIANCE>
                        COMPOSITE: Atomic: (X) <VARIANCE>
-                        LEAF: 'ATOM': (X) <VARIANCE>
-      LEAF: 'DOT': (X) <VARIANCE>
+                        LEAF: 'ATOM' "ok" [33@erlang/testData/earleyParser/conditionallyCompiledFunctions.erl]: (X) <VARIANCE>
+      LEAF: 'DOT' "." [35@erlang/testData/earleyParser/conditionallyCompiledFunctions.erl]: (X) <VARIANCE>
     COMPOSITE: Form: (X) <VARIANCE>
      COMPOSITE: Function: (X) <VARIANCE>
       COMPOSITE: Function clauses: (X) <VARIANCE>
        COMPOSITE: Function clause: (X) <VARIANCE>
-        LEAF: 'ATOM': (X) <VARIANCE>
+        LEAF: 'ATOM' "foo2" [41@erlang/testData/earleyParser/conditionallyCompiledFunctions.erl]: (X) <VARIANCE>
         COMPOSITE: Clause args: (X) <VARIANCE>
          COMPOSITE: Argument list: (X) <VARIANCE>
-          LEAF: 'PAR_LEFT': (X) <VARIANCE>
-          LEAF: 'PAR_RIGHT': (X) <VARIANCE>
+          LEAF: 'PAR_LEFT' "(" [45@erlang/testData/earleyParser/conditionallyCompiledFunctions.erl]: (X) <VARIANCE>
+          LEAF: 'PAR_RIGHT' ")" [46@erlang/testData/earleyParser/conditionallyCompiledFunctions.erl]: (X) <VARIANCE>
         COMPOSITE: Clause body: (X) <VARIANCE>
-         LEAF: 'ARROW': (X) <VARIANCE>
+         LEAF: 'ARROW' "->" [48@erlang/testData/earleyParser/conditionallyCompiledFunctions.erl]: (X) <VARIANCE>
          COMPOSITE: Expressions: (X) <VARIANCE>
           COMPOSITE: Expression: (X) <VARIANCE>
            COMPOSITE: Expression_100: (X) <VARIANCE>
@@ -84,19 +84,19 @@ ALTERNATIVES: TRUE <TRUE>
                     COMPOSITE: Expression_800: (X) <VARIANCE>
                      COMPOSITE: Max expression: (X) <VARIANCE>
                       COMPOSITE: Atomic: (X) <VARIANCE>
-                       LEAF: 'INTEGER': (X) <VARIANCE>
-     LEAF: 'DOT': (X) <VARIANCE>
+                       LEAF: 'INTEGER' "2" [59@erlang/testData/earleyParser/conditionallyCompiledFunctions.erl]: (X) <VARIANCE>
+     LEAF: 'DOT' "." [60@erlang/testData/earleyParser/conditionallyCompiledFunctions.erl]: (X) <VARIANCE>
    COMPOSITE: Form: TRUE <TRUE>
     COMPOSITE: Function: TRUE <TRUE>
      COMPOSITE: Function clauses: TRUE <TRUE>
       COMPOSITE: Function clause: TRUE <TRUE>
-       LEAF: 'ATOM': TRUE <TRUE>
+       LEAF: 'ATOM' "foo3" [71@erlang/testData/earleyParser/conditionallyCompiledFunctions.erl]: TRUE <TRUE>
        COMPOSITE: Clause args: TRUE <TRUE>
         COMPOSITE: Argument list: TRUE <TRUE>
-         LEAF: 'PAR_LEFT': TRUE <TRUE>
-         LEAF: 'PAR_RIGHT': TRUE <TRUE>
+         LEAF: 'PAR_LEFT' "(" [75@erlang/testData/earleyParser/conditionallyCompiledFunctions.erl]: TRUE <TRUE>
+         LEAF: 'PAR_RIGHT' ")" [76@erlang/testData/earleyParser/conditionallyCompiledFunctions.erl]: TRUE <TRUE>
        COMPOSITE: Clause body: TRUE <TRUE>
-        LEAF: 'ARROW': TRUE <TRUE>
+        LEAF: 'ARROW' "->" [78@erlang/testData/earleyParser/conditionallyCompiledFunctions.erl]: TRUE <TRUE>
         COMPOSITE: Expressions: TRUE <TRUE>
          COMPOSITE: Expression: TRUE <TRUE>
           COMPOSITE: Expression_100: TRUE <TRUE>
@@ -111,5 +111,5 @@ ALTERNATIVES: TRUE <TRUE>
                    COMPOSITE: Expression_800: TRUE <TRUE>
                     COMPOSITE: Max expression: TRUE <TRUE>
                      COMPOSITE: Atomic: TRUE <TRUE>
-                      LEAF: 'ATOM': TRUE <TRUE>
-    LEAF: 'DOT': TRUE <TRUE>
+                      LEAF: 'ATOM' "ok" [85@erlang/testData/earleyParser/conditionallyCompiledFunctions.erl]: TRUE <TRUE>
+    LEAF: 'DOT' "." [87@erlang/testData/earleyParser/conditionallyCompiledFunctions.erl]: TRUE <TRUE>

@@ -5,10 +5,10 @@ COMPOSITE: Forms: TRUE <TRUE>
     CONDITIONAL: (FOO_NOT_OK) <VARIANCE>
      COMPOSITE: Function clauses: (FOO_NOT_OK) <VARIANCE>
       COMPOSITE: Function clause: (FOO_NOT_OK) <VARIANCE>
-       LEAF: 'ATOM': TRUE <TRUE>
+       LEAF: 'ATOM' "foo" [103@erlang/testData/earleyParser/conditionalClause.erl]: TRUE <TRUE>
        COMPOSITE: Clause args: TRUE <TRUE>
         COMPOSITE: Argument list: TRUE <TRUE>
-         LEAF: 'PAR_LEFT': TRUE <TRUE>
+         LEAF: 'PAR_LEFT' "(" [106@erlang/testData/earleyParser/conditionalClause.erl]: TRUE <TRUE>
          COMPOSITE: Expressions: TRUE <TRUE>
           COMPOSITE: Expression: TRUE <TRUE>
            COMPOSITE: Expression_100: TRUE <TRUE>
@@ -23,10 +23,10 @@ COMPOSITE: Forms: TRUE <TRUE>
                     COMPOSITE: Expression_800: TRUE <TRUE>
                      COMPOSITE: Max expression: TRUE <TRUE>
                       COMPOSITE: Atomic: TRUE <TRUE>
-                       LEAF: 'ATOM': TRUE <TRUE>
-         LEAF: 'PAR_RIGHT': TRUE <TRUE>
+                       LEAF: 'ATOM' "ok" [107@erlang/testData/earleyParser/conditionalClause.erl]: TRUE <TRUE>
+         LEAF: 'PAR_RIGHT' ")" [109@erlang/testData/earleyParser/conditionalClause.erl]: TRUE <TRUE>
        COMPOSITE: Clause body: (FOO_NOT_OK) <VARIANCE>
-        LEAF: 'ARROW': TRUE <TRUE>
+        LEAF: 'ARROW' "->" [111@erlang/testData/earleyParser/conditionalClause.erl]: TRUE <TRUE>
         COMPOSITE: Expressions: (FOO_NOT_OK) <VARIANCE>
          COMPOSITE: Expression: (FOO_NOT_OK) <VARIANCE>
           COMPOSITE: Expression_100: (FOO_NOT_OK) <VARIANCE>
@@ -41,14 +41,14 @@ COMPOSITE: Forms: TRUE <TRUE>
                    COMPOSITE: Expression_800: (FOO_NOT_OK) <VARIANCE>
                     COMPOSITE: Max expression: (FOO_NOT_OK) <VARIANCE>
                      COMPOSITE: Atomic: (FOO_NOT_OK) <VARIANCE>
-                      LEAF: 'ATOM': TRUE <TRUE>
-      LEAF: 'SEMI': (FOO_NOT_OK) <VARIANCE>
+                      LEAF: 'ATOM' "ok" [118@erlang/testData/earleyParser/conditionalClause.erl]: TRUE <TRUE>
+      LEAF: 'SEMI' ";" [118@erlang/testData/earleyParser/conditionalClause.erl]: (FOO_NOT_OK) <VARIANCE>
       COMPOSITE: Function clauses: (FOO_NOT_OK) <VARIANCE>
        COMPOSITE: Function clause: (FOO_NOT_OK) <VARIANCE>
-        LEAF: 'ATOM': (FOO_NOT_OK) <VARIANCE>
+        LEAF: 'ATOM' "foo" [118@erlang/testData/earleyParser/conditionalClause.erl]: (FOO_NOT_OK) <VARIANCE>
         COMPOSITE: Clause args: (FOO_NOT_OK) <VARIANCE>
          COMPOSITE: Argument list: (FOO_NOT_OK) <VARIANCE>
-          LEAF: 'PAR_LEFT': (FOO_NOT_OK) <VARIANCE>
+          LEAF: 'PAR_LEFT' "(" [118@erlang/testData/earleyParser/conditionalClause.erl]: (FOO_NOT_OK) <VARIANCE>
           COMPOSITE: Expressions: (FOO_NOT_OK) <VARIANCE>
            COMPOSITE: Expression: (FOO_NOT_OK) <VARIANCE>
             COMPOSITE: Expression_100: (FOO_NOT_OK) <VARIANCE>
@@ -63,10 +63,10 @@ COMPOSITE: Forms: TRUE <TRUE>
                      COMPOSITE: Expression_800: (FOO_NOT_OK) <VARIANCE>
                       COMPOSITE: Max expression: (FOO_NOT_OK) <VARIANCE>
                        COMPOSITE: Atomic: (FOO_NOT_OK) <VARIANCE>
-                        LEAF: 'ATOM': (FOO_NOT_OK) <VARIANCE>
-          LEAF: 'PAR_RIGHT': (FOO_NOT_OK) <VARIANCE>
+                        LEAF: 'ATOM' "not_ok" [118@erlang/testData/earleyParser/conditionalClause.erl]: (FOO_NOT_OK) <VARIANCE>
+          LEAF: 'PAR_RIGHT' ")" [118@erlang/testData/earleyParser/conditionalClause.erl]: (FOO_NOT_OK) <VARIANCE>
         COMPOSITE: Clause body: (FOO_NOT_OK) <VARIANCE>
-         LEAF: 'ARROW': (FOO_NOT_OK) <VARIANCE>
+         LEAF: 'ARROW' "->" [118@erlang/testData/earleyParser/conditionalClause.erl]: (FOO_NOT_OK) <VARIANCE>
          COMPOSITE: Expressions: (FOO_NOT_OK) <VARIANCE>
           COMPOSITE: Expression: (FOO_NOT_OK) <VARIANCE>
            COMPOSITE: Expression_100: (FOO_NOT_OK) <VARIANCE>
@@ -81,14 +81,14 @@ COMPOSITE: Forms: TRUE <TRUE>
                     COMPOSITE: Expression_800: (FOO_NOT_OK) <VARIANCE>
                      COMPOSITE: Max expression: (FOO_NOT_OK) <VARIANCE>
                       COMPOSITE: Atomic: (FOO_NOT_OK) <VARIANCE>
-                       LEAF: 'ATOM': (FOO_NOT_OK) <VARIANCE>
+                       LEAF: 'ATOM' "not_ok" [118@erlang/testData/earleyParser/conditionalClause.erl]: (FOO_NOT_OK) <VARIANCE>
     CONDITIONAL: (!FOO_NOT_OK) <VARIANCE>
      COMPOSITE: Function clauses: (!FOO_NOT_OK) <VARIANCE>
       COMPOSITE: Function clause: (!FOO_NOT_OK) <VARIANCE>
-       LEAF: 'ATOM': TRUE <TRUE>
+       LEAF: 'ATOM' "foo" [103@erlang/testData/earleyParser/conditionalClause.erl]: TRUE <TRUE>
        COMPOSITE: Clause args: TRUE <TRUE>
         COMPOSITE: Argument list: TRUE <TRUE>
-         LEAF: 'PAR_LEFT': TRUE <TRUE>
+         LEAF: 'PAR_LEFT' "(" [106@erlang/testData/earleyParser/conditionalClause.erl]: TRUE <TRUE>
          COMPOSITE: Expressions: TRUE <TRUE>
           COMPOSITE: Expression: TRUE <TRUE>
            COMPOSITE: Expression_100: TRUE <TRUE>
@@ -103,10 +103,10 @@ COMPOSITE: Forms: TRUE <TRUE>
                     COMPOSITE: Expression_800: TRUE <TRUE>
                      COMPOSITE: Max expression: TRUE <TRUE>
                       COMPOSITE: Atomic: TRUE <TRUE>
-                       LEAF: 'ATOM': TRUE <TRUE>
-         LEAF: 'PAR_RIGHT': TRUE <TRUE>
+                       LEAF: 'ATOM' "ok" [107@erlang/testData/earleyParser/conditionalClause.erl]: TRUE <TRUE>
+         LEAF: 'PAR_RIGHT' ")" [109@erlang/testData/earleyParser/conditionalClause.erl]: TRUE <TRUE>
        COMPOSITE: Clause body: (!FOO_NOT_OK) <VARIANCE>
-        LEAF: 'ARROW': TRUE <TRUE>
+        LEAF: 'ARROW' "->" [111@erlang/testData/earleyParser/conditionalClause.erl]: TRUE <TRUE>
         COMPOSITE: Expressions: (!FOO_NOT_OK) <VARIANCE>
          COMPOSITE: Expression: (!FOO_NOT_OK) <VARIANCE>
           COMPOSITE: Expression_100: (!FOO_NOT_OK) <VARIANCE>
@@ -121,5 +121,5 @@ COMPOSITE: Forms: TRUE <TRUE>
                    COMPOSITE: Expression_800: (!FOO_NOT_OK) <VARIANCE>
                     COMPOSITE: Max expression: (!FOO_NOT_OK) <VARIANCE>
                      COMPOSITE: Atomic: (!FOO_NOT_OK) <VARIANCE>
-                      LEAF: 'ATOM': TRUE <TRUE>
-  LEAF: 'DOT': TRUE <TRUE>
+                      LEAF: 'ATOM' "ok" [118@erlang/testData/earleyParser/conditionalClause.erl]: TRUE <TRUE>
+  LEAF: 'DOT' "." [122@erlang/testData/earleyParser/conditionalClause.erl]: TRUE <TRUE>

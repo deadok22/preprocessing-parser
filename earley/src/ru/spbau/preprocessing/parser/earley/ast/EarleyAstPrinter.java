@@ -1,6 +1,8 @@
 package ru.spbau.preprocessing.parser.earley.ast;
 
 import ru.spbau.preprocessing.api.conditions.PresenceCondition;
+import ru.spbau.preprocessing.lexer.lexemegraph.Lexeme;
+import ru.spbau.preprocessing.lexer.lexemegraph.LexemeLocation;
 
 import java.io.PrintWriter;
 
@@ -24,7 +26,11 @@ public class EarleyAstPrinter extends EarleyAstVisitor {
 
   @Override
   public void visitLeafNode(EarleyLeafNode<?> leafNode) {
-    printAndVisitChildren("LEAF: " + leafNode.getSymbol(), leafNode);
+    Lexeme<?> lexeme = leafNode.getLexeme();
+    String lexemeText =  " \"" + lexeme.getText() + '\"';
+    LexemeLocation location = lexeme.getLocation();
+    String locationText = " [" + location.getStartOffset() + "@" + location.getSourceFile().getPath() + "]";
+    printAndVisitChildren("LEAF: " + leafNode.getSymbol() + lexemeText + locationText, leafNode);
   }
 
   @Override

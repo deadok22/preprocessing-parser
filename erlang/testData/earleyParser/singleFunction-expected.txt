@@ -3,13 +3,13 @@ COMPOSITE: Forms: TRUE <TRUE>
   COMPOSITE: Function: TRUE <TRUE>
    COMPOSITE: Function clauses: TRUE <TRUE>
     COMPOSITE: Function clause: TRUE <TRUE>
-     LEAF: 'ATOM': TRUE <TRUE>
+     LEAF: 'ATOM' "function" [0@erlang/testData/earleyParser/singleFunction.erl]: TRUE <TRUE>
      COMPOSITE: Clause args: TRUE <TRUE>
       COMPOSITE: Argument list: TRUE <TRUE>
-       LEAF: 'PAR_LEFT': TRUE <TRUE>
-       LEAF: 'PAR_RIGHT': TRUE <TRUE>
+       LEAF: 'PAR_LEFT' "(" [8@erlang/testData/earleyParser/singleFunction.erl]: TRUE <TRUE>
+       LEAF: 'PAR_RIGHT' ")" [9@erlang/testData/earleyParser/singleFunction.erl]: TRUE <TRUE>
      COMPOSITE: Clause body: TRUE <TRUE>
-      LEAF: 'ARROW': TRUE <TRUE>
+      LEAF: 'ARROW' "->" [11@erlang/testData/earleyParser/singleFunction.erl]: TRUE <TRUE>
       COMPOSITE: Expressions: TRUE <TRUE>
        COMPOSITE: Expression: TRUE <TRUE>
         COMPOSITE: Expression_100: TRUE <TRUE>
@@ -24,5 +24,5 @@ COMPOSITE: Forms: TRUE <TRUE>
                  COMPOSITE: Expression_800: TRUE <TRUE>
                   COMPOSITE: Max expression: TRUE <TRUE>
                    COMPOSITE: Atomic: TRUE <TRUE>
-                    LEAF: 'ATOM': TRUE <TRUE>
-  LEAF: 'DOT': TRUE <TRUE>
+                    LEAF: 'ATOM' "ok" [18@erlang/testData/earleyParser/singleFunction.erl]: TRUE <TRUE>
+  LEAF: 'DOT' "." [20@erlang/testData/earleyParser/singleFunction.erl]: TRUE <TRUE>
