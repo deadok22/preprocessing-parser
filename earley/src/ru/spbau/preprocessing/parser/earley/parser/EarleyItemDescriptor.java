@@ -3,7 +3,6 @@ package ru.spbau.preprocessing.parser.earley.parser;
 import com.google.common.base.Objects;
 import com.google.common.collect.Sets;
 import ru.spbau.preprocessing.api.conditions.PresenceCondition;
-import ru.spbau.preprocessing.parser.earley.grammar.EarleyTerminal;
 
 import java.util.Set;
 
@@ -41,8 +40,8 @@ import java.util.Set;
     return addReduction(new EarleyReduction(reductionItem));
   }
 
-  public boolean addReduction(EarleyTerminal<?> terminal, EarleyChartColumn column) {
-    return addReduction(new EarleyReduction(terminal, column));
+  public boolean addReduction(EarleyTerminalMatch<?> terminalMatch, EarleyChartColumn column) {
+    return addReduction(new EarleyReduction(terminalMatch, column));
   }
 
   public boolean addReduction(EarleyReduction reduction) {

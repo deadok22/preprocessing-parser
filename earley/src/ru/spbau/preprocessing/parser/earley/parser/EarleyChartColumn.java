@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.LinkedHashMultimap;
 import ru.spbau.preprocessing.api.conditions.PresenceCondition;
 import ru.spbau.preprocessing.parser.earley.grammar.EarleyProduction;
-import ru.spbau.preprocessing.parser.earley.grammar.EarleyTerminal;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -39,15 +38,15 @@ class EarleyChartColumn implements Iterable<EarleyItem> {
    * Add an item produced from a predecessor via token consuming.
    *
    * @param predecessor the predecessor of this item.
-   * @param terminal a terminal consumed.
+   * @param terminalMatch a terminalMatch consumed.
    * @param previousColumn
    * @param presenceCondition
    * @return added item or null if the column was not modified.
    */
-  public EarleyItem addItem(EarleyItem predecessor, EarleyTerminal<?> terminal, EarleyChartColumn previousColumn, PresenceCondition presenceCondition) {
-    EarleyItem newItem = predecessor.advanceWith(terminal);
+  public EarleyItem addItem(EarleyItem predecessor, EarleyTerminalMatch<?> terminalMatch, EarleyChartColumn previousColumn, PresenceCondition presenceCondition) {
+    EarleyItem newItem = predecessor.advanceWith(terminalMatch.getTerminal());
     EarleyItemDescriptor newItemDescriptor = new EarleyItemDescriptor(predecessor, presenceCondition);
-    newItemDescriptor.addReduction(terminal, previousColumn);
+    newItemDescriptor.addReduction(terminalMatch, previousColumn);
     return addItem(newItem, newItemDescriptor);
   }
 

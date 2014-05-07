@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import ru.spbau.preprocessing.api.conditions.PresenceCondition;
 import ru.spbau.preprocessing.api.conditions.PresenceConditionFactory;
+import ru.spbau.preprocessing.lexer.lexemegraph.Lexeme;
 import ru.spbau.preprocessing.lexer.lexemegraph.LexemeGraphNode;
 import ru.spbau.preprocessing.parser.earley.ast.*;
 import ru.spbau.preprocessing.parser.earley.grammar.EarleyGrammar;
@@ -140,8 +141,11 @@ public class EarleyParser {
 
   private EarleyAstNode buildNodeForReduction(EarleyReduction reduction, EarleyChartColumn column) {
     if (reduction.getSymbol().isTerminal()) {
+      EarleyTerminalMatch<?> terminalMatch = reduction.getTerminalMatch();
       //noinspection unchecked
-      return new EarleyLeafNode<Object>((EarleyTerminal<Object>) reduction.getTerminal(), reduction.getStartColumn().getPresenceCondition());
+      return new EarleyLeafNode<Object>((EarleyTerminal<Object>) terminalMatch.getTerminal(),
+              (Lexeme<Object>) terminalMatch.getLexeme(),
+              reduction.getStartColumn().getPresenceCondition());
     }
     else {
       return buildCompleteNode(reduction.getCompletedItem(), column);
@@ -169,7 +173,7 @@ public class EarleyParser {
   private Set<EarleyReduction> excludeReductionAmbiguities(EarleyItem currentItem, Set<EarleyReduction> reductions, EarleyChartColumn column) {
     HashMultimap<PresenceCondition, EarleyReduction> possibleAmbiguities = HashMultimap.create();
     for (EarleyReduction reduction : reductions) {
-      if (reduction.getTerminal() == null) {
+      if (reduction.getTerminalMatch() == null) {
         EarleyItem reductionItem = reduction.getCompletedItem();
         Set<EarleyItemDescriptor> descriptors = column.getDescriptors(reductionItem);
         for (EarleyItemDescriptor descriptor : descriptors) {

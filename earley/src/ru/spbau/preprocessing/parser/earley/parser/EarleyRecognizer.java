@@ -93,14 +93,15 @@ class EarleyRecognizer implements LexemeGraphVisitor {
   }
 
   private void doEarleyStep(Lexeme<?> lexeme, PresenceCondition presenceCondition) {
-    EarleyTerminal<Object> terminal = new EarleyTerminal<Object>(lexeme.getType());
-    if (myGrammar.isIgnoredSymbol(terminal)) return;
+    //noinspection unchecked
+    EarleyTerminalMatch<Object> terminalMatch = new EarleyTerminalMatch<Object>(new EarleyTerminal<Object>(lexeme.getType()), (Lexeme<Object>) lexeme);
+    if (myGrammar.isIgnoredSymbol(terminalMatch.getTerminal())) return;
 
     EarleyChartColumn currentColumn = myChart.lastColumn();
     EarleyChartColumn nextColumn = myChart.newColumn();
 
     predict(currentColumn);
-    scan(terminal, currentColumn, nextColumn, presenceCondition);
+    scan(terminalMatch, currentColumn, nextColumn, presenceCondition);
     complete(nextColumn);
   }
 
@@ -123,12 +124,12 @@ class EarleyRecognizer implements LexemeGraphVisitor {
     }
   }
 
-  private void scan(EarleyTerminal<?> terminal, EarleyChartColumn currentColumn, EarleyChartColumn nextColumn, PresenceCondition presenceCondition) {
+  private void scan(EarleyTerminalMatch<Object> terminalMatch, EarleyChartColumn currentColumn, EarleyChartColumn nextColumn, PresenceCondition presenceCondition) {
     for (EarleyItem item : currentColumn) {
-      if (Objects.equal(terminal, item.getNextExpectedSymbol())) {
+      if (Objects.equal(terminalMatch.getTerminal(), item.getNextExpectedSymbol())) {
         PresenceCondition itemPresenceCondition = getOrOfPresenceConditions(item, currentColumn);
         PresenceCondition newItemPresenceCondition = presenceCondition.and(itemPresenceCondition);
-        nextColumn.addItem(item, terminal, currentColumn, newItemPresenceCondition);
+        nextColumn.addItem(item, terminalMatch, currentColumn, newItemPresenceCondition);
       }
     }
   }

@@ -2,7 +2,6 @@ package ru.spbau.preprocessing.parser.earley.parser;
 
 import com.google.common.base.Objects;
 import ru.spbau.preprocessing.parser.earley.grammar.EarleySymbol;
-import ru.spbau.preprocessing.parser.earley.grammar.EarleyTerminal;
 
 /**
  * A reduction for an Earley item.
@@ -10,20 +9,20 @@ import ru.spbau.preprocessing.parser.earley.grammar.EarleyTerminal;
  */
 class EarleyReduction {
   private final EarleyItem myCompletedItem;
-  private final EarleyTerminal<?> myTerminal;
+  private final EarleyTerminalMatch<?> myTerminalMatch;
   private final EarleyChartColumn myStartColumn;
 
   EarleyReduction(EarleyItem reductionItem) {
     this(reductionItem, null, reductionItem.getStartColumn());
   }
 
-  EarleyReduction(EarleyTerminal<?> terminal, EarleyChartColumn chartColumn) {
-    this(null, terminal, chartColumn);
+  EarleyReduction(EarleyTerminalMatch<?> terminalMatch, EarleyChartColumn chartColumn) {
+    this(null, terminalMatch, chartColumn);
   }
 
-  private EarleyReduction(EarleyItem completedItem, EarleyTerminal<?> terminal, EarleyChartColumn startColumn) {
+  private EarleyReduction(EarleyItem completedItem, EarleyTerminalMatch<?> terminalMatch, EarleyChartColumn startColumn) {
     myCompletedItem = completedItem;
-    myTerminal = terminal;
+    myTerminalMatch = terminalMatch;
     myStartColumn = startColumn;
   }
 
@@ -32,8 +31,8 @@ class EarleyReduction {
     return myCompletedItem;
   }
 
-  public EarleyTerminal<?> getTerminal() {
-    return myTerminal;
+  public EarleyTerminalMatch<?> getTerminalMatch() {
+    return myTerminalMatch;
   }
 
   public EarleyChartColumn getStartColumn() {
@@ -45,7 +44,7 @@ class EarleyReduction {
    * @return EarleySymbol which is represented by this reduction.
    */
   public EarleySymbol getSymbol() {
-    return myTerminal != null ? myTerminal : myCompletedItem.getSymbol();
+    return myTerminalMatch != null ? myTerminalMatch.getTerminal() : myCompletedItem.getSymbol();
   }
 
   @Override
@@ -55,13 +54,13 @@ class EarleyReduction {
     EarleyReduction that = (EarleyReduction) o;
     return Objects.equal(myCompletedItem, that.myCompletedItem) &&
             Objects.equal(myStartColumn, that.myStartColumn) &&
-            Objects.equal(myTerminal, that.myTerminal);
+            Objects.equal(myTerminalMatch, that.myTerminalMatch);
   }
 
   @Override
   public int hashCode() {
     int result = myCompletedItem != null ? myCompletedItem.hashCode() : 0;
-    result = 31 * result + (myTerminal != null ? myTerminal.hashCode() : 0);
+    result = 31 * result + (myTerminalMatch != null ? myTerminalMatch.hashCode() : 0);
     result = 31 * result + myStartColumn.hashCode();
     return result;
   }
