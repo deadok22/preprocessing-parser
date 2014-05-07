@@ -100,7 +100,7 @@ public class PreprocessingLexer<TokenTypeBase> {
     public void visitFileInclusion(PreprocessorLanguageFileInclusionNode node) {
       try {
         SourceFile includedFile = mySourceFile.resolveInclusion(node);
-        String text = mySourceFile.loadText();
+        String text = includedFile.loadText();
         List<? extends PreprocessorLanguageNode> preprocessorLanguageNodes = myLanguageProvider.createPreprocessorLanguageParser().parse(text);
         new LexingPreprocessorLanguageNodeVisitor(includedFile, text, myContext, myLexemeGraphBuilder).visitNodes(preprocessorLanguageNodes);
       } catch (IOException e) {

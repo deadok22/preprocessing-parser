@@ -23,6 +23,10 @@ public class ErlangPreprocessingLexerTests extends ErlangAbstractFileResultTests
   @Test public void expandMultipleCalls()           throws Exception { doTest(); }
   @Test public void expandCallAfterMultipleCalls()  throws Exception { doTest(); }
 
+  //tests with file inclusion
+  @Test public void fooInclusion()                  throws Exception { doTest(); }
+  @Test public void conditionalFooInclusion()       throws Exception { doTest(); }
+
   @Override
   protected String getTestDataPath() {
     return "erlang/testData/preprocessingLexer/";

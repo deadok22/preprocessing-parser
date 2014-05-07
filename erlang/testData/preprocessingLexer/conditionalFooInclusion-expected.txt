@@ -1,0 +1,13 @@
+FORK   TRUE   TRUE
+ BRANCH   (INC_FOO)   VARIANCE
+  LANG   (INC_FOO)   VARIANCE
+   Lexeme: WHITESPACE
+   Lexeme: ATOM
+   Lexeme: PAR_LEFT
+   Lexeme: PAR_RIGHT
+   Lexeme: WHITESPACE
+   Lexeme: ARROW
+   Lexeme: WHITESPACE
+   Lexeme: ATOM
+   Lexeme: DOT
+   Lexeme: WHITESPACE
