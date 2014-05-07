@@ -1,0 +1,21 @@
+LANG   TRUE   TRUE
+ Lexeme: WHITESPACE - 18
+ Lexeme: ATOM - 20
+ Lexeme: PAR_LEFT - 23
+ Lexeme: PAR_RIGHT - 24
+ Lexeme: WHITESPACE - 25
+ Lexeme: ARROW - 26
+ Lexeme: WHITESPACE - 28
+FORK   TRUE   TRUE
+ BRANCH   TRUE   TRUE
+  FORK   TRUE   TRUE
+   BRANCH   TRUE   TRUE
+    LANG   TRUE   TRUE
+     Lexeme: WHITESPACE - 33
+     Lexeme: INTEGER - 33
+     Lexeme: WHITESPACE - 33
+     Lexeme: OP_PLUS - 33
+     Lexeme: WHITESPACE - 33
+     Lexeme: INTEGER - 33
+LANG   TRUE   TRUE
+ Lexeme: DOT - 35

@@ -1,0 +1,38 @@
+FORK   TRUE   TRUE
+ BRANCH   (MACRO)   VARIANCE
+  LANG   (MACRO)   VARIANCE
+   Lexeme: WHITESPACE - 14
+   Lexeme: WHITESPACE - 37
+ BRANCH   (!MACRO)   VARIANCE
+  LANG   (!MACRO)   VARIANCE
+   Lexeme: WHITESPACE - 44
+   Lexeme: WHITESPACE - 69
+LANG   TRUE   TRUE
+ Lexeme: WHITESPACE - 77
+ Lexeme: ATOM - 79
+ Lexeme: PAR_LEFT - 82
+ Lexeme: PAR_RIGHT - 83
+ Lexeme: WHITESPACE - 84
+ Lexeme: ARROW - 85
+ Lexeme: WHITESPACE - 87
+FORK   TRUE   TRUE
+ BRANCH   TRUE   TRUE
+  FORK   TRUE   TRUE
+   BRANCH   (MACRO)   VARIANCE
+    LANG   (MACRO)   VARIANCE
+     Lexeme: WHITESPACE - 92
+     Lexeme: INTEGER - 92
+     Lexeme: WHITESPACE - 92
+     Lexeme: OP_PLUS - 92
+     Lexeme: WHITESPACE - 92
+     Lexeme: INTEGER - 92
+   BRANCH   (!MACRO)   VARIANCE
+    LANG   (!MACRO)   VARIANCE
+     Lexeme: WHITESPACE - 92
+     Lexeme: INTEGER - 92
+     Lexeme: WHITESPACE - 92
+     Lexeme: OP_AR_MUL - 92
+     Lexeme: WHITESPACE - 92
+     Lexeme: INTEGER - 92
+LANG   TRUE   TRUE
+ Lexeme: DOT - 94

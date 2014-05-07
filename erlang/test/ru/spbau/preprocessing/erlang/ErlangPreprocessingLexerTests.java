@@ -33,7 +33,9 @@ public class ErlangPreprocessingLexerTests extends ErlangAbstractFileResultTests
   @Test public void transitiveInclusions()            throws Exception { doTest(); }
 
   //lexeme location tests
-  @Test public void simpleLocations()                 throws Exception { doLexemeLocationTest(); }
+  @Test public void simpleLocations()                  throws Exception { doLexemeLocationTest(); }
+  @Test public void simpleSubstitutionLocations()      throws Exception { doLexemeLocationTest(); }
+  @Test public void alternativeSubstitutionLocations() throws Exception { doLexemeLocationTest(); }
 
   @Override
   protected String getTestDataPath() {
