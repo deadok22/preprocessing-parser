@@ -26,6 +26,8 @@ public class ErlangPreprocessingLexerTests extends ErlangAbstractFileResultTests
   //tests with file inclusion
   @Test public void fooInclusion()                  throws Exception { doTest(); }
   @Test public void conditionalFooInclusion()       throws Exception { doTest(); }
+  @Test public void macrosFromIncludesAreDefined()  throws Exception { doTest(); }
+  @Test public void macrosFromIncludesAreExpanded() throws Exception { doTest(); }
 
   @Override
   protected String getTestDataPath() {
