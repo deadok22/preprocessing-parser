@@ -3,6 +3,9 @@ package ru.spbau.preprocessing.erlang;
 import com.google.common.io.Resources;
 import org.junit.Rule;
 import org.junit.rules.TestName;
+import ru.spbau.preprocessing.erlang.files.ErlangFileSystemSourceFile;
+import ru.spbau.preprocessing.lexer.PreprocessingLexer;
+import ru.spbau.preprocessing.lexer.lexemegraph.LexemeGraphNode;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,6 +23,12 @@ public abstract class ErlangAbstractFileResultTests {
     assertEquals(expected, actual);
   }
 
+  protected LexemeGraphNode buildLexemes() throws IOException {
+    ErlangFileSystemSourceFile sourceFile = new ErlangFileSystemSourceFile(getTestDirectoryFile(getInputFileName()));
+    PreprocessingLexer<ErlangToken> lexer = new PreprocessingLexer<ErlangToken>(new ErlangLanguageProvider(), sourceFile);
+    return lexer.buildLexemeGraph();
+  }
+
   protected String getInputFileName() {
     return myTestName.getMethodName() + ".erl";
   }
@@ -29,7 +38,11 @@ public abstract class ErlangAbstractFileResultTests {
   }
 
   protected String readFile(String fileName) throws IOException {
-    return Resources.toString(new File(getTestDataPath() + fileName).toURI().toURL(), Charset.forName(CHARSET));
+    return Resources.toString(getTestDirectoryFile(fileName).toURI().toURL(), Charset.forName(CHARSET));
+  }
+
+  protected File getTestDirectoryFile(String fileName) {
+    return new File(getTestDataPath() + fileName);
   }
 
   protected abstract String getTestDataPath();

@@ -19,7 +19,6 @@ public class ErlangInclusionAttributeNode extends ErlangPreprocessorNode impleme
     return myIncludePath;
   }
 
-  @Override
   public ErlangIncludeResolutionStrategy getResolutionStrategy() {
     return myResolutionStrategy;
   }
@@ -29,7 +28,7 @@ public class ErlangInclusionAttributeNode extends ErlangPreprocessorNode impleme
     visitor.visitFileInclusion(this);
   }
 
-  public enum ErlangIncludeResolutionStrategy implements IncludeResolutionStrategy {
+  public enum ErlangIncludeResolutionStrategy {
     INCLUDE_LIB,
     INCLUDE
   }

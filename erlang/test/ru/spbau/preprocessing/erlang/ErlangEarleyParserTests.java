@@ -4,7 +4,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
-import ru.spbau.preprocessing.lexer.PreprocessingLexer;
 import ru.spbau.preprocessing.lexer.lexemegraph.LexemeGraphNode;
 import ru.spbau.preprocessing.parser.earley.ast.EarleyAstNode;
 import ru.spbau.preprocessing.parser.earley.ast.EarleyAstPrinter;
@@ -40,8 +39,7 @@ public class ErlangEarleyParserTests extends ErlangAbstractFileResultTests {
   }
 
   private void doTest() throws IOException {
-    String input = readFile(getInputFileName());
-    EarleyAstNode parseResult = parse(input);
+    EarleyAstNode parseResult = parse();
     assertNotNull(parseResult);
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     PrintWriter printWriter = new PrintWriter(outputStream, true);
@@ -51,14 +49,9 @@ public class ErlangEarleyParserTests extends ErlangAbstractFileResultTests {
     checkResult(result);
   }
 
-  private EarleyAstNode parse(String text) throws IOException {
-    LexemeGraphNode lexemes = buildLexemes(text);
+  private EarleyAstNode parse() throws IOException {
+    LexemeGraphNode lexemes = buildLexemes();
     return myParserCreator.getParser().parse(lexemes);
-  }
-
-  private LexemeGraphNode buildLexemes(String text) throws IOException {
-    PreprocessingLexer<ErlangToken> lexer = new PreprocessingLexer<ErlangToken>(new ErlangLanguageProvider(), text);
-    return lexer.buildLexemeGraph();
   }
 
   public static class ErlangEarleyParserCreatorRule extends TestWatcher {

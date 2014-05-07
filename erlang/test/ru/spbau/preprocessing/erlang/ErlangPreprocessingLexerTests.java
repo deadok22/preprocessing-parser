@@ -1,10 +1,8 @@
 package ru.spbau.preprocessing.erlang;
 
 import org.junit.Test;
-import ru.spbau.preprocessing.lexer.PreprocessingLexer;
 import ru.spbau.preprocessing.lexer.lexemegraph.LexemeGraphNode;
 
-import java.io.IOException;
 import java.io.StringWriter;
 
 public class ErlangPreprocessingLexerTests extends ErlangAbstractFileResultTests {
@@ -31,15 +29,9 @@ public class ErlangPreprocessingLexerTests extends ErlangAbstractFileResultTests
   }
 
   private void doTest() throws Exception {
-    String input = readFile(getInputFileName());
-    LexemeGraphNode actualLexemeGraph = buildLexemes(input);
+    LexemeGraphNode actualLexemeGraph = buildLexemes();
     String actualLexemes = getLexemeGraphRepr(actualLexemeGraph);
     checkResult(actualLexemes);
-  }
-
-  private LexemeGraphNode buildLexemes(String text) throws IOException {
-    PreprocessingLexer<ErlangToken> lexer = new PreprocessingLexer<ErlangToken>(new ErlangLanguageProvider(), text);
-    return lexer.buildLexemeGraph();
   }
 
   private String getLexemeGraphRepr(LexemeGraphNode graph) {
