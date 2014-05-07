@@ -16,9 +16,10 @@ import static ru.spbau.preprocessing.erlang.ErlangToken.*;
 
   // implementation of ru.spbau.preprocessing.api.LanguageLexer<ErlangToken>
 
-  private int myStartIndexInSourceBuffer;
+  private int myLastTokenIndexInSourceBuffer;
 
   public void advance() throws IOException {
+    myLastTokenIndexInSourceBuffer = tokenEndOffset();
     myTokenType = _next();
   }
 
@@ -27,15 +28,15 @@ import static ru.spbau.preprocessing.erlang.ErlangToken.*;
   }
 
   public int tokenStartOffset() {
-    return myStartIndexInSourceBuffer + zzStartRead;
+    return myLastTokenIndexInSourceBuffer;
   }
 
   public int tokenEndOffset() {
-    return myStartIndexInSourceBuffer + zzMarkedPos;
+    return myLastTokenIndexInSourceBuffer + yylength();
   }
 
   public void start(CharSequence buffer, int start, int end) {
-    myStartIndexInSourceBuffer = start;
+    myLastTokenIndexInSourceBuffer = start;
     yyreset(new java.io.StringReader(buffer.subSequence(start, end).toString()));
   }
 %}
