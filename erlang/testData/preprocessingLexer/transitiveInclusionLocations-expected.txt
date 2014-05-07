@@ -1,0 +1,44 @@
+LANG   TRUE   TRUE
+ Lexeme: ATOM - 0
+ Lexeme: PAR_LEFT - 6
+ Lexeme: PAR_RIGHT - 7
+ Lexeme: WHITESPACE - 8
+ Lexeme: ARROW - 9
+ Lexeme: WHITESPACE - 11
+ Lexeme: ATOM - 12
+ Lexeme: DOT - 14
+ Lexeme: WHITESPACE - 15
+ Lexeme: ATOM - 0 @erlang/testData/preprocessingLexer/foo.hrl
+ Lexeme: PAR_LEFT - 3 @erlang/testData/preprocessingLexer/foo.hrl
+ Lexeme: PAR_RIGHT - 4 @erlang/testData/preprocessingLexer/foo.hrl
+ Lexeme: WHITESPACE - 5 @erlang/testData/preprocessingLexer/foo.hrl
+ Lexeme: ARROW - 6 @erlang/testData/preprocessingLexer/foo.hrl
+ Lexeme: WHITESPACE - 8 @erlang/testData/preprocessingLexer/foo.hrl
+ Lexeme: ATOM - 13 @erlang/testData/preprocessingLexer/foo.hrl
+ Lexeme: DOT - 15 @erlang/testData/preprocessingLexer/foo.hrl
+ Lexeme: WHITESPACE - 20 @erlang/testData/preprocessingLexer/transitiveInclusionLocations.hrl
+ Lexeme: WHITESPACE - 47 @erlang/testData/preprocessingLexer/transitiveInclusionLocations.hrl
+ Lexeme: ATOM - 49 @erlang/testData/preprocessingLexer/transitiveInclusionLocations.hrl
+ Lexeme: PAR_LEFT - 52 @erlang/testData/preprocessingLexer/transitiveInclusionLocations.hrl
+ Lexeme: PAR_RIGHT - 53 @erlang/testData/preprocessingLexer/transitiveInclusionLocations.hrl
+ Lexeme: WHITESPACE - 54 @erlang/testData/preprocessingLexer/transitiveInclusionLocations.hrl
+ Lexeme: ARROW - 55 @erlang/testData/preprocessingLexer/transitiveInclusionLocations.hrl
+ Lexeme: WHITESPACE - 57 @erlang/testData/preprocessingLexer/transitiveInclusionLocations.hrl
+ Lexeme: ATOM - 58 @erlang/testData/preprocessingLexer/transitiveInclusionLocations.hrl
+ Lexeme: DOT - 60 @erlang/testData/preprocessingLexer/transitiveInclusionLocations.hrl
+ Lexeme: WHITESPACE - 61 @erlang/testData/preprocessingLexer/transitiveInclusionLocations.hrl
+ Lexeme: ATOM - 0 @erlang/testData/preprocessingLexer/useX_0.hrl
+ Lexeme: PAR_LEFT - 3 @erlang/testData/preprocessingLexer/useX_0.hrl
+ Lexeme: PAR_RIGHT - 4 @erlang/testData/preprocessingLexer/useX_0.hrl
+ Lexeme: WHITESPACE - 5 @erlang/testData/preprocessingLexer/useX_0.hrl
+ Lexeme: ARROW - 6 @erlang/testData/preprocessingLexer/useX_0.hrl
+ Lexeme: WHITESPACE - 8 @erlang/testData/preprocessingLexer/useX_0.hrl
+FORK   TRUE   TRUE
+ BRANCH   TRUE   TRUE
+  FORK   TRUE   TRUE
+   BRANCH   TRUE   TRUE
+    LANG   TRUE   TRUE
+     Lexeme: WHITESPACE - 13 @erlang/testData/preprocessingLexer/useX_0.hrl
+     Lexeme: ATOM - 13 @erlang/testData/preprocessingLexer/useX_0.hrl
+LANG   TRUE   TRUE
+ Lexeme: DOT - 15 @erlang/testData/preprocessingLexer/useX_0.hrl

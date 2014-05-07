@@ -1,0 +1,18 @@
+LANG   TRUE   TRUE
+ Lexeme: ATOM - 0 @erlang/testData/preprocessingLexer/foo.hrl
+ Lexeme: PAR_LEFT - 3 @erlang/testData/preprocessingLexer/foo.hrl
+ Lexeme: PAR_RIGHT - 4 @erlang/testData/preprocessingLexer/foo.hrl
+ Lexeme: WHITESPACE - 5 @erlang/testData/preprocessingLexer/foo.hrl
+ Lexeme: ARROW - 6 @erlang/testData/preprocessingLexer/foo.hrl
+ Lexeme: WHITESPACE - 8 @erlang/testData/preprocessingLexer/foo.hrl
+ Lexeme: ATOM - 13 @erlang/testData/preprocessingLexer/foo.hrl
+ Lexeme: DOT - 15 @erlang/testData/preprocessingLexer/foo.hrl
+ Lexeme: WHITESPACE - 20
+ Lexeme: ATOM - 22
+ Lexeme: PAR_LEFT - 25
+ Lexeme: PAR_RIGHT - 26
+ Lexeme: WHITESPACE - 27
+ Lexeme: ARROW - 28
+ Lexeme: WHITESPACE - 30
+ Lexeme: ATOM - 31
+ Lexeme: DOT - 33

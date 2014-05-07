@@ -19,7 +19,7 @@ public abstract class FileSystemSourceFile implements SourceFile {
 
   @Override
   public String getPath() {
-    return myFile.getAbsolutePath();
+    return myFile.getPath();
   }
 
   @Override
