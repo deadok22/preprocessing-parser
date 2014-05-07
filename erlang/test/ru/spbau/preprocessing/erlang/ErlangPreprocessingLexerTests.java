@@ -24,10 +24,11 @@ public class ErlangPreprocessingLexerTests extends ErlangAbstractFileResultTests
   @Test public void expandCallAfterMultipleCalls()  throws Exception { doTest(); }
 
   //tests with file inclusion
-  @Test public void fooInclusion()                  throws Exception { doTest(); }
-  @Test public void conditionalFooInclusion()       throws Exception { doTest(); }
-  @Test public void macrosFromIncludesAreDefined()  throws Exception { doTest(); }
-  @Test public void macrosFromIncludesAreExpanded() throws Exception { doTest(); }
+  @Test public void fooInclusion()                    throws Exception { doTest(); }
+  @Test public void conditionalFooInclusion()         throws Exception { doTest(); }
+  @Test public void macrosFromIncludesAreDefined()    throws Exception { doTest(); }
+  @Test public void macrosFromIncludesAreExpanded()   throws Exception { doTest(); }
+  @Test public void macrosInsideIncludesAreExpanded() throws Exception { doTest(); }
 
   @Override
   protected String getTestDataPath() {
