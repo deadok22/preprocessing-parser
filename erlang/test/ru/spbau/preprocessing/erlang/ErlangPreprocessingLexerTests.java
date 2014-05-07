@@ -29,6 +29,8 @@ public class ErlangPreprocessingLexerTests extends ErlangAbstractFileResultTests
   @Test public void macrosFromIncludesAreDefined()    throws Exception { doTest(); }
   @Test public void macrosFromIncludesAreExpanded()   throws Exception { doTest(); }
   @Test public void macrosInsideIncludesAreExpanded() throws Exception { doTest(); }
+  @Test public void transitiveInclusions()            throws Exception { doTest(); }
+
 
   @Override
   protected String getTestDataPath() {
