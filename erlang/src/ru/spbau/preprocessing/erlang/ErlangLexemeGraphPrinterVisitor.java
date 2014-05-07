@@ -1,10 +1,8 @@
 package ru.spbau.preprocessing.erlang;
 
+import com.google.common.base.Objects;
 import ru.spbau.preprocessing.api.conditions.PresenceCondition;
-import ru.spbau.preprocessing.lexer.lexemegraph.LexemeGraphForkNode;
-import ru.spbau.preprocessing.lexer.lexemegraph.LexemeGraphLangNode;
-import ru.spbau.preprocessing.lexer.lexemegraph.LexemeGraphNode;
-import ru.spbau.preprocessing.lexer.lexemegraph.LexemeGraphVisitor;
+import ru.spbau.preprocessing.lexer.lexemegraph.*;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -13,6 +11,9 @@ import java.io.Writer;
 public class ErlangLexemeGraphPrinterVisitor implements LexemeGraphVisitor, Closeable {
   private final Writer myWriter;
   private final boolean myShouldClose;
+
+  private boolean myShouldPrintLocation;
+  private String myRootPath; // root path is not printed if print location is enabled.
 
   private int myDepth = 0;
 
@@ -23,6 +24,14 @@ public class ErlangLexemeGraphPrinterVisitor implements LexemeGraphVisitor, Clos
   public ErlangLexemeGraphPrinterVisitor(Writer writer, boolean shouldClose) {
     myWriter = writer;
     myShouldClose = shouldClose;
+  }
+
+  public void setPrintLocation(boolean printLocation) {
+    myShouldPrintLocation = printLocation;
+  }
+
+  public void setRootPath(String path) {
+    myRootPath = path;
   }
 
   @Override
@@ -43,7 +52,7 @@ public class ErlangLexemeGraphPrinterVisitor implements LexemeGraphVisitor, Clos
     printLine("LANG", langNode.getPresenceCondition());
     myDepth++;
     for (Object lexeme : langNode.getLexemes()) {
-      printLine(String.valueOf(lexeme));
+      printLine(String.valueOf(lexeme) + (myShouldPrintLocation ? (" - " + getLexemeLocationString(lexeme)) : ""));
     }
     myDepth--;
   }
@@ -53,6 +62,12 @@ public class ErlangLexemeGraphPrinterVisitor implements LexemeGraphVisitor, Clos
     if (myShouldClose) {
       myWriter.close();
     }
+  }
+
+  private String getLexemeLocationString(Object lexeme) {
+    LexemeLocation location = ((Lexeme) lexeme).getLocation();
+    String path = location.getSourceFile().getPath();
+    return location.getStartOffset() + (Objects.equal(path, myRootPath) ? "" : (" @" + path));
   }
 
   private void printLine(String lineText, PresenceCondition presenceCondition) {

@@ -1,6 +1,7 @@
 package ru.spbau.preprocessing.erlang;
 
 import org.junit.Test;
+import ru.spbau.preprocessing.erlang.files.ErlangFileSystemSourceFile;
 import ru.spbau.preprocessing.lexer.lexemegraph.LexemeGraphNode;
 
 import java.io.StringWriter;
@@ -31,21 +32,33 @@ public class ErlangPreprocessingLexerTests extends ErlangAbstractFileResultTests
   @Test public void macrosInsideIncludesAreExpanded() throws Exception { doTest(); }
   @Test public void transitiveInclusions()            throws Exception { doTest(); }
 
+  //lexeme location tests
+  @Test public void simpleLocations()                 throws Exception { doLexemeLocationTest(); }
 
   @Override
   protected String getTestDataPath() {
     return "erlang/testData/preprocessingLexer/";
   }
 
+  private void doLexemeLocationTest() throws Exception {
+    doTest(true);
+  }
+
   private void doTest() throws Exception {
+    doTest(false);
+  }
+
+  private void doTest(boolean isLexemeLocationsTest) throws Exception {
     LexemeGraphNode actualLexemeGraph = buildLexemes();
-    String actualLexemes = getLexemeGraphRepr(actualLexemeGraph);
+    String actualLexemes = getLexemeGraphRepr(actualLexemeGraph, isLexemeLocationsTest);
     checkResult(actualLexemes);
   }
 
-  private String getLexemeGraphRepr(LexemeGraphNode graph) {
+  private String getLexemeGraphRepr(LexemeGraphNode graph, boolean printLocations) {
     StringWriter stringWriter = new StringWriter();
     ErlangLexemeGraphPrinterVisitor printer = new ErlangLexemeGraphPrinterVisitor(stringWriter, false);
+    printer.setPrintLocation(printLocations);
+    printer.setRootPath(new ErlangFileSystemSourceFile(getTestDirectoryFile(getInputFileName())).getPath());
     graph.accept(printer);
     return stringWriter.toString();
   }

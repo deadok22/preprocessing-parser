@@ -12,6 +12,7 @@ import ru.spbau.preprocessing.api.preprocessor.*;
 import ru.spbau.preprocessing.lexer.lexemegraph.Lexeme;
 import ru.spbau.preprocessing.lexer.lexemegraph.LexemeGraphBuilder;
 import ru.spbau.preprocessing.lexer.lexemegraph.LexemeGraphNode;
+import ru.spbau.preprocessing.lexer.lexemegraph.LexemeLocation;
 
 import java.io.IOException;
 import java.util.*;
@@ -31,7 +32,7 @@ public class PreprocessingLexer<TokenTypeBase> {
     if (preprocessorLanguageNodes == null) return null;
     LexemeGraphBuilder<TokenTypeBase> lexemeGraphBuilder = new LexemeGraphBuilder<TokenTypeBase>();
     ConditionalContextImpl rootContext = new ConditionalContextImpl(myLanguageProvider.createPresenceConditionFactory());
-    new LexingPreprocessorLanguageNodeVisitor(mySourceFile, text, rootContext, lexemeGraphBuilder).visitNodes(preprocessorLanguageNodes);
+    new LexingPreprocessorLanguageNodeVisitor(mySourceFile, text, rootContext, lexemeGraphBuilder, null).visitNodes(preprocessorLanguageNodes);
     return lexemeGraphBuilder.build();
   }
 
@@ -40,16 +41,21 @@ public class PreprocessingLexer<TokenTypeBase> {
     private final String myText;
     private final ConditionalContextImpl myContext;
     private final LexemeGraphBuilder<TokenTypeBase> myLexemeGraphBuilder;
+    //if this is not null, all lexemes produced by this visitor will have this location
+    //used as a workaround for substitution tokens
+    private final LexemeLocation myLexemeLocation;
 
     public LexingPreprocessorLanguageNodeVisitor(SourceFile sourceFile,
                                                  String text,
                                                  ConditionalContextImpl context,
-                                                 LexemeGraphBuilder<TokenTypeBase> lexemeGraphBuilder) {
+                                                 LexemeGraphBuilder<TokenTypeBase> lexemeGraphBuilder,
+                                                 LexemeLocation lexemeLocation) {
       mySourceFile = sourceFile;
       myText = text;
       myContext = context;
       myLexemeGraphBuilder = lexemeGraphBuilder;
       myLexemeGraphBuilder.setNodePresenceCondition(context.getCurrentPresenceCondition());
+      myLexemeLocation = lexemeLocation;
     }
 
     @Override
@@ -90,7 +96,7 @@ public class PreprocessingLexer<TokenTypeBase> {
         ConditionalContextImpl forkConditionalContext = myContext.copy()
                 .andCondition(negationOfPreviousBranchGuards)
                 .andCondition(branchGuard);
-        new LexingPreprocessorLanguageNodeVisitor(mySourceFile, myText, forkConditionalContext, forkBuilder).visitConditional(conditional);
+        new LexingPreprocessorLanguageNodeVisitor(mySourceFile, myText, forkConditionalContext, forkBuilder, myLexemeLocation).visitConditional(conditional);
         forkBuilder.build();
         negationOfPreviousBranchGuards = negationOfPreviousBranchGuards.and(branchGuard.not());
       }
@@ -102,7 +108,7 @@ public class PreprocessingLexer<TokenTypeBase> {
         SourceFile includedFile = mySourceFile.resolveInclusion(node);
         String text = includedFile.loadText();
         List<? extends PreprocessorLanguageNode> preprocessorLanguageNodes = myLanguageProvider.createPreprocessorLanguageParser().parse(text);
-        new LexingPreprocessorLanguageNodeVisitor(includedFile, text, myContext, myLexemeGraphBuilder).visitNodes(preprocessorLanguageNodes);
+        new LexingPreprocessorLanguageNodeVisitor(includedFile, text, myContext, myLexemeGraphBuilder, myLexemeLocation).visitNodes(preprocessorLanguageNodes);
       } catch (IOException e) {
         e.printStackTrace();
       }
@@ -118,7 +124,7 @@ public class PreprocessingLexer<TokenTypeBase> {
       LanguageLexer<TokenTypeBase> langLexer = myLanguageProvider.createLanguageLexer();
       langLexer.start(text, startOffset, endOffset);
       try {
-        LexemeBuffer<TokenTypeBase> buffer = LexemeBuffer.create(text, langLexer);
+        LexemeBuffer<TokenTypeBase> buffer = createLexemeBuffer(text, langLexer);
         processBuffer(buffer);
       } catch (IOException e) {
         e.printStackTrace();
@@ -181,8 +187,11 @@ public class PreprocessingLexer<TokenTypeBase> {
             maxMacroCallLexemesCount = lexemesCount;
           }
         }
+        assert maxMacroCallLexemesCount > 0;
         ArrayList<Lexeme<TokenTypeBase>> macroCallLexemesBuffer = new ArrayList<Lexeme<TokenTypeBase>>(maxMacroCallLexemesCount);
-        for (int i = 0; i < maxMacroCallLexemesCount; i++) {
+        Lexeme<TokenTypeBase> macroCallsStartLexeme = buffer.next(); //store the very first token so that we can re-use it's location
+        macroCallLexemesBuffer.add(macroCallsStartLexeme);
+        for (int i = 1; i < maxMacroCallLexemesCount; i++) {
           macroCallLexemesBuffer.add(buffer.next());
         }
 
@@ -204,7 +213,8 @@ public class PreprocessingLexer<TokenTypeBase> {
 
           PresenceCondition callForkPresenceCondition = negationOfPreviousCallForkGuards.and(call.myPresenceCondition);
           LexingPreprocessorLanguageNodeVisitor callForkPreprocessor =
-                  new LexingPreprocessorLanguageNodeVisitor(mySourceFile, myText, myContext.copy().andCondition(callForkPresenceCondition), callForkBuilder);
+                  new LexingPreprocessorLanguageNodeVisitor(mySourceFile, myText, myContext.copy().andCondition(callForkPresenceCondition),
+                          callForkBuilder, myLexemeLocation != null ? myLexemeLocation : macroCallsStartLexeme.getLocation());
           callForkPreprocessor.expandMacroCall(call.myCall);
 
           //TODO process tokens after shorter macro calls - they can contain macro calls (i.e. ?M(?M) in case only ?M/-1 is defined)
@@ -238,13 +248,23 @@ public class PreprocessingLexer<TokenTypeBase> {
         ConditionalContextImpl substitutionContext = myContext
                 .copy().andCondition(definitionPresenceCondition);
 
-        new LexingPreprocessorLanguageNodeVisitor(mySourceFile, myText, substitutionContext, substitutionForkBuilder)
+        new LexingPreprocessorLanguageNodeVisitor(mySourceFile, myText, substitutionContext, substitutionForkBuilder, myLexemeLocation)
                 .processText(unprocessedSubstitutionText, 0, unprocessedSubstitutionText.length());
         substitutionForkBuilder.build();
       }
     }
-  }
 
+    private LexemeBuffer<TokenTypeBase> createLexemeBuffer(CharSequence text, LanguageLexer<TokenTypeBase> lexer) throws IOException {
+      List<Lexeme<TokenTypeBase>> buffer = new ArrayList<Lexeme<TokenTypeBase>>();
+      for (lexer.advance(); lexer.tokenType() != null; lexer.advance()) {
+        LexemeLocation lexemeLocation = myLexemeLocation != null ? myLexemeLocation : new LexemeLocation(mySourceFile, lexer.tokenStartOffset());
+        Lexeme<TokenTypeBase> lexeme = new Lexeme<TokenTypeBase>(lexer.tokenType(),
+                text.subSequence(lexer.tokenStartOffset(), lexer.tokenEndOffset()).toString(), lexemeLocation);
+        buffer.add(lexeme);
+      }
+      return new LexemeBuffer<TokenTypeBase>(buffer);
+    }
+  }
 
   private static class LexemeBuffer<TokenTypeBase> implements Iterator<Lexeme<TokenTypeBase>> {
     private final List<Lexeme<TokenTypeBase>> myBuffer;
@@ -276,16 +296,6 @@ public class PreprocessingLexer<TokenTypeBase> {
     @Override
     public void remove() {
       throw new UnsupportedOperationException();
-    }
-
-    public static <TokenTypeBase> LexemeBuffer<TokenTypeBase> create(CharSequence text, LanguageLexer<TokenTypeBase> lexer) throws IOException {
-      List<Lexeme<TokenTypeBase>> buffer = new ArrayList<Lexeme<TokenTypeBase>>();
-      for (lexer.advance(); lexer.tokenType() != null; lexer.advance()) {
-        Lexeme<TokenTypeBase> lexeme = new Lexeme<TokenTypeBase>(lexer.tokenType(),
-                text.subSequence(lexer.tokenStartOffset(), lexer.tokenEndOffset()).toString());
-        buffer.add(lexeme);
-      }
-      return new LexemeBuffer<TokenTypeBase>(buffer);
     }
   }
 }

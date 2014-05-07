@@ -1,0 +1,9 @@
+LANG   TRUE   TRUE
+ Lexeme: ATOM - 0
+ Lexeme: PAR_LEFT - 3
+ Lexeme: PAR_RIGHT - 4
+ Lexeme: WHITESPACE - 5
+ Lexeme: ARROW - 6
+ Lexeme: WHITESPACE - 8
+ Lexeme: ATOM - 9
+ Lexeme: DOT - 11

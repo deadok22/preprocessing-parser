@@ -3,10 +3,12 @@ package ru.spbau.preprocessing.lexer.lexemegraph;
 public class Lexeme<TokenTypeBase> {
   private final TokenTypeBase myType;
   private final String myText;
+  private final LexemeLocation myLocation;
 
-  public Lexeme(TokenTypeBase type, String text) {
+  public Lexeme(TokenTypeBase type, String text, LexemeLocation location) {
     myType = type;
     myText = text;
+    myLocation = location;
   }
 
   public TokenTypeBase getType() {
@@ -17,17 +19,24 @@ public class Lexeme<TokenTypeBase> {
     return myText;
   }
 
+  public LexemeLocation getLocation() {
+    return myLocation;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     Lexeme lexeme = (Lexeme) o;
-    return myType.equals(lexeme.myType);
+    return myLocation.equals(lexeme.myLocation) && myText.equals(lexeme.myText) && myType.equals(lexeme.myType);
   }
 
   @Override
   public int hashCode() {
-    return myType.hashCode();
+    int result = myType.hashCode();
+    result = 31 * result + myText.hashCode();
+    result = 31 * result + myLocation.hashCode();
+    return result;
   }
 
   @Override
