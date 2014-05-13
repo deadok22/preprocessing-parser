@@ -1,3 +1,6 @@
+preview: build
+	evince thesis.pdf
+
 build:
 	pdflatex thesis.tex
 
