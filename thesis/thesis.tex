@@ -1,6 +1,17 @@
 \documentclass[a4paper,14pt]{extarticle}
+
 \usepackage[utf8]{inputenc}
+
 \usepackage[english,russian]{babel}
+
+\usepackage{url}
+\usepackage[unicode]{hyperref}
+
+\usepackage[backend=bibtex]{biblatex}
+\bibliography{bibliography}
+\DefineBibliographyStrings{russian}{%
+	references = {Библиография},
+}
 
 \usepackage{geometry}
 \geometry{left=3cm}
@@ -9,7 +20,6 @@
 \geometry{bottom=2cm}
 
 \linespread{1.3}
-
 
 \newcommand{\todo}[1]{\textbackslash\textbackslash TODO: #1}
 
@@ -21,5 +31,5 @@
 \tableofcontents
 
 \input{intro}
-
+\input{bibliography}
 \end{document}
