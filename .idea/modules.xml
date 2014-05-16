@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/earley/earley.iml" filepath="$PROJECT_DIR$/earley/earley.iml" />
       <module fileurl="file://$PROJECT_DIR$/erlang/erlang.iml" filepath="$PROJECT_DIR$/erlang/erlang.iml" />
       <module fileurl="file://$PROJECT_DIR$/lexer/lexer.iml" filepath="$PROJECT_DIR$/lexer/lexer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/xtc-erlang/xtc-erlang.iml" filepath="$PROJECT_DIR$/xtc-erlang/xtc-erlang.iml" />
     </modules>
   </component>
 </project>

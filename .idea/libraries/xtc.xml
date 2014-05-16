@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="xtc">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/xtc.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/lib/xtc-core.zip!/xtc/glr/ella/in" />
+      <root url="jar://$PROJECT_DIR$/lib/xtc-core.zip!/xtc/src" />
+    </SOURCES>
+  </library>
+</component>
