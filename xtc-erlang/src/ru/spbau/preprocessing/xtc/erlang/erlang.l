@@ -1,19 +1,7 @@
 
-# define LANGUAGE(token, text)                                        \
-  text {                                                              \
-    Language<ErlangTag> syntax = new Language<ErlangTag>(token);      \
-    syntax.setLocation(new Location(fileName, yyline+1, yycolumn+1)); \
-    return syntax;                                                    \
-  }
+#include "token.h"
 
-# define TEXT(token, regex, hasName)                                \
-  regex {                                                           \
-    Text<ErlangTag> syntax = new Text<ErlangTag>(token, yytext());  \
-    syntax.setLocation(new Location(fileName, yyline+1, yycolumn)); \
-    return syntax;                                                  \
-  }
-
-
+#ifdef LEXER
 package ru.spbau.preprocessing.xtc.erlang;
 
 import xtc.tree.Location;
@@ -104,6 +92,17 @@ Variable = (_ {NameChars}) | ({ErlangUppercase} {NameChars}?) | _
  {Comment}                     { return new Layout(yytext(), false); }
  {Whitespace}                  { return new Layout(yytext(), false); }
 
+#elif defined TAG
+
+package ru.spbau.preprocessing.xtc.erlang;
+
+import xtc.lang.cpp.Syntax.Layout;
+import xtc.lang.cpp.Syntax.PreprocessorTag;
+import xtc.lang.cpp.Syntax.Language;
+
+public enum ErlangTag implements xtc.lang.cpp.Syntax.LanguageTag {
+#endif
+
 LANGUAGE(AFTER, "after")
 LANGUAGE(WHEN, "when")
 LANGUAGE(BEGIN, "begin")
@@ -180,3 +179,68 @@ LANGUAGE(ORELSE, "orelse")
  LANGUAGE(QMARK, "?")
  LANGUAGE(ARROW, "->")
  LANGUAGE(RADIX, "#")
+
+#ifdef TAG
+TYPEDEFname(getID("TYPEDEFname"), null, true);
+
+  private final int id;
+  private final String text;
+  private final boolean hasName;
+  private final PreprocessorTag ppTag;
+
+  ErlangTag(int id, String text, boolean hasName, PreprocessorTag ppTag) {
+    this.id = id;
+    this.text = text;
+    this.hasName = hasName;
+    this.ppTag = ppTag;
+  }
+
+  ErlangTag(int id, String text, boolean hasName) {
+    this(id, text, hasName, PreprocessorTag.NONE);
+  }
+
+  ErlangTag(int id, String text) {
+    this(id, text, isName(text), PreprocessorTag.NONE);
+  }
+
+  ErlangTag(int id, String text, PreprocessorTag ppTag) {
+    this(id, text, isName(text), ppTag);
+  }
+
+  public int getID() {
+    return id;
+  }
+
+  public String getText() {
+    return text;
+  }
+
+  public boolean hasName() {
+    return hasName;
+  }
+
+  public PreprocessorTag ppTag() {
+    return ppTag;
+  }
+
+  static boolean isName(String name) {
+    if (null == name || name.length() == 0) return false;
+
+    return Character.isLetter(name.charAt(0)) || '_' == name.charAt(0);
+  }
+
+  static int getID(String token) {
+    for (int id = 0; id < ForkMergeParserTables.YYNTOKENS; id++) {
+      if (ForkMergeParserTables.yytname.table[id].equals(token)) {
+        return id;
+      }
+    }
+
+    System.err.println("error: invalid token name");
+    System.exit(1);
+
+    return -1;
+  }
+
+}
+#endif

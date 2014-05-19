@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cpp erlang.l > erlang.l.flex
+cpp -DLEXER erlang.l | grep -v "^#" > erlang.l.flex
 
 java -jar ../../../../../../../lib/jflex-1.5.1.jar erlang.l.flex
 
