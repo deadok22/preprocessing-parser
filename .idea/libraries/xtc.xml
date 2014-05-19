@@ -3,6 +3,7 @@
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/lib/xtc.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/javabdd-1.0b2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jdd.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
