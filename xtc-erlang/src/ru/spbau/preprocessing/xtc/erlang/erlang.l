@@ -181,8 +181,7 @@ LANGUAGE(ORELSE, "orelse")
  LANGUAGE(RADIX, "#")
 
 #ifdef TAG
-TYPEDEFname(getID("TYPEDEFname"), null, true);
-
+  ;
   private final int id;
   private final String text;
   private final boolean hasName;
@@ -230,8 +229,8 @@ TYPEDEFname(getID("TYPEDEFname"), null, true);
   }
 
   static int getID(String token) {
-    for (int id = 0; id < ForkMergeParserTables.YYNTOKENS; id++) {
-      if (ForkMergeParserTables.yytname.table[id].equals(token)) {
+    for (int id = 0; id < ErlangForkMergeParserTables.YYNTOKENS; id++) {
+      if (ErlangForkMergeParserTables.yytname.table[id].equals(token)) {
         return id;
       }
     }
