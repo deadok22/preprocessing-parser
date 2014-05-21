@@ -17,6 +17,8 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="scala-library" level="application" />
     <orderEntry type="library" name="TypeChef-0.3.4" level="project" />
+    <orderEntry type="module" module-name="erlang" />
+    <orderEntry type="module" module-name="lexer" />
   </component>
 </module>
 
