@@ -1,8 +1,14 @@
 package ru.spbau.preprocessing.typechef.erlang
 
+import ru.spbau.preprocessing.erlang.files.ErlangFileSystemSourceFile
+import ru.spbau.preprocessing.erlang.{ErlangToken, ErlangLanguageProvider}
+import ru.spbau.preprocessing.lexer.PreprocessingLexer
+import ru.spbau.preprocessing.lexer.lexemegraph.LexemeGraphNode
+
 object Launcher extends App {
   parseAndPrintC()
   parseAndPrintJava()
+  printErlangLexemeSeq()
 
   def parseAndPrintC() = {
     import de.fosd.typechef.parser.c.{PrettyPrinter, CParser}
@@ -32,5 +38,12 @@ object Launcher extends App {
     val parseResult = phrase(JavaLexer.lex("class A { public static int foo() { return 10; } }"), FeatureExprFactory.True)
 
     println(parseResult)
+  }
+
+  def printErlangLexemeSeq() = {
+    val sourceFile: ErlangFileSystemSourceFile = new ErlangFileSystemSourceFile(new java.io.File("erlang/testData/preprocessingLexer/definitionDefinesMacro.erl"))
+    val lexer: PreprocessingLexer[ErlangToken] = new PreprocessingLexer[ErlangToken](new ErlangLanguageProvider, sourceFile)
+    val graph: LexemeGraphNode = lexer.buildLexemeGraph
+    LexemeSequence.from(graph).foreach(println(_))
   }
 }

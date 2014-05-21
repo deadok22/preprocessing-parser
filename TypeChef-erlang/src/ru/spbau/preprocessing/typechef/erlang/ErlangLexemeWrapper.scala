@@ -12,6 +12,8 @@ class ErlangLexemeWrapper(val text: String, val feature: FeatureExpr, val positi
   override def getText: String = text
 
   override def getFeature: FeatureExpr = feature
+
+  override def toString: String = text + " <" + feature.toTextExpr + "> @" + position
 }
 
 class ErlangLexemePosition(startOffset: Int, file: String) extends Position {
