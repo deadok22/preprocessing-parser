@@ -165,8 +165,6 @@ public class ErlangParser {
 
     translationUnit = parser.parse();
 
-    if (runtime.test("printAST")) {
-      runtime.console().format((Node) translationUnit).pln().flush();
-    }
+    runtime.console().format((Node) translationUnit).pln().flush();
   }
 }
