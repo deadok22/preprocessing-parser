@@ -15,6 +15,10 @@ public class ErlangPresenceCondition implements PresenceCondition {
     myExpression = expression;
   }
 
+  public ErlangBooleanExpression getExpression() {
+    return myExpression;
+  }
+
   @Override
   public PresenceCondition and(PresenceCondition presenceCondition) {
     assert presenceCondition instanceof ErlangPresenceCondition;

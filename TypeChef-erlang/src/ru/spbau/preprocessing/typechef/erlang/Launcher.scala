@@ -41,7 +41,7 @@ object Launcher extends App {
   }
 
   def printErlangLexemeSeq() = {
-    val sourceFile: ErlangFileSystemSourceFile = new ErlangFileSystemSourceFile(new java.io.File("erlang/testData/preprocessingLexer/definitionDefinesMacro.erl"))
+    val sourceFile: ErlangFileSystemSourceFile = new ErlangFileSystemSourceFile(new java.io.File("erlang/testData/preprocessingLexer/definedMacro.erl"))
     val lexer: PreprocessingLexer[ErlangToken] = new PreprocessingLexer[ErlangToken](new ErlangLanguageProvider, sourceFile)
     val graph: LexemeGraphNode = lexer.buildLexemeGraph
     LexemeSequence.from(graph).foreach(println(_))

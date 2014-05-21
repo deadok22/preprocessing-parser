@@ -14,6 +14,10 @@ public class ErlangDisjunctiveNormalForm extends ErlangBooleanExpression {
     myClauses = clauses;
   }
 
+  public ImmutableList<ErlangConjunctiveClause> getClauses() {
+    return myClauses;
+  }
+
   @Override
   public ErlangBooleanExpression and(ErlangBooleanExpression ebe) {
     if (ebe instanceof ErlangBooleanConstant) {

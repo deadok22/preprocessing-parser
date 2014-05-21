@@ -17,6 +17,10 @@ public class ErlangConjunctiveClause extends ErlangBooleanExpression {
     myConjuncts = conjuncts;
   }
 
+  public ImmutableMap<String, Boolean> getConjuncts() {
+    return myConjuncts;
+  }
+
   @Override
   public ErlangBooleanExpression and(ErlangBooleanExpression ebe) {
     if (ebe instanceof ErlangBooleanConstant || ebe instanceof ErlangDisjunctiveNormalForm) {
