@@ -21,6 +21,7 @@ object Benchmark extends App {
 
   def runBench(files: Iterable[java.io.File], pr: ParserRunner) {
     val sw = new StopWatch
+    var failures = 0
     files.foreach(f => {
       val sourceFile: ErlangFileSystemSourceFile = new ErlangFileSystemSourceFile(f)
       val lexer: PreprocessingLexer[ErlangToken] = new PreprocessingLexer[ErlangToken](new ErlangLanguageProvider, sourceFile)
@@ -36,10 +37,11 @@ object Benchmark extends App {
       print(f.getPath)
       print("\t")
       print(if (parsed) "OK" else "FAIL")
+      if (!parsed) failures += 1
       print("\t")
       println(parseTime)
     })
-    println("TOTAL: " + sw.total + "ms")
+    println("TOTAL: " + sw.total + "ms Failures: " + failures)
   }
 }
 
