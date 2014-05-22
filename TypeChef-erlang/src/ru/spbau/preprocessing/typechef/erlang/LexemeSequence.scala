@@ -19,7 +19,8 @@ object LexemeSequence {
       val pc = langNode.getPresenceCondition.asInstanceOf[ErlangPresenceCondition]
       langNode.getLexemes.foreach {
         case l: Lexeme[ErlangToken] =>
-          sequence = ErlangLexemeWrapper.create(l, pc) :: sequence
+          if (l.getType != ErlangToken.WHITESPACE && l.getType != ErlangToken.COMMENT)
+            sequence = ErlangLexemeWrapper.create(l, pc) :: sequence
       }
     }
 
