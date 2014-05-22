@@ -30,12 +30,13 @@ object Benchmark extends App {
 
       System.gc()
 
+      print(f.getPath)
+      print("\t")
+
       sw.start()
       val parsed: Boolean = pr.parse(lexemes)
       val parseTime: Long = sw.stop()
 
-      print(f.getPath)
-      print("\t")
       print(if (parsed) "OK" else "FAIL")
       if (!parsed) failures += 1
       print("\t")
