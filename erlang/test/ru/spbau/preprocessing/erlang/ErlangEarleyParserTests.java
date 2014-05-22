@@ -88,13 +88,13 @@ public class ErlangEarleyParserTests extends ErlangAbstractFileResultTests {
       String mult_op = "Multiplicative operator";
       String prefix_op = "Prefix operator";
       String function_call = "Function call";
-      String record_expr = "Record expression";
+//      String record_expr = "Record expression";
       String expr_max = "Max expression";
       String atomic = "Atomic";
       String strings = "Strings";
-      String record_tuple = "Record tuple";
-      String record_fields = "Record fields";
-      String record_field = "Record field";
+//      String record_tuple = "Record tuple";
+//      String record_fields = "Record fields";
+//      String record_field = "Record field";
 
       EarleyGrammar grammar = EarleyGrammarBuilder.grammar(forms)
 
@@ -147,7 +147,7 @@ public class ErlangEarleyParserTests extends ErlangAbstractFileResultTests {
               .rule(expr_600).nonTerminal(expr_700).completeRule()
 
               .rule(expr_700).nonTerminal(function_call).completeRule()
-              .rule(expr_700).nonTerminal(record_expr).completeRule()
+//              .rule(expr_700).nonTerminal(record_expr).completeRule()
               .rule(expr_700).nonTerminal(expr_800).completeRule()
 
               .rule(expr_800).nonTerminal(expr_max).terminal(COLON).nonTerminal(expr_max).completeRule()
@@ -168,21 +168,21 @@ public class ErlangEarleyParserTests extends ErlangAbstractFileResultTests {
 //              .rule(expr_max).nonTerminal(fun_expr).completeRule()
 //              .rule(expr_max).nonTerminal(try_expr).completeRule()
 
-              .rule(record_expr).terminal(RADIX).terminal(ATOM).terminal(DOT).terminal(ATOM).completeRule()
-              .rule(record_expr).terminal(RADIX).terminal(ATOM).nonTerminal(record_tuple).completeRule()
-              .rule(record_expr).nonTerminal(expr_max).terminal(RADIX).terminal(ATOM).terminal(DOT).terminal(ATOM).completeRule()
-              .rule(record_expr).nonTerminal(expr_max).terminal(RADIX).terminal(ATOM).nonTerminal(record_tuple).completeRule()
-              .rule(record_expr).nonTerminal(record_expr).terminal(RADIX).terminal(ATOM).terminal(DOT).terminal(ATOM).completeRule()
-              .rule(record_expr).nonTerminal(record_expr).terminal(RADIX).terminal(ATOM).nonTerminal(record_tuple).completeRule()
-
-              .rule(record_tuple).terminal(CURLY_LEFT).terminal(CURLY_RIGHT).completeRule()
-              .rule(record_tuple).terminal(CURLY_LEFT).nonTerminal(record_fields).terminal(CURLY_RIGHT).completeRule()
-
-              .rule(record_fields).nonTerminal(record_field).completeRule()
-              .rule(record_fields).nonTerminal(record_field).terminal(COMMA).nonTerminal(record_fields).completeRule()
-
-              .rule(record_field).terminal(VAR).terminal(OP_EQ).nonTerminal(expr).completeRule()
-              .rule(record_field).terminal(ATOM).terminal(OP_EQ).nonTerminal(expr).completeRule()
+//              .rule(record_expr).terminal(RADIX).terminal(ATOM).terminal(DOT).terminal(ATOM).completeRule()
+//              .rule(record_expr).terminal(RADIX).terminal(ATOM).nonTerminal(record_tuple).completeRule()
+//              .rule(record_expr).nonTerminal(expr_max).terminal(RADIX).terminal(ATOM).terminal(DOT).terminal(ATOM).completeRule()
+//              .rule(record_expr).nonTerminal(expr_max).terminal(RADIX).terminal(ATOM).nonTerminal(record_tuple).completeRule()
+//              .rule(record_expr).nonTerminal(record_expr).terminal(RADIX).terminal(ATOM).terminal(DOT).terminal(ATOM).completeRule()
+//              .rule(record_expr).nonTerminal(record_expr).terminal(RADIX).terminal(ATOM).nonTerminal(record_tuple).completeRule()
+//
+//              .rule(record_tuple).terminal(CURLY_LEFT).terminal(CURLY_RIGHT).completeRule()
+//              .rule(record_tuple).terminal(CURLY_LEFT).nonTerminal(record_fields).terminal(CURLY_RIGHT).completeRule()
+//
+//              .rule(record_fields).nonTerminal(record_field).completeRule()
+//              .rule(record_fields).nonTerminal(record_field).terminal(COMMA).nonTerminal(record_fields).completeRule()
+//
+//              .rule(record_field).terminal(VAR).terminal(OP_EQ).nonTerminal(expr).completeRule()
+//              .rule(record_field).terminal(ATOM).terminal(OP_EQ).nonTerminal(expr).completeRule()
 
               .rule(function_call).nonTerminal(expr_800).nonTerminal(argument_list).completeRule()
 
