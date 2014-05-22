@@ -52,6 +52,7 @@ object Launcher extends App {
     val file: io.File = new io.File("erlang/testData/preprocessingLexer/definedMacro.erl")
     val parser: ErlangParser = new ErlangParser
     //TODO report a Scala plugin bug
-    println(parser.parseFile(file, parser.file))
+    val parseResult = parser.parseFile(file, parser.file)
+    println(parseResult)
   }
 }
