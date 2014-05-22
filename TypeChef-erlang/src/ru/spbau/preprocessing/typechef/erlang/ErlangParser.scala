@@ -175,4 +175,10 @@ class ErlangParser extends MultiFeatureParser(debugOutput = true) {
   def comma = et("comma", COMMA)
 
   def semicolon = et("semicolon", SEMI)
+
+  def isSuccessfulParse[T](parseResult: MultiParseResult[T]): Boolean =
+    parseResult match {
+      case Success(_, unparsed) => unparsed.atEnd
+      case _ => false
+    }
 }
