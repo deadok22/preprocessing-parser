@@ -6,11 +6,11 @@
     <JAVADOC />
     <SOURCES>
       <root url="jar://$PROJECT_DIR$/lib/TypeChef-0.3.4.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/TypeChef-src.zip!/TypeChef-master/Frontend/src/main/scala" />
-      <root url="jar://$PROJECT_DIR$/lib/TypeChef-src.zip!/TypeChef-master/CRefactor/src/main/java" />
-      <root url="jar://$PROJECT_DIR$/lib/TypeChef-src.zip!/TypeChef-master/JavaParser/src/main/java" />
-      <root url="jar://$PROJECT_DIR$/lib/TypeChef-src.zip!/TypeChef-master/PartialPreprocessor/src/main/scala" />
-      <root url="jar://$PROJECT_DIR$/lib/TypeChef-src.zip!/TypeChef-master/PartialPreprocessor/src/test/java" />
+      <root url="jar://$PROJECT_DIR$/lib/TypeChef-src.zip!/TypeChef-0.3.4/Frontend/src/main/scala" />
+      <root url="jar://$PROJECT_DIR$/lib/TypeChef-src.zip!/TypeChef-0.3.4/JavaParser/src/main/java" />
+      <root url="jar://$PROJECT_DIR$/lib/TypeChef-src.zip!/TypeChef-0.3.4/PartialPreprocessor/src/main/scala" />
+      <root url="jar://$PROJECT_DIR$/lib/TypeChef-src.zip!/TypeChef-0.3.4/PartialPreprocessor/src/test/java" />
+      <root url="jar://$PROJECT_DIR$/lib/TypeChef-src.zip!/TypeChef-0.3.4/ParserFramework/src/main/scala" />
     </SOURCES>
   </library>
 </component>
