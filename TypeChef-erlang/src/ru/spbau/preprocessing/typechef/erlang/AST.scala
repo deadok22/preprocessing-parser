@@ -37,6 +37,8 @@ case class FloatExpr(float: String) extends Expr
 
 case class StringsExpr(strings: List[Opt[String]]) extends Expr
 
+case class FunctionCallExpr(callee: Expr, args: ArgumentsList) extends Expr
+
 case class Exprs(exprs: List[Opt[Expr]]) extends Expr
 
 //function

@@ -87,8 +87,12 @@ class ErlangParser extends MultiFeatureParser(debugOutput = true) {
 
   def prefix_op = et(OP_PLUS) | et(OP_MINUS) | et(BNOT) | et(NOT)
 
-  def expr_700: MultiParser[Expr] = //TODO uncomment and add parsers: function_call | record_expr |
+  def expr_700: MultiParser[Expr] = function_call | //TODO uncomment and add parsers: record_expr |
     expr_800
+
+  def function_call = expr_800 ~ argumentsList ^^ {
+    case callee ~ args => new FunctionCallExpr(callee, args)
+  }
 
   def expr_800 = bop(expr_max, COLON, expr_max) |
     expr_max
