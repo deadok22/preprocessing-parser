@@ -45,7 +45,8 @@ class ErlangParser extends MultiFeatureParser {
     new Exprs(_)
   }
 
-  def expr: MultiParser[Expr] = uop(CATCH, expr) | expr_100
+  def expr: MultiParser[Expr] = //TODO uop(CATCH, expr) |
+    expr_100
 
   def expr_100: MultiParser[Expr] = assignment | send | expr_150
 
@@ -53,38 +54,46 @@ class ErlangParser extends MultiFeatureParser {
 
   def send = bop(expr_150, OP_EXL, expr_100)
 
-  def expr_150: MultiParser[Expr] = orelse | expr_160
+  def expr_150: MultiParser[Expr] = //TODO orelse |
+    expr_160
 
   def orelse = bop(expr_160, ORELSE, expr_150)
 
-  def expr_160: MultiParser[Expr] = andalso | expr_160
+  def expr_160: MultiParser[Expr] = //TODO andalso |
+    expr_200
 
   def andalso = bop(expr_200, ANDALSO, expr_160)
 
-  def expr_200: MultiParser[Expr] = bop(expr_300, comp_op, expr_300) | expr_300
+  def expr_200: MultiParser[Expr] = //TODO bop(expr_300, comp_op, expr_300) |
+    expr_300
 
   def comp_op = et(OP_EQ_EQ) | et(OP_DIV_EQ) | et(OP_EQ_LT) | et(OP_LT) | et(OP_GT_EQ) | et(OP_GT) | et(OP_EQ_COL_EQ) | et(OP_EQ_DIV_EQ)
 
-  def expr_300: MultiParser[Expr] = bop(expr_400, list_op, expr_300) | expr_400
+  def expr_300: MultiParser[Expr] = //TODO bop(expr_400, list_op, expr_300) |
+    expr_400
 
   def list_op = et(OP_PLUS_PLUS) | et(OP_MINUS_MINUS)
 
-  def expr_400: MultiParser[Expr] = bop(expr_400, add_op, expr_500) | expr_500
+  def expr_400: MultiParser[Expr] = //TODO bop(expr_400, add_op, expr_500) |
+    expr_500
 
   def add_op = et(OP_PLUS) | et(OP_MINUS) | et(BOR) | et(BXOR) | et(BSL) | et(BSR) | et(OR) | et(XOR)
 
-  def expr_500: MultiParser[Expr] = bop(expr_500, mult_op, expr_600) | expr_600
+  def expr_500: MultiParser[Expr] = //TODO bop(expr_500, mult_op, expr_600) |
+    expr_600
 
   def mult_op = et(OP_AR_DIV) | et(OP_AR_MUL) | et(DIV) | et(REM) | et(BAND) | et(AND)
 
-  def expr_600: MultiParser[Expr] = uop(prefix_op, expr_700) | expr_700
+  def expr_600: MultiParser[Expr] = //TODO uop(prefix_op, expr_700) |
+    expr_700
 
   def prefix_op = et(OP_PLUS) | et(OP_MINUS) | et(BNOT) | et(NOT)
 
   def expr_700: MultiParser[Expr] = //TODO uncomment and add parsers: function_call | record_expr | 
     expr_800
 
-  def expr_800 = bop(expr_max, COLON, expr_max) | expr_max
+  def expr_800 = //TODO bop(expr_max, COLON, expr_max) |
+    expr_max
 
   def expr_max = variable | atomic | parenthesized | begin_end
 
@@ -122,17 +131,17 @@ class ErlangParser extends MultiFeatureParser {
     new StringsExpr(_)
   }
 
-  def bop[Left <: Expr, Right <: Expr](l: MultiParser[Left], op: ErlangToken, r: MultiParser[Right]): MultiParser[BinaryExpr] =
+  def bop[Left <: Expr, Right <: Expr](l: => MultiParser[Left], op: ErlangToken, r: => MultiParser[Right]): MultiParser[BinaryExpr] =
     bop(l, et(op.toString.toLowerCase, op), r)
 
-  def bop[Left <: Expr, Right <: Expr](l: MultiParser[Left], op: MultiParser[Elem], r: MultiParser[Right]): MultiParser[BinaryExpr] =
+  def bop[Left <: Expr, Right <: Expr](l: => MultiParser[Left], op: MultiParser[Elem], r: => MultiParser[Right]): MultiParser[BinaryExpr] =
     l ~ op ~ r ^^ {
       case a ~ o ~ b => new BinaryExpr(a, b, o.getType)
     }
 
-  def uop[Arg <: Expr](op: ErlangToken, a: MultiParser[Arg]): MultiParser[PrefixExpr] = uop(et(op.toString.toLowerCase, op), a)
+  def uop[Arg <: Expr](op: ErlangToken, a: => MultiParser[Arg]): MultiParser[PrefixExpr] = uop(et(op.toString.toLowerCase, op), a)
 
-  def uop[Arg <: Expr](op: MultiParser[Elem], a: MultiParser[Arg]): MultiParser[PrefixExpr] =
+  def uop[Arg <: Expr](op: MultiParser[Elem], a: => MultiParser[Arg]): MultiParser[PrefixExpr] =
     op ~ a ^^ {
       case oper ~ arg => new PrefixExpr(arg, oper.getType)
     }
