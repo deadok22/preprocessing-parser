@@ -74,13 +74,11 @@ class ErlangParser extends MultiFeatureParser(debugOutput = true) {
 
   def list_op = et(OP_PLUS_PLUS) | et(OP_MINUS_MINUS)
 
-  def expr_400: MultiParser[Expr] = bop(expr_500, add_op, expr_400) | //TODO assoc
-    expr_500
+  def expr_400: MultiParser[Expr] = leftAssocBop(expr_500, add_op)
 
   def add_op = et(OP_PLUS) | et(OP_MINUS) | et(BOR) | et(BXOR) | et(BSL) | et(BSR) | et(OR) | et(XOR)
 
-  def expr_500: MultiParser[Expr] = bop(expr_600, mult_op, expr_500) | //TODO assoc
-    expr_600
+  def expr_500: MultiParser[Expr] = leftAssocBop(expr_600, mult_op)
 
   def mult_op = et(OP_AR_DIV) | et(OP_AR_MUL) | et(DIV) | et(REM) | et(BAND) | et(AND)
 
@@ -130,6 +128,13 @@ class ErlangParser extends MultiFeatureParser(debugOutput = true) {
   def strings = repOpt(ett("string", STRING)) ^^ {
     new StringsExpr(_)
   }
+
+  def leftAssocBop(argParser: MultiParser[Expr], opParser: MultiParser[Elem]) =
+    argParser ~ repPlain(opParser ~ argParser) ^^ {
+      case left ~ tail => tail.foldLeft(left) {
+        case (l, op ~ r) => new BinaryExpr(l, r, op.getType)
+      }
+    }
 
   def bop[Left <: Expr, Right <: Expr](l: => MultiParser[Left], op: ErlangToken, r: => MultiParser[Right]): MultiParser[BinaryExpr] =
     bop(l, et(op.toString.toLowerCase, op), r)
