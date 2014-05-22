@@ -1,6 +1,6 @@
 package ru.spbau.preprocessing.typechef.erlang
 
-import de.fosd.typechef.parser.{TokenReader, MultiFeatureParser}
+import de.fosd.typechef.parser.{~, TokenReader, MultiFeatureParser}
 import de.fosd.typechef.featureexpr.{FeatureExprFactory, FeatureExpr}
 import ru.spbau.preprocessing.erlang.files.ErlangFileSystemSourceFile
 import ru.spbau.preprocessing.lexer.PreprocessingLexer
@@ -30,11 +30,11 @@ class ErlangParser extends MultiFeatureParser {
     new Function(_)
   }
 
-  def functionClause: MultiParser[FunctionClause] = atom ~ clauseArgs ~ clauseBody ^^ {
-    case (clauseName, _, body) => new FunctionClause(clauseName, body)
+  def functionClause: MultiParser[FunctionClause] = (atom <~ clauseArgs) ~ clauseBody ^^ {
+    case clauseName ~ body => new FunctionClause(clauseName, body)
   }
 
-  def clauseArgs = lpar ~ rpar
+  def clauseArgs = lpar ~ rpar ^^ { _ => success(Unit) }
 
   def clauseBody = arrow ~> exprs ^^ {
     new Exprs(_)
