@@ -45,8 +45,7 @@ class ErlangParser extends MultiFeatureParser(debugOutput = true) {
     new Exprs(_)
   }
 
-  def expr: MultiParser[Expr] = uop(CATCH, expr) |
-    expr_100
+  def expr: MultiParser[Expr] = uop(CATCH, expr) | expr_100
 
   def expr_100: MultiParser[Expr] = assignment | send | expr_150
 
@@ -54,23 +53,19 @@ class ErlangParser extends MultiFeatureParser(debugOutput = true) {
 
   def send = bop(expr_150, OP_EXL, expr_100)
 
-  def expr_150: MultiParser[Expr] = orelse |
-    expr_160
+  def expr_150: MultiParser[Expr] = orelse | expr_160
 
   def orelse = bop(expr_160, ORELSE, expr_150)
 
-  def expr_160: MultiParser[Expr] = andalso |
-    expr_200
+  def expr_160: MultiParser[Expr] = andalso | expr_200
 
   def andalso = bop(expr_200, ANDALSO, expr_160)
 
-  def expr_200: MultiParser[Expr] = bop(expr_300, comp_op, expr_300) |
-    expr_300
+  def expr_200: MultiParser[Expr] = bop(expr_300, comp_op, expr_300) | expr_300
 
   def comp_op = et(OP_EQ_EQ) | et(OP_DIV_EQ) | et(OP_EQ_LT) | et(OP_LT) | et(OP_GT_EQ) | et(OP_GT) | et(OP_EQ_COL_EQ) | et(OP_EQ_DIV_EQ)
 
-  def expr_300: MultiParser[Expr] = bop(expr_400, list_op, expr_300) |
-    expr_400
+  def expr_300: MultiParser[Expr] = bop(expr_400, list_op, expr_300) | expr_400
 
   def list_op = et(OP_PLUS_PLUS) | et(OP_MINUS_MINUS)
 
@@ -82,13 +77,11 @@ class ErlangParser extends MultiFeatureParser(debugOutput = true) {
 
   def mult_op = et(OP_AR_DIV) | et(OP_AR_MUL) | et(DIV) | et(REM) | et(BAND) | et(AND)
 
-  def expr_600: MultiParser[Expr] = uop(prefix_op, expr_700) |
-    expr_700
+  def expr_600: MultiParser[Expr] = uop(prefix_op, expr_700) | expr_700
 
   def prefix_op = et(OP_PLUS) | et(OP_MINUS) | et(BNOT) | et(NOT)
 
-  def expr_700: MultiParser[Expr] = function_call | //TODO uncomment and add parsers: record_expr |
-    expr_800
+  def expr_700: MultiParser[Expr] = function_call | expr_800
 
   def function_call = expr_800 ~ argumentsList ^^ {
     case callee ~ args => new FunctionCallExpr(callee, args)
