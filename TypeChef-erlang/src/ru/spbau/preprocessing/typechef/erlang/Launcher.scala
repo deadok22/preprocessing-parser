@@ -4,11 +4,12 @@ import ru.spbau.preprocessing.erlang.files.ErlangFileSystemSourceFile
 import ru.spbau.preprocessing.erlang.{ErlangToken, ErlangLanguageProvider}
 import ru.spbau.preprocessing.lexer.PreprocessingLexer
 import ru.spbau.preprocessing.lexer.lexemegraph.LexemeGraphNode
+import java.io
 
 object Launcher extends App {
   parseAndPrintC()
   parseAndPrintJava()
-  printErlangLexemeSeq()
+  parseAndPrintErlang()
 
   def parseAndPrintC() = {
     import de.fosd.typechef.parser.c.{PrettyPrinter, CParser}
@@ -45,5 +46,12 @@ object Launcher extends App {
     val lexer: PreprocessingLexer[ErlangToken] = new PreprocessingLexer[ErlangToken](new ErlangLanguageProvider, sourceFile)
     val graph: LexemeGraphNode = lexer.buildLexemeGraph
     LexemeSequence.from(graph).foreach(println(_))
+  }
+
+  def parseAndPrintErlang() = {
+    val file: io.File = new io.File("erlang/testData/preprocessingLexer/definedMacro.erl")
+    val parser: ErlangParser = new ErlangParser
+    //TODO report a Scala plugin bug
+    println(parser.parseFile(file, parser.file))
   }
 }

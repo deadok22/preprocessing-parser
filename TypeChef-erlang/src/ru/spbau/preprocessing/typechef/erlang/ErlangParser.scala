@@ -7,9 +7,11 @@ import ru.spbau.preprocessing.lexer.PreprocessingLexer
 import ru.spbau.preprocessing.erlang.{ErlangToken, ErlangLanguageProvider}
 import ru.spbau.preprocessing.erlang.ErlangToken._
 import ru.spbau.preprocessing.lexer.lexemegraph.LexemeGraphNode
+import de.fosd.typechef.parser.c.CTypeContext
 
 class ErlangParser extends MultiFeatureParser {
   type Elem = ErlangLexemeWrapper
+  type TypeContext = Null
 
   def parseFile[T](file: java.io.File, production: (TokenReader[Elem, Null], FeatureExpr) => MultiParseResult[T]): MultiParseResult[T] = {
     val sourceFile: ErlangFileSystemSourceFile = new ErlangFileSystemSourceFile(file)
