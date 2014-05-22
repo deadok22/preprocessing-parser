@@ -44,6 +44,6 @@ case class Exprs(exprs: List[Opt[Expr]]) extends Expr
 //function
 case class FunctionClause(atom: String, params: ArgumentsList, body: Exprs) extends AST
 
-case class ArgumentsList(arguments: Option[Exprs]) extends AST
+case class ArgumentsList(arguments: Exprs) extends AST
 
 case class Function(clauses: List[Opt[FunctionClause]]) extends Form

@@ -40,8 +40,9 @@ class ErlangParser extends MultiFeatureParser(debugOutput = true) {
     case clauseName ~ params ~ body => new FunctionClause(clauseName, params, body)
   }
 
-  def argumentsList = (lpar ~> exprs ?) <~ rpar ^^ {
-    new ArgumentsList(_)
+  def argumentsList = (lpar ~> (exprs?)) <~ rpar ^^ {
+    case None => new ArgumentsList(new Exprs(Nil))
+    case Some(args) => new ArgumentsList(args)
   }
 
   def clauseBody = arrow ~> exprs
@@ -86,7 +87,10 @@ class ErlangParser extends MultiFeatureParser(debugOutput = true) {
 
   def prefix_op = et(OP_PLUS) | et(OP_MINUS) | et(BNOT) | et(NOT)
 
-  def expr_700: MultiParser[Expr] = function_call | expr_800
+  def expr_700: MultiParser[Expr] = (expr_800 ~ (argumentsList?)) ^^ {
+    case (expr ~ None) => expr
+    case (callee ~ Some(args)) => new FunctionCallExpr(callee, args)
+  }
 
   def function_call = expr_800 ~ argumentsList ^^ {
     case callee ~ args => new FunctionCallExpr(callee, args)
