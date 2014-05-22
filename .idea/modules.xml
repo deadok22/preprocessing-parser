@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/TypeChef-erlang/TypeChef-erlang.iml" filepath="$PROJECT_DIR$/TypeChef-erlang/TypeChef-erlang.iml" />
+      <module fileurl="file://$PROJECT_DIR$/benchmark/benchmark.iml" filepath="$PROJECT_DIR$/benchmark/benchmark.iml" />
       <module fileurl="file://$PROJECT_DIR$/earley/earley.iml" filepath="$PROJECT_DIR$/earley/earley.iml" />
       <module fileurl="file://$PROJECT_DIR$/erlang/erlang.iml" filepath="$PROJECT_DIR$/erlang/erlang.iml" />
       <module fileurl="file://$PROJECT_DIR$/lexer/lexer.iml" filepath="$PROJECT_DIR$/lexer/lexer.iml" />
