@@ -18,7 +18,7 @@ class ErlangParser extends MultiFeatureParser {
     val lexer: PreprocessingLexer[ErlangToken] = new PreprocessingLexer[ErlangToken](new ErlangLanguageProvider, sourceFile)
     val graph: LexemeGraphNode = lexer.buildLexemeGraph
     val lexemes: List[Elem] = LexemeSequence.from(graph)
-    val tokenReader: TokenReader[Elem, Null] = new TokenReader[Elem, Null](lexemes, 0, eofToken = null)
+    val tokenReader: TokenReader[Elem, Null] = new TokenReader[Elem, Null](lexemes, 0, eofToken = ErlangLexemeWrapper.EOF)
     production(tokenReader, FeatureExprFactory.True)
   }
 

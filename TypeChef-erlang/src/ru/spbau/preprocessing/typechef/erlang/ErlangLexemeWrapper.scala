@@ -31,6 +31,8 @@ class ErlangLexemePosition(startOffset: Int, file: String) extends Position {
 }
 
 object ErlangLexemeWrapper {
+  def EOF = new ErlangLexemeWrapper(new Lexeme[ErlangToken](null, "<EOF>", null), FeatureExprFactory.True, null)
+
   def create(lexeme: Lexeme[ErlangToken], pc: ErlangPresenceCondition) = {
     new ErlangLexemeWrapper(lexeme, createFeatureFor(pc.getExpression), new ErlangLexemePosition(lexeme.getLocation))
   }
