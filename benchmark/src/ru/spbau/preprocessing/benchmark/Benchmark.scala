@@ -1,6 +1,10 @@
 package ru.spbau.preprocessing.benchmark
 
 import java.io.File
+import ru.spbau.preprocessing.erlang.files.ErlangFileSystemSourceFile
+import ru.spbau.preprocessing.lexer.PreprocessingLexer
+import ru.spbau.preprocessing.erlang.{ErlangLanguageProvider, ErlangToken}
+import ru.spbau.preprocessing.lexer.lexemegraph.LexemeGraphNode
 
 object Benchmark extends App {
 
@@ -18,12 +22,19 @@ object Benchmark extends App {
   def runBench(files: Iterable[java.io.File], pr: ParserRunner) {
     val sw = new StopWatch
     files.foreach(f => {
+      val sourceFile: ErlangFileSystemSourceFile = new ErlangFileSystemSourceFile(f)
+      val lexer: PreprocessingLexer[ErlangToken] = new PreprocessingLexer[ErlangToken](new ErlangLanguageProvider, sourceFile)
+      val lexemeGraph: LexemeGraphNode = lexer.buildLexemeGraph
+      val lexemes = pr.prepareLexemes(lexemeGraph)
+
+      System.gc()
+
+      sw.start()
+      val parsed: Boolean = pr.parse(lexemes)
+      val parseTime: Long = sw.stop()
+
       print(f.getPath)
       print("\t")
-      sw.start()
-      val parsed: Boolean = pr.parse(f)
-      val parseTime: Long = sw.stop()
-      System.gc()
       print(if (parsed) "OK" else "FAIL")
       print("\t")
       println(parseTime)

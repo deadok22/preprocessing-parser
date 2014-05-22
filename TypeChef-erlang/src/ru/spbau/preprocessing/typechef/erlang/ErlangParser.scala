@@ -21,6 +21,11 @@ class ErlangParser extends MultiFeatureParser(debugOutput = true) {
     production(tokenReader, FeatureExprFactory.True)
   }
 
+  def parse[T](input: List[Elem], production: (TokenReader[Elem, Null], FeatureExpr) => MultiParseResult[T]) = {
+    val tokenReader: TokenReader[Elem, Null] = new TokenReader[Elem, Null](input, 0, eofToken = ErlangLexemeWrapper.EOF)
+    production(tokenReader, FeatureExprFactory.True)
+  }
+
   def file: MultiParser[File] = repOpt(form, "forms") ^^ {
     new File(_)
   }

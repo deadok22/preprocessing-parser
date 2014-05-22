@@ -1,7 +1,9 @@
 package ru.spbau.preprocessing.benchmark
 
-import java.io.File
+import ru.spbau.preprocessing.lexer.lexemegraph.LexemeGraphNode
 
 trait ParserRunner {
-  def parse(file: File): Boolean
+  type Input
+  def prepareLexemes(node: LexemeGraphNode): Input
+  def parse(input: Input): Boolean
 }
