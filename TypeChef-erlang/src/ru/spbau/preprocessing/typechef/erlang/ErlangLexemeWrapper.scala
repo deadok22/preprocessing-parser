@@ -2,7 +2,7 @@ package ru.spbau.preprocessing.typechef.erlang
 
 import ru.spbau.preprocessing.lexer.lexemegraph.{LexemeLocation, Lexeme}
 import ru.spbau.preprocessing.erlang.ErlangToken
-import de.fosd.typechef.parser.{Position, AbstractToken}
+import de.fosd.typechef.parser.{NoPosition, Position, AbstractToken}
 import de.fosd.typechef.featureexpr.{FeatureExprFactory, FeatureExpr}
 import ru.spbau.preprocessing.erlang.conditions.ErlangPresenceCondition
 import ru.spbau.preprocessing.erlang.conditions.dnf.{ErlangDisjunctiveNormalForm, ErlangConjunctiveClause, ErlangBooleanConstant, ErlangBooleanExpression}
@@ -31,7 +31,7 @@ class ErlangLexemePosition(startOffset: Int, file: String) extends Position {
 }
 
 object ErlangLexemeWrapper {
-  def EOF = new ErlangLexemeWrapper(new Lexeme[ErlangToken](null, "<EOF>", null), FeatureExprFactory.True, null)
+  def EOF = new ErlangLexemeWrapper(new Lexeme[ErlangToken](null, "<EOF>", null), FeatureExprFactory.True, NoPosition)
 
   def create(lexeme: Lexeme[ErlangToken], pc: ErlangPresenceCondition) = {
     new ErlangLexemeWrapper(lexeme, createFeatureFor(pc.getExpression), new ErlangLexemePosition(lexeme.getLocation))
