@@ -13,7 +13,7 @@ object LexemeSequence {
   }
 
   private class SequenceBuildingVisitor(var sequence: List[ErlangLexemeWrapper] = Nil) extends LexemeGraphVisitor {
-    def result: List[ErlangLexemeWrapper] = sequence.reverse
+    def result: List[ErlangLexemeWrapper] = (ErlangLexemeWrapper.EOF :: sequence).reverse
 
     override def visitLangNode(langNode: LexemeGraphLangNode[_]): Unit = {
       val pc = langNode.getPresenceCondition.asInstanceOf[ErlangPresenceCondition]
