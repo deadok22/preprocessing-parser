@@ -7,7 +7,6 @@ import ru.spbau.preprocessing.lexer.PreprocessingLexer
 import ru.spbau.preprocessing.erlang.{ErlangToken, ErlangLanguageProvider}
 import ru.spbau.preprocessing.erlang.ErlangToken._
 import ru.spbau.preprocessing.lexer.lexemegraph.LexemeGraphNode
-import de.fosd.typechef.parser.c.CTypeContext
 
 class ErlangParser extends MultiFeatureParser {
   type Elem = ErlangLexemeWrapper
@@ -32,17 +31,17 @@ class ErlangParser extends MultiFeatureParser {
     new Function(_)
   }
 
-  def functionClause: MultiParser[FunctionClause] = (atom <~ clauseArgs) ~ clauseBody ^^ {
-    case clauseName ~ body => new FunctionClause(clauseName, body)
+  def functionClause: MultiParser[FunctionClause] = atom ~ argumentsList ~ clauseBody ^^ {
+    case clauseName ~ params ~ body => new FunctionClause(clauseName, params, body)
   }
 
-  def clauseArgs = lpar ~ rpar ^^ { _ => success(Unit) }
+  def argumentsList = (lpar ~> exprs?) <~ rpar ^^ { new ArgumentsList(_) }
 
-  def clauseBody = arrow ~> exprs ^^ {
+  def clauseBody = arrow ~> exprs
+
+  def exprs = rep1SepOpt(expr, comma) ^^ {
     new Exprs(_)
   }
-
-  def exprs = rep1SepOpt(expr, comma)
 
   def expr = atomic
 

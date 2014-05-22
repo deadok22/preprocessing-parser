@@ -18,7 +18,9 @@ case class Atomic(atom: String) extends Expr
 case class Exprs(exprs: List[Opt[Expr]]) extends Expr
 
 
-case class FunctionClause(atom: String, body: Exprs) extends AST
+case class FunctionClause(atom: String, params: ArgumentsList, body: Exprs) extends AST
+
+case class ArgumentsList(arguments: Option[Exprs]) extends AST
 
 case class Function(clauses: List[Opt[FunctionClause]]) extends Form
 
