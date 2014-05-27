@@ -7,6 +7,8 @@ import ru.spbau.preprocessing.api.conditions.PresenceCondition;
 import java.util.List;
 
 class EarleyChart {
+  private final EarleyChartColumn myParentColumnBeforeFork;
+
   private final List<EarleyChartColumn> myChart;
   // maps indexes in this chart's column list to subcharts created at these indexes.
   private final LinkedHashMultimap<Integer, EarleyChart> mySubCharts = LinkedHashMultimap.create();
@@ -14,7 +16,12 @@ class EarleyChart {
   private final PresenceCondition myBasePresenceCondition;
 
   public EarleyChart(PresenceCondition basePresenceCondition) {
-    myBasePresenceCondition = basePresenceCondition;
+    this(null, basePresenceCondition);
+  }
+
+  private EarleyChart(EarleyChartColumn parentColumnBeforeFork, PresenceCondition presenceCondition) {
+    myParentColumnBeforeFork = parentColumnBeforeFork;
+    myBasePresenceCondition = presenceCondition;
     myChart = Lists.newArrayList();
   }
 
@@ -34,14 +41,17 @@ class EarleyChart {
 
   public EarleyChart createSubChart(PresenceCondition presenceCondition) {
     EarleyChart subChart = new EarleyChart(presenceCondition);
-    subChart.myChart.add(lastColumn());
+    //TODO correct determination of terminals' presence conditions (alter presence conditions of rules which consumed a terminal?)
+    EarleyChartColumn subChartFirstColumn = subChart.newColumn();
+    subChartFirstColumn.addAllFrom(lastColumn(), presenceCondition);
     mySubCharts.put(myChart.size() - 1, subChart);
     return subChart;
   }
 
   EarleyChartColumn getColumnBefore(EarleyChartColumn column) {
     int i = myChart.indexOf(column);
-    return i > 0 ? myChart.get(i - 1) : null;
+    return i > 0 ? myChart.get(i - 1) :
+            (myParentColumnBeforeFork != null ? myParentColumnBeforeFork.getChart().getColumnBefore(myParentColumnBeforeFork) : null);
   }
 
   public PresenceCondition getBasePresenceCondition() {

@@ -26,8 +26,10 @@ import java.util.Set;
     this(predecessor, Sets.<EarleyReduction>newLinkedHashSet(), presenceCondition);
   }
 
-  EarleyItemDescriptor(EarleyItemDescriptor descriptor) {
-    this(descriptor.getPredecessor(), Sets.newLinkedHashSet(descriptor.getReductions()), descriptor.getPresenceCondition());
+  EarleyItemDescriptor(EarleyItemDescriptor descriptor, PresenceCondition andPresenceCondition) {
+    this(descriptor.getPredecessor(),
+            Sets.newLinkedHashSet(descriptor.getReductions()),
+            andPresenceCondition == null ? descriptor.getPresenceCondition() : descriptor.getPresenceCondition().and(andPresenceCondition));
   }
 
   private EarleyItemDescriptor(EarleyItem predecessor, Set<EarleyReduction> reductionItems, PresenceCondition presenceCondition) {

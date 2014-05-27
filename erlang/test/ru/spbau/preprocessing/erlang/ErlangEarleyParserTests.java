@@ -15,6 +15,7 @@ public class ErlangEarleyParserTests extends ErlangAbstractEarleyParserTests {
   @Test public void alternativeSubstitution()        throws Exception { doTest(); }
   @Test public void alternativeExpressions()         throws Exception { doTest(); }
   @Test public void conditionalClause()              throws Exception { doTest(); }
+  @Test public void optionalFirstClause()            throws Exception { doTest(); }
 
   @Override
   protected String getTestDataPath() {

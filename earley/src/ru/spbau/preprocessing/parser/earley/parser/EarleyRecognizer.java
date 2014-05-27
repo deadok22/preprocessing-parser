@@ -74,8 +74,9 @@ class EarleyRecognizer implements LexemeGraphVisitor {
     if (orOfForkBranches.value() == PresenceCondition.Value.TRUE || myChart.getBasePresenceCondition().equals(orOfForkBranches)) return;
 
     // fork branches coverage is not exhaustive, it's possible that none of the branches is selected
-    // add items from column before fork to handle this case
-    columnAfterFork.addAllFrom(columnBeforeFork);
+    // add items from column before fork and-ing their presence conditions with not of orOfForkBranches to handle this case
+    PresenceCondition notOrOfForkBranches = orOfForkBranches.not();
+    columnAfterFork.addAllFrom(columnBeforeFork, notOrOfForkBranches);
   }
 
   @Override

@@ -30,7 +30,7 @@ class EarleyChartColumn implements Iterable<EarleyItem> {
    */
   public EarleyItem addItem(EarleyProduction production, PresenceCondition presenceCondition) {
     EarleyItem newItem = new EarleyItem(production, this);
-    EarleyItemDescriptor newItemDescriptor = new EarleyItemDescriptor(null, presenceCondition);
+    EarleyItemDescriptor newItemDescriptor = new EarleyItemDescriptor((EarleyItem) null, presenceCondition);
     return addItem(newItem, newItemDescriptor);
   }
 
@@ -104,14 +104,23 @@ class EarleyChartColumn implements Iterable<EarleyItem> {
   }
 
   public void addAllFrom(EarleyChartColumn otherColumn) {
+    addAllFrom(otherColumn, null);
+  }
+
+  public void addAllFrom(EarleyChartColumn otherColumn, PresenceCondition extraPresenceCondition) {
     for (EarleyItem item : otherColumn) {
       for (EarleyItemDescriptor descriptor : otherColumn.getDescriptors(item)) {
-        addItem(item, new EarleyItemDescriptor(descriptor));
+        EarleyItemDescriptor newItemDescriptor = new EarleyItemDescriptor(descriptor, extraPresenceCondition);
+        addItem(item, newItemDescriptor);
       }
     }
   }
 
   public PresenceCondition getPresenceCondition() {
     return myChart.getBasePresenceCondition();
+  }
+
+  public EarleyChart getChart() {
+    return myChart;
   }
 }

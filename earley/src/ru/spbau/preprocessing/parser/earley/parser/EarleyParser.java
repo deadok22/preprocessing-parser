@@ -19,6 +19,9 @@ import java.util.List;
 import java.util.Set;
 
 public class EarleyParser {
+  @SuppressWarnings("FieldCanBeLocal")
+  private static boolean RESOLVE_AMBIGUITIES = false;
+
   private final EarleyGrammar myGrammar;
   private final PresenceConditionFactory myPresenceConditionFactory;
 
@@ -171,6 +174,7 @@ public class EarleyParser {
   }
 
   private Set<EarleyReduction> excludeReductionAmbiguities(EarleyItem currentItem, Set<EarleyReduction> reductions, EarleyChartColumn column) {
+    if (!RESOLVE_AMBIGUITIES) return reductions;
     HashMultimap<PresenceCondition, EarleyReduction> possibleAmbiguities = HashMultimap.create();
     for (EarleyReduction reduction : reductions) {
       if (reduction.getTerminalMatch() == null) {
