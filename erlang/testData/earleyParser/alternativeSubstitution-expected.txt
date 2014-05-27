@@ -26,8 +26,8 @@ COMPOSITE: Forms: TRUE <TRUE>
                    ALTERNATIVES: TRUE <TRUE>
                     CONDITIONAL: (X) <VARIANCE>
                      COMPOSITE: Atomic: (X) <VARIANCE>
-                      LEAF: 'ATOM' "nan" [81@erlang/testData/earleyParser/alternativeSubstitution.erl]: TRUE <TRUE>
+                      LEAF: 'ATOM' "nan" [81@erlang/testData/earleyParser/alternativeSubstitution.erl]: (X) <VARIANCE>
                     CONDITIONAL: (!X) <VARIANCE>
                      COMPOSITE: Atomic: (!X) <VARIANCE>
-                      LEAF: 'INTEGER' "10" [81@erlang/testData/earleyParser/alternativeSubstitution.erl]: TRUE <TRUE>
+                      LEAF: 'INTEGER' "10" [81@erlang/testData/earleyParser/alternativeSubstitution.erl]: (!X) <VARIANCE>
   LEAF: 'DOT' "." [87@erlang/testData/earleyParser/alternativeSubstitution.erl]: TRUE <TRUE>

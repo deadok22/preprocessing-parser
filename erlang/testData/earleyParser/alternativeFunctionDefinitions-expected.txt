@@ -5,7 +5,7 @@ COMPOSITE: Forms: TRUE <TRUE>
     COMPOSITE: Function: (FOO_0) <VARIANCE>
      COMPOSITE: Function clauses: (FOO_0) <VARIANCE>
       COMPOSITE: Function clause: (FOO_0) <VARIANCE>
-       LEAF: 'ATOM' "foo" [16@erlang/testData/earleyParser/alternativeFunctionDefinitions.erl]: TRUE <TRUE>
+       LEAF: 'ATOM' "foo" [16@erlang/testData/earleyParser/alternativeFunctionDefinitions.erl]: (FOO_0) <VARIANCE>
        COMPOSITE: Clause args: (FOO_0) <VARIANCE>
         COMPOSITE: Argument list: (FOO_0) <VARIANCE>
          LEAF: 'PAR_LEFT' "(" [19@erlang/testData/earleyParser/alternativeFunctionDefinitions.erl]: (FOO_0) <VARIANCE>
@@ -32,7 +32,7 @@ COMPOSITE: Forms: TRUE <TRUE>
     COMPOSITE: Function: (!FOO_0) <VARIANCE>
      COMPOSITE: Function clauses: (!FOO_0) <VARIANCE>
       COMPOSITE: Function clause: (!FOO_0) <VARIANCE>
-       LEAF: 'ATOM' "foo" [42@erlang/testData/earleyParser/alternativeFunctionDefinitions.erl]: TRUE <TRUE>
+       LEAF: 'ATOM' "foo" [42@erlang/testData/earleyParser/alternativeFunctionDefinitions.erl]: (!FOO_0) <VARIANCE>
        COMPOSITE: Clause args: (!FOO_0) <VARIANCE>
         COMPOSITE: Argument list: (!FOO_0) <VARIANCE>
          LEAF: 'PAR_LEFT' "(" [45@erlang/testData/earleyParser/alternativeFunctionDefinitions.erl]: (!FOO_0) <VARIANCE>

@@ -1,0 +1,21 @@
+COMPOSITE: forms: TRUE <TRUE>
+ ALTERNATIVES: TRUE <TRUE>
+  CONDITIONAL: (!X) <VARIANCE>
+   COMPOSITE: forms: (!X) <VARIANCE>
+    ALTERNATIVES: (!X) <VARIANCE>
+     CONDITIONAL: (!X) <VARIANCE>
+      COMPOSITE: form: (!X) <VARIANCE>
+       LEAF: 'ATOM' "b" [26@erlang/testData/sequenceParser/firstOptional.erl]: TRUE <TRUE>
+       LEAF: 'DOT' "." [27@erlang/testData/sequenceParser/firstOptional.erl]: TRUE <TRUE>
+  CONDITIONAL: (X) <VARIANCE>
+   COMPOSITE: forms: (X) <VARIANCE>
+    COMPOSITE: forms: (X) <VARIANCE>
+     COMPOSITE: form: (X) <VARIANCE>
+      LEAF: 'ATOM' "a" [15@erlang/testData/sequenceParser/firstOptional.erl]: (X) <VARIANCE>
+      LEAF: 'DOT' "." [16@erlang/testData/sequenceParser/firstOptional.erl]: (X) <VARIANCE>
+    COMPOSITE: form: (X) <VARIANCE>
+     LEAF: 'ATOM' "b" [26@erlang/testData/sequenceParser/firstOptional.erl]: TRUE <TRUE>
+     LEAF: 'DOT' "." [27@erlang/testData/sequenceParser/firstOptional.erl]: TRUE <TRUE>
+ COMPOSITE: form: TRUE <TRUE>
+  LEAF: 'ATOM' "c" [29@erlang/testData/sequenceParser/firstOptional.erl]: TRUE <TRUE>
+  LEAF: 'DOT' "." [30@erlang/testData/sequenceParser/firstOptional.erl]: TRUE <TRUE>
