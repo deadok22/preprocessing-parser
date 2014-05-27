@@ -41,7 +41,7 @@ COMPOSITE: Forms: TRUE <TRUE>
                    COMPOSITE: Expression_800: (FOO_NOT_OK) <VARIANCE>
                     COMPOSITE: Max expression: (FOO_NOT_OK) <VARIANCE>
                      COMPOSITE: Atomic: (FOO_NOT_OK) <VARIANCE>
-                      LEAF: 'ATOM' "ok" [118@erlang/testData/earleyParser/conditionalClause.erl]: TRUE <TRUE>
+                      LEAF: 'ATOM' "ok" [118@erlang/testData/earleyParser/conditionalClause.erl]: (FOO_NOT_OK) <VARIANCE>
       LEAF: 'SEMI' ";" [118@erlang/testData/earleyParser/conditionalClause.erl]: (FOO_NOT_OK) <VARIANCE>
       COMPOSITE: Function clauses: (FOO_NOT_OK) <VARIANCE>
        COMPOSITE: Function clause: (FOO_NOT_OK) <VARIANCE>
@@ -121,5 +121,5 @@ COMPOSITE: Forms: TRUE <TRUE>
                    COMPOSITE: Expression_800: (!FOO_NOT_OK) <VARIANCE>
                     COMPOSITE: Max expression: (!FOO_NOT_OK) <VARIANCE>
                      COMPOSITE: Atomic: (!FOO_NOT_OK) <VARIANCE>
-                      LEAF: 'ATOM' "ok" [118@erlang/testData/earleyParser/conditionalClause.erl]: TRUE <TRUE>
+                      LEAF: 'ATOM' "ok" [118@erlang/testData/earleyParser/conditionalClause.erl]: (!FOO_NOT_OK) <VARIANCE>
   LEAF: 'DOT' "." [122@erlang/testData/earleyParser/conditionalClause.erl]: TRUE <TRUE>

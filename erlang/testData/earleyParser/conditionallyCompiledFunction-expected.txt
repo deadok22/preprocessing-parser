@@ -3,7 +3,7 @@ COMPOSITE: Forms: (X) <VARIANCE>
   COMPOSITE: Function: (X) <VARIANCE>
    COMPOSITE: Function clauses: (X) <VARIANCE>
     COMPOSITE: Function clause: (X) <VARIANCE>
-     LEAF: 'ATOM' "foo" [12@erlang/testData/earleyParser/conditionallyCompiledFunction.erl]: TRUE <TRUE>
+     LEAF: 'ATOM' "foo" [12@erlang/testData/earleyParser/conditionallyCompiledFunction.erl]: (X) <VARIANCE>
      COMPOSITE: Clause args: (X) <VARIANCE>
       COMPOSITE: Argument list: (X) <VARIANCE>
        LEAF: 'PAR_LEFT' "(" [15@erlang/testData/earleyParser/conditionallyCompiledFunction.erl]: (X) <VARIANCE>

@@ -35,15 +35,15 @@ COMPOSITE: Forms: TRUE <TRUE>
                            CONDITIONAL: (X) <VARIANCE>
                             COMPOSITE: Expression_400: (X) <VARIANCE>
                              COMPOSITE: Expression_500: (X) <VARIANCE>
-                              COMPOSITE: Expression_500: TRUE <TRUE>
-                               COMPOSITE: Expression_600: TRUE <TRUE>
-                                COMPOSITE: Expression_700: TRUE <TRUE>
-                                 COMPOSITE: Expression_800: TRUE <TRUE>
-                                  COMPOSITE: Max expression: TRUE <TRUE>
-                                   COMPOSITE: Atomic: TRUE <TRUE>
+                              COMPOSITE: Expression_500: (X) <VARIANCE>
+                               COMPOSITE: Expression_600: (X) <VARIANCE>
+                                COMPOSITE: Expression_700: (X) <VARIANCE>
+                                 COMPOSITE: Expression_800: (X) <VARIANCE>
+                                  COMPOSITE: Max expression: (X) <VARIANCE>
+                                   COMPOSITE: Atomic: (X) <VARIANCE>
                                     LEAF: 'INTEGER' "11" [83@erlang/testData/earleyParser/alternativeExpressions.erl]: TRUE <TRUE>
                               COMPOSITE: Multiplicative operator: (X) <VARIANCE>
-                               LEAF: 'OP_AR_MUL' "*" [86@erlang/testData/earleyParser/alternativeExpressions.erl]: TRUE <TRUE>
+                               LEAF: 'OP_AR_MUL' "*" [86@erlang/testData/earleyParser/alternativeExpressions.erl]: (X) <VARIANCE>
                               COMPOSITE: Expression_600: (X) <VARIANCE>
                                COMPOSITE: Expression_700: (X) <VARIANCE>
                                 COMPOSITE: Expression_800: (X) <VARIANCE>
@@ -52,16 +52,16 @@ COMPOSITE: Forms: TRUE <TRUE>
                                    LEAF: 'INTEGER' "19" [86@erlang/testData/earleyParser/alternativeExpressions.erl]: (X) <VARIANCE>
                            CONDITIONAL: (!X) <VARIANCE>
                             COMPOSITE: Expression_400: (!X) <VARIANCE>
-                             COMPOSITE: Expression_400: TRUE <TRUE>
-                              COMPOSITE: Expression_500: TRUE <TRUE>
-                               COMPOSITE: Expression_600: TRUE <TRUE>
-                                COMPOSITE: Expression_700: TRUE <TRUE>
-                                 COMPOSITE: Expression_800: TRUE <TRUE>
-                                  COMPOSITE: Max expression: TRUE <TRUE>
-                                   COMPOSITE: Atomic: TRUE <TRUE>
+                             COMPOSITE: Expression_400: (!X) <VARIANCE>
+                              COMPOSITE: Expression_500: (!X) <VARIANCE>
+                               COMPOSITE: Expression_600: (!X) <VARIANCE>
+                                COMPOSITE: Expression_700: (!X) <VARIANCE>
+                                 COMPOSITE: Expression_800: (!X) <VARIANCE>
+                                  COMPOSITE: Max expression: (!X) <VARIANCE>
+                                   COMPOSITE: Atomic: (!X) <VARIANCE>
                                     LEAF: 'INTEGER' "11" [83@erlang/testData/earleyParser/alternativeExpressions.erl]: TRUE <TRUE>
                              COMPOSITE: Additive operator: (!X) <VARIANCE>
-                              LEAF: 'OP_PLUS' "+" [86@erlang/testData/earleyParser/alternativeExpressions.erl]: TRUE <TRUE>
+                              LEAF: 'OP_PLUS' "+" [86@erlang/testData/earleyParser/alternativeExpressions.erl]: (!X) <VARIANCE>
                              COMPOSITE: Expression_500: (!X) <VARIANCE>
                               COMPOSITE: Expression_600: (!X) <VARIANCE>
                                COMPOSITE: Expression_700: (!X) <VARIANCE>
