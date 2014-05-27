@@ -43,7 +43,7 @@ class EarleyChart {
     EarleyChart subChart = new EarleyChart(presenceCondition);
     //TODO correct determination of terminals' presence conditions (alter presence conditions of rules which consumed a terminal?)
     EarleyChartColumn subChartFirstColumn = subChart.newColumn();
-    subChartFirstColumn.addAllFrom(lastColumn(), presenceCondition);
+    subChartFirstColumn.addAllFrom(lastColumn());
     mySubCharts.put(myChart.size() - 1, subChart);
     return subChart;
   }

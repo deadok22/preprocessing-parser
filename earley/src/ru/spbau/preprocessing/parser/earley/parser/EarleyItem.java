@@ -8,6 +8,7 @@ import ru.spbau.preprocessing.parser.earley.grammar.EarleySymbol;
 import java.util.List;
 
 class EarleyItem {
+  private boolean myPredictionDone = false;
   private final EarleyProduction myProduction;
   private final int myIndexInProduction;
   private final EarleyChartColumn myStartColumn;
@@ -57,6 +58,14 @@ class EarleyItem {
 
   public boolean isComplete() {
     return getNextExpectedSymbol() == null;
+  }
+
+  public void predictionIsDone() {
+    myPredictionDone = true;
+  }
+
+  public boolean isPredictionDone() {
+    return myPredictionDone;
   }
 
   @Override

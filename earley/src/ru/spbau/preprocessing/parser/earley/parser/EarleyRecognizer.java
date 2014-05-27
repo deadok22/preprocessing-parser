@@ -39,6 +39,7 @@ class EarleyRecognizer implements LexemeGraphVisitor {
   @Override
   public void visitForkNode(LexemeGraphForkNode forkNode) {
     EarleyChartColumn columnBeforeFork = myChart.lastColumn();
+    predict(columnBeforeFork);
     //TODO be sure not to complete items from one branch with items from another!
     List<EarleyRecognizer> forkRecognizers = Lists.newArrayListWithExpectedSize(forkNode.getChildren().size());
     for (LexemeGraphNode lexemeGraphNode : forkNode.getChildren()) {
@@ -113,6 +114,8 @@ class EarleyRecognizer implements LexemeGraphVisitor {
   }
 
   private void predictForItem(EarleyItem item, EarleyChartColumn currentColumn) {
+    if (item.isPredictionDone()) return;
+    item.predictionIsDone();
     EarleySymbol nextExpectedSymbol = item.getNextExpectedSymbol();
     if (nextExpectedSymbol == null || nextExpectedSymbol.isTerminal()) return;
     Set<EarleyProduction> productions = myGrammar.getProductions(nextExpectedSymbol.getName());
