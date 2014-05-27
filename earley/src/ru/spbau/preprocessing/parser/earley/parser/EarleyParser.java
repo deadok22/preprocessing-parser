@@ -131,6 +131,8 @@ public class EarleyParser {
     else {
       List<EarleyConditionalBranchNode> branchNodes = Lists.newArrayListWithExpectedSize(reductions.size());
       for (EarleyReduction reduction : reductions) {
+        //TODO some variation of this condition should be used to filter reductions out prior to checking their size
+        if (item.getIndexInProduction() == 1 && reduction.getStartColumn() != descriptor.getPredecessor().getStartColumn()) continue;
         EarleyAstNode nodeForReduction = buildNodeForReduction(reduction, column);
         List<EarleyAstNode> reversedBranchNodes = Lists.newArrayList();
         reversedBranchNodes.add(nodeForReduction);
