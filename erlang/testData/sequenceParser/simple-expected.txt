@@ -1,0 +1,12 @@
+COMPOSITE: forms: TRUE <TRUE>
+ COMPOSITE: forms: TRUE <TRUE>
+  COMPOSITE: forms: TRUE <TRUE>
+   COMPOSITE: form: TRUE <TRUE>
+    LEAF: 'ATOM' "a" [0@erlang/testData/sequenceParser/simple.erl]: TRUE <TRUE>
+    LEAF: 'DOT' "." [1@erlang/testData/sequenceParser/simple.erl]: TRUE <TRUE>
+  COMPOSITE: form: TRUE <TRUE>
+   LEAF: 'ATOM' "b" [3@erlang/testData/sequenceParser/simple.erl]: TRUE <TRUE>
+   LEAF: 'DOT' "." [4@erlang/testData/sequenceParser/simple.erl]: TRUE <TRUE>
+ COMPOSITE: form: TRUE <TRUE>
+  LEAF: 'ATOM' "c" [6@erlang/testData/sequenceParser/simple.erl]: TRUE <TRUE>
+  LEAF: 'DOT' "." [7@erlang/testData/sequenceParser/simple.erl]: TRUE <TRUE>
