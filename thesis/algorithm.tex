@@ -49,6 +49,8 @@
 \subsection{Модификация алгоритма Earley}
 \label{subsec:earleymodification}
 
+\todo{переделать этот текст, вставить псевдокод и т.д. и т.п.}
+
 Далее описывается модификация алгоритма Earley, позволяющая работать с графом, полученным на выходе препроцессирующего лексера, сохраняющего конфигурацию. 
 
 Основная идея алгоритма состоит в том, чтобы для различных ветвей условной компиляции строить различные последовательности состояний, сохраняя условия наличия, после чего объединять полученные наборы состояний.
@@ -94,4 +96,84 @@
 Для функции, преобразующей завершенные элементы в узлы графа-результата разумно применять мемоизацию, так как в некоторых случаях они могут быть вызваны многократно для одних и тех же узлов.
 
 Таким образом, модифицированный алгоритм Earley позволяет строить граф, содержащий синтаксические деревья для всех возможных конфигураций препроцессора без какой-либо дополнительной информации о возможных точках ветвления и слияния ветвей условной компиляции.
+
+\subsubsection{Распознавание}
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[caption={Псевдокод модифицированных процедур алгоритма Earley},language=Scala,label=modearleyprocs]
+def predictForItem(item, currentColumn) = {
+	if (item.predictionIsDone || item.isComplete || 
+		item.nextExpectedSymbol.isTerminal) return
+	item.predictionIsDone = true
+	val pc = getOrOfPrsenceConditions(item, currentColumn)
+	val productions = Grammar.productionsFor(item.nextExpectedSymbol)
+	productions.forEach(production => {
+		val item = currentColumn.addItem(production, pc)
+		if (item != null)
+			predictForItem(item)
+	})
+}
+
+def scan(lexeme, currentCol, nextCol) = 
+	currentCol.items.filter(_.expects(lexeme)).forEach(item => {
+		val pc = item.presenceCondition and
+			lexeme.presenceCondtion
+		nextCol.addItem(item.consume(lexeme), pc)
+	}
+
+def completeForItem(item, nextCol) = {
+	if (!item.isComplete) return
+	item.startColumn.items
+		.filter(_.expects(item)).forEach(startColItem => {
+			val pc = item.presenceCondition and 
+				startColItem.presenceCondition
+			val newItem = nextCol.addItem(startColItem.consume(item), pc)
+			if (newItem != null)
+				completeForItem(newItem, nextCol)		
+		})
+}
+\end{lstlisting}
+\end{minipage}
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[caption={Псевдокод алгоритма распознавания},language=Scala,label=recognitionpseudocode]
+def recognize(stream) : Chart = {
+	val chart = new Chart
+	processStream(stream, chart)
+	predict(chart.lastColumn)
+	complete(chart.lastColumn)
+	chart
+}
+
+def processStream(stream, chart) = {
+	var lexeme = stream.next
+	while (lexeme != stream.eof) {
+		lexeme match {
+			case Fork(streams) => {
+				val colBeforeFork = chart.lastColumn
+				predict(colBeforeFork)
+				val forkLastColumns = streams.map(
+					forkStream => {
+						val subChart = chart
+							.subChart(forkStream.presenceCondition)
+						processStream(forkStream, subChart)
+						subChart.lastColumn
+					}
+				)
+				val colAfterFork = chart.newColumn()
+				forkLastColumns.forEach(colAfterFork.addItemsFrom(_))
+				val orOfForkPCs = streams
+					.foldLeft(PresenceCondition.False) 
+						(_ or _.presenceCondition)
+				if (!orOfForkPCs.isTrue) 
+					colAfterFork
+						.addItemsFrom(colBeforeFork, orOfForkPCs.not)
+			}
+			case lexeme => doEarleyStep(lexeme, chart)
+		}
+	}
+}
+
+\end{lstlisting}
+\end{minipage}
 
