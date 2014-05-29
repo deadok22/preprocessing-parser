@@ -100,13 +100,56 @@
 \subsubsection{Распознавание}
 
 \begin{minipage}{\linewidth}
+\begin{lstlisting}[caption={Псевдокод алгоритма Earley},language=Scala,label=earleyrecognizer]
+def doEarleyStep(lexeme, chart) = {
+	val currentCol = chart.lastColumn
+	val nextCol = chart.newColumnt
+	predict(currentCol)
+	scan(lexeme, currentCol, nextCol)
+	complete(nextCol)
+}
+
+def predict(currentCol) = 
+	currentCol.items.forEach(predictForItem(_, currentCol))
+
+def predictForItem(item, currentColumn) = {
+	if (item.isComplete || item.nextSymbol.isTerminal) return
+	val productions = Grammar .productionsFor(item.nextSymbol)
+	productions.forEach(production => {
+		val item = currentColumn.addItem(production)
+		if (item != null) predictForItem(item)
+	})
+}
+
+def scan(lexeme, currentCol, nextCol) = 
+	currentCol.items.filter(_.expects(lexeme))
+		.forEach(nextCol.addItem(_.consume(lexeme)))
+	
+def complete(nextCol) = 
+	nextCol.items.forEach(completeForItem(_, nextCol))
+
+def completeForItem(item, nextCol) = {
+	if (!item.isComplete) return
+	item.startColumn.items.filter(_.expects(item))
+		.forEach(startColItem => {
+			val newItem = nextCol.addItem(startColItem.consume(item))
+			if (newItem != null)
+				completeForItem(newItem, nextCol)		
+		})
+}
+\end{lstlisting}
+\end{minipage}
+
+
+
+\begin{minipage}{\linewidth}
 \begin{lstlisting}[caption={Псевдокод модифицированных процедур алгоритма Earley},language=Scala,label=modearleyprocs]
 def predictForItem(item, currentColumn) = {
 	if (item.predictionIsDone || item.isComplete || 
-		item.nextExpectedSymbol.isTerminal) return
+		item.nextSymbol.isTerminal) return
 	item.predictionIsDone = true
 	val pc = getOrOfPrsenceConditions(item, currentColumn)
-	val productions = Grammar.productionsFor(item.nextExpectedSymbol)
+	val productions = Grammar.productionsFor(item.nextSymbol)
 	productions.forEach(production => {
 		val item = currentColumn.addItem(production, pc)
 		if (item != null)
@@ -115,19 +158,21 @@ def predictForItem(item, currentColumn) = {
 }
 
 def scan(lexeme, currentCol, nextCol) = 
-	currentCol.items.filter(_.expects(lexeme)).forEach(item => {
-		val pc = item.presenceCondition and
-			lexeme.presenceCondtion
-		nextCol.addItem(item.consume(lexeme), pc)
-	}
+	currentCol.items.filter(_.expects(lexeme))
+		.forEach(item => {
+			val pc = item.presenceCondition and
+				lexeme.presenceCondtion
+			nextCol.addItem(item.consume(lexeme), pc)
+		})
 
 def completeForItem(item, nextCol) = {
 	if (!item.isComplete) return
-	item.startColumn.items
-		.filter(_.expects(item)).forEach(startColItem => {
+	item.startColumn.items filter(_.expects(item))
+		.forEach(startColItem => {
 			val pc = item.presenceCondition and 
 				startColItem.presenceCondition
-			val newItem = nextCol.addItem(startColItem.consume(item), pc)
+			val newItem = 
+				nextCol.addItem(startColItem.consume(item), pc)
 			if (newItem != null)
 				completeForItem(newItem, nextCol)		
 		})
@@ -146,8 +191,8 @@ def recognize(stream) : Chart = {
 }
 
 def processStream(stream, chart) = {
-	var lexeme = stream.next
-	while (lexeme != stream.eof) {
+	var lexeme = stream.eof
+	while ((lexeme = stream.next) != stream.eof) {
 		lexeme match {
 			case Fork(streams) => {
 				val colBeforeFork = chart.lastColumn
@@ -173,7 +218,9 @@ def processStream(stream, chart) = {
 		}
 	}
 }
-
 \end{lstlisting}
 \end{minipage}
+
+\subsubsection{Построение графа синтаксического разбора}
+
 
