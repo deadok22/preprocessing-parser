@@ -11,46 +11,14 @@
 \institute{{\tiny научный руководитель} \\ \vspace{.10cm} Игнатов Сергей Сергеевич}
 \date{\scriptsize Академический университет\\ \vspace{.10cm} 2014 г.}
 
-
-
 \begin{document}
 
 \frame{\titlepage}
 
 \frame{
-  \frametitle{Текстовый препроцессор}
-  
-  \begin{block}{Типичная функциональность}
-    \begin{itemize}
-      \item Включение файлов
-      \item Макроопределения
-      \item Блоки условной компиляции
-    \end{itemize}
-  \end{block}
-
-  \begin{block}{Сложности при обработке непрепроцессированного кода}
-    \begin{itemize}
-      \item 2 языка
-      \item Зависимость кода от конфигурации препроцессора
-    \end{itemize}
-  \end{block}
-}
-
-\frame{
   \frametitle{Пример непрепроцессированного кода}
-  TODO write some C or Erlang code here
-}
 
-\frame{
-  \frametitle{Обработка непрепроцессированного кода}
-
-  \begin{block}{Существующие подходы}
-    \begin{enumerate}
-      \item Обработка конкретных конфигураций препроцессора
-      \item Эвристическая обработка
-      \item Обработка всех возможных конфигураций препроцессора
-    \end{enumerate}
-  \end{block}
+  TODO write code illustrating problems that may occur due to preprocessor usage, explain that multiple configurations should be handled and it can only be achieved using a parser which builds parse trees for all possible preprocessor configurations
 }
 
 \frame{
