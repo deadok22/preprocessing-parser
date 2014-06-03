@@ -20,6 +20,7 @@
   \frametitle{Пример непрепроцессированного кода}
 
   TODO write code illustrating problems that may occur due to preprocessor usage, explain that multiple configurations should be handled and it can only be achieved using a parser which builds parse trees for all possible preprocessor configurations
+
 }
 
 \frame{
@@ -33,7 +34,7 @@
     \begin{enumerate}
       \item Изучить существующие решения
       \item Разработать и реализовать алгоритм синтаксического анализа непрепроцессированного кода
-      \item Проверить разработанную библиотеку, сравнив её с аналогами
+      \item Сравнить разработанную библиотеку с аналогами
     \end{enumerate}
   \end{block}
 }
@@ -105,7 +106,7 @@
       \item Отсутствие необходимости модификации грамматики языка
       \item Отсутствие необходимости описания ветвлений и слияний
       \item Лаконичность синтаксиса описания языка: $\sim$100 строк на Java против $\sim$200 строк на Scala
-      \item Сравнимая скорость работы: медианное время работы на тестовых данных в $\sim$2 раза меньше
+      \item Медианное время работы на тестовых данных в $\sim$2 раза меньше
     \end{itemize}
   \end{block}
 }
@@ -120,7 +121,7 @@
     \begin{itemize}
       \item Описание грамматики языка в БНФ
       \item Автоматическое ветвление и слияние ветвей разбора
-      \item Поддержка широкого класса языков (все КС-языки)
+      \item Поддержка языков, порождаемых контекстно-свободными грамматиками
       \item Сравнимая с аналогами производительность
     \end{itemize}
   \end{block} 
