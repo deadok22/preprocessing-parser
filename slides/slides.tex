@@ -9,6 +9,15 @@
 \setbeamertemplate{footline}[frame number]
 \beamertemplatenavigationsymbolsempty
 
+\newcommand{\backupbegin}{
+  \newcounter{finalframe}
+  \setcounter{finalframe}{\value{framenumber}}
+}
+\newcommand{\backupend}{
+  \setcounter{framenumber}{\value{finalframe}}
+}
+
+
 \title{Синтаксический анализ исходного кода, содержащего инструкции препроцессора}
 \author{Савенко Сергей Андреевич}
 \institute{{\tiny научный руководитель} \\ \vspace{.10cm} Игнатов Сергей Сергеевич}
@@ -127,5 +136,26 @@
     \end{itemize}
   \end{block} 
 }
+
+%% Backup slides
+\backupbegin
+
+\frame{
+  \frametitle{Алгоритм Earley}
+
+  \begin{block}{Предсказание}
+    Для каждого элемента Earley вида $A \to A \beta \bullet B$, добавить в текущее состояние элементы, соответствующие продукциям для $B$
+  \end{block}
+
+  \begin{block}{Сканирование}
+    Для каждого элемента Earley вида $A \to A \bullet \beta B$, если терминал совпадает с входным символом, добавить в следующее состояние элемент с точкой смещенной вправо
+  \end{block}
+
+  \begin{block}{Завершение}
+    Для каждого элемента Earley вида $A \to A \beta B \bullet$ найти в состоянии, где был начат разбор этого правила, элементы вида $E \to \alpha \bullet A$, добавить в следующее состояние такие элементы с точками, смещенными вправо
+  \end{block}
+}
+
+\backupend
 
 \end{document}
